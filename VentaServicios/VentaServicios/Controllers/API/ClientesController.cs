@@ -56,8 +56,11 @@ namespace VentaServicios.Controllers.API
                 response = new Response
                 {
                     IsSuccess = false,
-                    Message = 
+                    Message = Mensaje.ModeloInvalido,
+                    Resultado = null
                 };
+
+                return response;
             }
 
             try
@@ -65,13 +68,29 @@ namespace VentaServicios.Controllers.API
                 db.Cliente.Add(cliente);
                 await db.SaveChangesAsync();
 
+                response = new Response
+                {
+                    IsSuccess = true,
+                    Message = Mensaje.Satisfactorio,
+                    Resultado = cliente
+                };
+
+                return response;
+
             }
             catch (Exception ex)
             {
+                response = new Response
+                {
+                    IsSuccess = false,
+                    Message = Mensaje.Excepcion,
+                    Resultado = null
+                };
                 
+                return response;
+
             }
             
-            return response;
 
         }
 
