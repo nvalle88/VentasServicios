@@ -17,24 +17,24 @@ namespace VentaServicios.Controllers.API
 {
 
 
-    [RoutePrefix("api/Clientes")]
-    public class ClientesController : ApiController
+    [RoutePrefix("api/Vendedores")]
+    public class VendedoresController : ApiController
     {
         private readonly ModelVentas db = new ModelVentas();
 
 
-        // GET: api/Clientes
+        // GET: api/Vendedores
         [HttpGet]
-        [Route("ListarClientes")]
-        public async Task<List<Cliente>> GetCliente()
+        [Route("ListarVendedores")]
+        public async Task<List<Vendedor>> ListarVendedores()
         {
             try
             {
-                return await db.Cliente.ToListAsync();
+                return await db.Vendedor.ToListAsync();
             }
             catch (Exception ex)
             {
-                return new List<Cliente>();
+                return new List<Vendedor>();
             }
         }
 
@@ -43,10 +43,10 @@ namespace VentaServicios.Controllers.API
 
         
 
-        // POST: api/Clientes
+        // POST: api/Vendedores
         [HttpPost]
-        [Route("InsertarCliente")]
-        public async Task<Response> InsertarCliente([FromBody] Cliente cliente)
+        [Route("InsertarVendedor")]
+        public async Task<Response> InsertarVendedor([FromBody] Vendedor Vendedor)
         {
 
             Response response = new Response();
@@ -65,14 +65,14 @@ namespace VentaServicios.Controllers.API
 
             try
             {
-                db.Cliente.Add(cliente);
+                db.Vendedor.Add(Vendedor);
                 await db.SaveChangesAsync();
 
                 response = new Response
                 {
                     IsSuccess = true,
                     Message = Mensaje.Satisfactorio,
-                    Resultado = cliente
+                    Resultado = Vendedor
                 };
 
                 return response;
@@ -94,9 +94,47 @@ namespace VentaServicios.Controllers.API
 
         }
 
-       
 
-   
+
+        // PUT: api/Vendedores
+
+        //[HttpPut("{id}")]
+        [Route("EditarVendedor")]
+        public async Task<Response> EditarVendedor([FromBody] Vendedor Vendedor )
+        {
+            Response response = new Response();
+
+            try
+            {
+
+                db.Entry(Vendedor).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+
+                response = new Response
+                {
+                    IsSuccess = true,
+                    Message = Mensaje.Satisfactorio,
+                    Resultado = Vendedor
+                };
+
+                return response;
+
+            }
+            catch(Exception ex)
+            {
+                response = new Response
+                {
+                    IsSuccess = false,
+                    Message = Mensaje.Excepcion,
+                    Resultado = null
+                };
+
+                return response;
+
+            }
+        }
+
+
 
 
 
