@@ -51,7 +51,12 @@ namespace VentaServicios.ModeloDato
         [StringLength(10)]
         public string Telefono { get; set; }
 
-        public int? id { get; set; }
+        public int? IdEmpresa { get; set; }
+
+        [StringLength(128)]
+        public string IdUsuarioAspNet { get; set; }
+
+        public virtual AspNetUsers AspNetUsers { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Chat> Chat { get; set; }

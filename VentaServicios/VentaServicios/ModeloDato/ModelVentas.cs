@@ -70,6 +70,11 @@ namespace VentaServicios.ModeloDato
                 .WithRequired(e => e.AspNetUsers)
                 .HasForeignKey(e => e.UserId);
 
+            modelBuilder.Entity<AspNetUsers>()
+                .HasMany(e => e.Usuario)
+                .WithOptional(e => e.AspNetUsers)
+                .HasForeignKey(e => e.IdUsuarioAspNet);
+
             modelBuilder.Entity<Chat>()
                 .Property(e => e.Mensaje)
                 .IsUnicode(false);
@@ -142,6 +147,11 @@ namespace VentaServicios.ModeloDato
             modelBuilder.Entity<Empresa>()
                 .Property(e => e.Direccion)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<Empresa>()
+                .HasMany(e => e.Usuario)
+                .WithOptional(e => e.Empresa)
+                .HasForeignKey(e => e.IdEmpresa);
 
             modelBuilder.Entity<Empresa>()
                 .HasMany(e => e.Noticia)
