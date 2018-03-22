@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace bd.swth.entidades.Utils
+namespace VentaServicios.Utils
 {
     public  class Response
     {

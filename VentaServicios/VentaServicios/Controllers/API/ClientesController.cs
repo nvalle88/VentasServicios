@@ -1,4 +1,4 @@
-﻿using bd.swth.entidades.Utils;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VentaServicios.ModeloDato;
+using VentaServicios.Utils;
 
 namespace VentaServicios.Controllers.API
 {
@@ -40,7 +41,7 @@ namespace VentaServicios.Controllers.API
 
 
 
-        /*
+        
 
         // POST: api/Clientes
         [HttpPost]
@@ -52,7 +53,11 @@ namespace VentaServicios.Controllers.API
 
             if (!ModelState.IsValid)
             {
-
+                response = new Response
+                {
+                    IsSuccess = false,
+                    Message = 
+                };
             }
 
             try
@@ -65,12 +70,16 @@ namespace VentaServicios.Controllers.API
             {
                 
             }
+            
+            return response;
 
         }
 
-        return response;
+       
 
-    }
-    */
+   
+
+
+
     }
 }
