@@ -11,10 +11,11 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VentaServicios.ModeloDato;
 using VentaServicios.ObjectRequest;
+using VentaServicios.Utils;
 
 namespace VentaServicios.Controllers.API
 {
-    [RoutePrefix("Api/Supervisor")]
+    [RoutePrefix("api/Supervisor")]
     public class SupervisorsController : ApiController
     {
         private ModelVentas db = new ModelVentas();
@@ -24,10 +25,11 @@ namespace VentaServicios.Controllers.API
         //{
         //    return db.Supervisor;
         //}
-
+        #region listarSupervisor
+        
         [HttpGet]
-        [Route("LitarSupervisores")]
-        public async Task<List<SupervisorRequest>> LitarSupervisores()
+        [Route("ListarSupervisores")]
+        public async Task<List<SupervisorRequest>> ListarSupervisores()
         {
             var lista = await db.Supervisor.Select(x => new SupervisorRequest
             {
@@ -43,6 +45,57 @@ namespace VentaServicios.Controllers.API
 
             return lista;
         }
+        #endregion
+
+        #region InsertarSupervisor
+        [HttpPost]
+        [Route("InsertarSupervisor")]
+        public async Task<Response> InsertarSupervisor([FromBody] Cliente cliente)
+        {
+            Response response = new Response();
+
+            if (!ModelState.IsValid)
+            {
+                response = new Response
+                {
+                    IsSuccess = false,
+                    Message = Mensaje.ModeloInvalido,
+                    Resultado = null
+                };
+
+                return response;
+            }
+
+            try
+            {
+                db.Cliente.Add(cliente);
+                await db.SaveChangesAsync();
+
+                response = new Response
+                {
+                    IsSuccess = true,
+                    Message = Mensaje.Satisfactorio,
+                    Resultado = cliente
+                };
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                response = new Response
+                {
+                    IsSuccess = false,
+                    Message = Mensaje.Excepcion,
+                    Resultado = null
+                };
+
+                return response;
+
+            }
+
+        }
+        #endregion
 
 
 
