@@ -12,15 +12,16 @@ namespace VentaServicios.ModeloDato
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Empresa()
         {
+            AspNetUsers = new HashSet<AspNetUsers>();
             Producto = new HashSet<Producto>();
             TipoVisita = new HashSet<TipoVisita>();
-            Usuario = new HashSet<Usuario>();
             Noticia = new HashSet<Noticia>();
             Suscripcion = new HashSet<Suscripcion>();
             TipoCliente = new HashSet<TipoCliente>();
         }
 
-        public int id { get; set; }
+        [Key]
+        public int IdEmpresa { get; set; }
 
         [Required]
         [StringLength(10)]
@@ -42,13 +43,13 @@ namespace VentaServicios.ModeloDato
         public double? Longitud { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AspNetUsers> AspNetUsers { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Producto> Producto { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TipoVisita> TipoVisita { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Usuario> Usuario { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Noticia> Noticia { get; set; }

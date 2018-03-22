@@ -18,11 +18,12 @@ namespace VentaServicios.ModeloDato
         [Key]
         public int IdGerente { get; set; }
 
-        public int? IdUsuario { get; set; }
+        [StringLength(128)]
+        public string IdUsuario { get; set; }
+
+        public virtual AspNetUsers AspNetUsers { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Supervisor> Supervisor { get; set; }
-
-        public virtual Usuario Usuario { get; set; }
     }
 }

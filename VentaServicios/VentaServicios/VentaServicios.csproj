@@ -187,13 +187,8 @@
     <Compile Include="Controllers\API\ClientesController.cs" />
     <Compile Include="Controllers\API\GerentesController.cs" />
     <Compile Include="Controllers\API\SupervisorsController.cs" />
+    <Compile Include="Controllers\API\TiposClientesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\MVC\ClientesController.cs" />
-    <Compile Include="Controllers\MVC\EmpresasController.cs" />
-    <Compile Include="Controllers\MVC\GerentesController.cs" />
-    <Compile Include="Controllers\MVC\SupervisorsController.cs" />
-    <Compile Include="Controllers\MVC\UsuariosController.cs" />
-    <Compile Include="Controllers\MVC\VendedorsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -226,9 +221,9 @@
     <Compile Include="ModeloDato\TipoDato.cs" />
     <Compile Include="ModeloDato\TipoSuscripcion.cs" />
     <Compile Include="ModeloDato\TipoVisita.cs" />
-    <Compile Include="ModeloDato\Usuario.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
     <Compile Include="ModeloDato\Visita.cs" />
+    <Compile Include="ObjectRequest\ClienteRequest.cs" />
     <Compile Include="ObjectRequest\GerenteRequest.cs" />
     <Compile Include="ObjectRequest\SupervisorRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

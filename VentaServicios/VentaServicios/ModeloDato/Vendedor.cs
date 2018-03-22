@@ -25,10 +25,13 @@ namespace VentaServicios.ModeloDato
 
         public int? IdSupervisor { get; set; }
 
-        public int? IdUsuario { get; set; }
+        [StringLength(128)]
+        public string IdUsuario { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Agenda> Agenda { get; set; }
+
+        public virtual AspNetUsers AspNetUsers { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cliente> Cliente { get; set; }
@@ -37,8 +40,6 @@ namespace VentaServicios.ModeloDato
         public virtual ICollection<LogRutaVendedor> LogRutaVendedor { get; set; }
 
         public virtual Supervisor Supervisor { get; set; }
-
-        public virtual Usuario Usuario { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Visita> Visita { get; set; }

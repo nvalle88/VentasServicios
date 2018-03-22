@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VentaServicios.ModeloDato;
+using VentaServicios.ObjectRequest;
 using VentaServicios.Utils;
 
 namespace VentaServicios.Controllers.API
@@ -26,15 +27,33 @@ namespace VentaServicios.Controllers.API
         // GET: api/Clientes
         [HttpGet]
         [Route("ListarClientes")]
-        public async Task<List<Cliente>> GetCliente()
+        public async Task<List<ClienteRequest>> ListarClientes(Empresa empresa)
         {
             try
             {
-                return await db.Cliente.ToListAsync();
+                return await db.Cliente.Select(x=>new ClienteRequest
+                {
+                    Apellido=x.Apellido,
+                    ApellidosVendedor=x.Vendedor.AspNetUsers.Apellidos,
+                    Email=x.Email,
+                    Firma=x.Firma,
+                    Foto=x.Foto,
+                    IdCliente=x.idCliente,
+                    IdTipoCliente=Convert.ToInt32(x.idTipoCliente),
+                    IdVendedor=x.IdVendedor,
+                    Latitud=x.Latitud,
+                    Longitud=x.Longitud,
+                    Nombre=x.Nombre,
+                    NombresVendedor=x.Vendedor.AspNetUsers.Nombres,
+                    Telefono=x.Telefono,
+                    TipoCliente=x.TipoCliente.Tipo,
+                    Identificacion=x.Identificacion,
+
+                }).ToListAsync();
             }
             catch (Exception ex)
             {
-                return new List<Cliente>();
+                return new List<ClienteRequest>();
             }
         }
 

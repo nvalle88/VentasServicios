@@ -9,7 +9,7 @@ namespace VentaServicios.ObjectRequest
     {
         public int IdSupervisor { get; set; }
 
-        public int? IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
 
         public int IdGerente { get; set; }
 

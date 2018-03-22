@@ -40,7 +40,6 @@ namespace VentaServicios.ModeloDato
         public virtual DbSet<TipoDato> TipoDato { get; set; }
         public virtual DbSet<TipoSuscripcion> TipoSuscripcion { get; set; }
         public virtual DbSet<TipoVisita> TipoVisita { get; set; }
-        public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<Vendedor> Vendedor { get; set; }
         public virtual DbSet<Visita> Visita { get; set; }
 
@@ -48,11 +47,6 @@ namespace VentaServicios.ModeloDato
         {
             modelBuilder.Entity<Agenda>()
                 .Property(e => e.Notas)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Agenda>()
-                .Property(e => e.idCliente)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<AspNetRoles>()
@@ -70,13 +64,35 @@ namespace VentaServicios.ModeloDato
                 .WithRequired(e => e.AspNetUsers)
                 .HasForeignKey(e => e.UserId);
 
+            modelBuilder.Entity<AspNetUsers>()
+                .HasMany(e => e.Chat)
+                .WithRequired(e => e.AspNetUsers)
+                .HasForeignKey(e => e.UsuarioEnvia)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<AspNetUsers>()
+                .HasMany(e => e.Chat1)
+                .WithRequired(e => e.AspNetUsers1)
+                .HasForeignKey(e => e.UsuarioRecibe)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<AspNetUsers>()
+                .HasMany(e => e.Gerente)
+                .WithOptional(e => e.AspNetUsers)
+                .HasForeignKey(e => e.IdUsuario);
+
+            modelBuilder.Entity<AspNetUsers>()
+                .HasMany(e => e.Supervisor)
+                .WithOptional(e => e.AspNetUsers)
+                .HasForeignKey(e => e.IdUsuario);
+
+            modelBuilder.Entity<AspNetUsers>()
+                .HasMany(e => e.Vendedor)
+                .WithOptional(e => e.AspNetUsers)
+                .HasForeignKey(e => e.IdUsuario);
+
             modelBuilder.Entity<Chat>()
                 .Property(e => e.Mensaje)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Cliente>()
-                .Property(e => e.idCliente)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<Cliente>()
@@ -103,6 +119,14 @@ namespace VentaServicios.ModeloDato
             modelBuilder.Entity<Cliente>()
                 .Property(e => e.Email)
                 .IsFixedLength();
+
+            modelBuilder.Entity<Cliente>()
+                .Property(e => e.TelefonoMovil)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Cliente>()
+                .Property(e => e.Identificacion)
+                .IsUnicode(false);
 
             modelBuilder.Entity<Cliente>()
                 .HasMany(e => e.Agenda)
@@ -144,9 +168,35 @@ namespace VentaServicios.ModeloDato
                 .IsUnicode(false);
 
             modelBuilder.Entity<Empresa>()
-                .HasMany(e => e.Noticia)
+                .HasMany(e => e.AspNetUsers)
                 .WithRequired(e => e.Empresa)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Empresa>()
+                .HasMany(e => e.Producto)
+                .WithOptional(e => e.Empresa)
+                .HasForeignKey(e => e.id);
+
+            modelBuilder.Entity<Empresa>()
+                .HasMany(e => e.TipoVisita)
+                .WithOptional(e => e.Empresa)
+                .HasForeignKey(e => e.id);
+
+            modelBuilder.Entity<Empresa>()
+                .HasMany(e => e.Noticia)
+                .WithRequired(e => e.Empresa)
+                .HasForeignKey(e => e.id)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Empresa>()
+                .HasMany(e => e.Suscripcion)
+                .WithOptional(e => e.Empresa)
+                .HasForeignKey(e => e.id);
+
+            modelBuilder.Entity<Empresa>()
+                .HasMany(e => e.TipoCliente)
+                .WithOptional(e => e.Empresa)
+                .HasForeignKey(e => e.IdEmpresa);
 
             modelBuilder.Entity<Formulario>()
                 .Property(e => e.Titulo)
@@ -255,55 +305,6 @@ namespace VentaServicios.ModeloDato
                 .WithRequired(e => e.TipoVisita)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.TokenContrasena)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Foto)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Contrasena)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Correo)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Direccion)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Identificacion)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Nombres)
-                .IsFixedLength();
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Apellidos)
-                .IsFixedLength();
-
-            modelBuilder.Entity<Usuario>()
-                .Property(e => e.Telefono)
-                .IsFixedLength()
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Usuario>()
-                .HasMany(e => e.Chat)
-                .WithRequired(e => e.Usuario)
-                .HasForeignKey(e => e.UsuarioEnvia)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Usuario>()
-                .HasMany(e => e.Chat1)
-                .WithRequired(e => e.Usuario1)
-                .HasForeignKey(e => e.UsuarioRecibe)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<Vendedor>()
                 .HasMany(e => e.Agenda)
                 .WithRequired(e => e.Vendedor)
@@ -330,11 +331,6 @@ namespace VentaServicios.ModeloDato
 
             modelBuilder.Entity<Visita>()
                 .Property(e => e.Foto)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Visita>()
-                .Property(e => e.idCliente)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<Visita>()

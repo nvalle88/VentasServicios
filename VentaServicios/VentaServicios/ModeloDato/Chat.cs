@@ -20,12 +20,16 @@ namespace VentaServicios.ModeloDato
         [StringLength(500)]
         public string Mensaje { get; set; }
 
-        public int UsuarioEnvia { get; set; }
+        [Required]
+        [StringLength(128)]
+        public string UsuarioEnvia { get; set; }
 
-        public int UsuarioRecibe { get; set; }
+        [Required]
+        [StringLength(128)]
+        public string UsuarioRecibe { get; set; }
 
-        public virtual Usuario Usuario { get; set; }
+        public virtual AspNetUsers AspNetUsers { get; set; }
 
-        public virtual Usuario Usuario1 { get; set; }
+        public virtual AspNetUsers AspNetUsers1 { get; set; }
     }
 }

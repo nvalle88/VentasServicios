@@ -13,6 +13,11 @@ namespace VentaServicios.ModeloDato
         {
             AspNetUserClaims = new HashSet<AspNetUserClaims>();
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
+            Chat = new HashSet<Chat>();
+            Chat1 = new HashSet<Chat>();
+            Gerente = new HashSet<Gerente>();
+            Supervisor = new HashSet<Supervisor>();
+            Vendedor = new HashSet<Vendedor>();
             AspNetRoles = new HashSet<AspNetRoles>();
         }
 
@@ -43,11 +48,46 @@ namespace VentaServicios.ModeloDato
         [StringLength(256)]
         public string UserName { get; set; }
 
+        public int IdEmpresa { get; set; }
+
+        public string TokenContrasena { get; set; }
+
+        public string Foto { get; set; }
+
+        public bool Estado { get; set; }
+
+        public string Direccion { get; set; }
+
+        public string Identificacion { get; set; }
+
+        public string Nombres { get; set; }
+
+        public string Apellidos { get; set; }
+
+        public string Telefono { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Chat> Chat { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Chat> Chat1 { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Gerente> Gerente { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Supervisor> Supervisor { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Vendedor> Vendedor { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetRoles> AspNetRoles { get; set; }

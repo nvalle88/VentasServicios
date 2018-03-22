@@ -22,9 +22,7 @@ namespace VentaServicios.ModeloDato
         [StringLength(500)]
         public string Notas { get; set; }
 
-        [Required]
-        [StringLength(10)]
-        public string idCliente { get; set; }
+        public int idCliente { get; set; }
 
         public int IdVendedor { get; set; }
 

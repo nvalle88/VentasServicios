@@ -17,8 +17,7 @@ namespace VentaServicios.ModeloDato
         }
 
         [Key]
-        [StringLength(10)]
-        public string idCliente { get; set; }
+        public int idCliente { get; set; }
 
         [StringLength(250)]
         public string Foto { get; set; }
@@ -26,9 +25,9 @@ namespace VentaServicios.ModeloDato
         [StringLength(250)]
         public string Firma { get; set; }
 
-        public double? Latitud { get; set; }
+        public double Latitud { get; set; }
 
-        public double? Longitud { get; set; }
+        public double Longitud { get; set; }
 
         [StringLength(200)]
         public string Nombre { get; set; }
@@ -45,6 +44,12 @@ namespace VentaServicios.ModeloDato
         public int? idTipoCliente { get; set; }
 
         public int IdVendedor { get; set; }
+
+        [StringLength(10)]
+        public string TelefonoMovil { get; set; }
+
+        [StringLength(20)]
+        public string Identificacion { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Agenda> Agenda { get; set; }

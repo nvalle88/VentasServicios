@@ -41,8 +41,7 @@ namespace VentaServicios.ModeloDato
 
         public int idTipoVisita { get; set; }
 
-        [StringLength(10)]
-        public string idCliente { get; set; }
+        public int? idCliente { get; set; }
 
         public virtual Cliente Cliente { get; set; }
 

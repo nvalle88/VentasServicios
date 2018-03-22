@@ -32,13 +32,13 @@ namespace VentaServicios.Controllers.API
             var lista = await db.Supervisor.Select(x => new SupervisorRequest
             {
                 IdSupervisor = x.IdSupervisor,
-                Apellidos = x.Usuario.Apellidos,
-                Direccion = x.Usuario.Direccion,
-                Identificacion = x.Usuario.Identificacion,
+                Apellidos = x.AspNetUsers.Apellidos,
+                Direccion = x.AspNetUsers.Direccion,
+                Identificacion = x.AspNetUsers.Identificacion,
                 IdGerente = x.IdGerente,
-                IdUsuario = x.IdUsuario,
-                Nombres = x.Usuario.Nombres,
-                Telefono = x.Usuario.Telefono,
+                IdUsuario = x.AspNetUsers.Id,
+                Nombres = x.AspNetUsers.Nombres,
+                Telefono = x.AspNetUsers.Telefono,
             }).ToListAsync();
 
             return lista;
