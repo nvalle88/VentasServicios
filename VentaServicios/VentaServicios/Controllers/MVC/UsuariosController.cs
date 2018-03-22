@@ -57,7 +57,7 @@ namespace VentaServicios.Controllers.MVC
                 return RedirectToAction("Index");
             }
 
-            ViewBag.id = new SelectList(db.Empresa, "id", "Telefono", usuario.id);
+            ViewBag.id = new SelectList(db.Empresa, "id", "Telefono", usuario.IdEmpresa);
             return View(usuario);
         }
 
@@ -73,7 +73,7 @@ namespace VentaServicios.Controllers.MVC
             {
                 return HttpNotFound();
             }
-            ViewBag.id = new SelectList(db.Empresa, "id", "Telefono", usuario.id);
+            ViewBag.id = new SelectList(db.Empresa, "id", "Telefono", usuario.IdEmpresa);
             return View(usuario);
         }
 
@@ -90,7 +90,7 @@ namespace VentaServicios.Controllers.MVC
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.id = new SelectList(db.Empresa, "id", "Telefono", usuario.id);
+            ViewBag.id = new SelectList(db.Empresa, "id", "Telefono", usuario.IdEmpresa);
             return View(usuario);
         }
 

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VentaServicios.ModeloDato;
+using VentaServicios.ObjectRequest;
 using VentaServicios.Utils;
 
 namespace VentaServicios.Controllers.API
@@ -26,15 +27,42 @@ namespace VentaServicios.Controllers.API
         // GET: api/Vendedores
         [HttpGet]
         [Route("ListarVendedores")]
-        public async Task<List<Vendedor>> ListarVendedores()
+        public async Task<List<VendedorRequest>> ListarVendedores()
         {
+
+            var listaVendedores = new List<VendedorRequest>();
+
             try
             {
-                return await db.Vendedor.ToListAsync();
+                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest 
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = 0 + (int)(x.IdSupervisor),
+                    IdUsuario = x.Usuario.IdUsuario,
+                    TokenContrasena = x.Usuario.TokenContrasena,
+                    Foto = x.Usuario.Foto,
+                    Estado = x.Usuario.Estado,
+                    Contrasena = x.Usuario.Contrasena,
+                    Correo = x.Usuario.Correo,
+                    Direccion = x.Usuario.Direccion,
+                    Identificacion = x.Usuario.Identificacion,
+                    Nombres = x.Usuario.Nombres,
+                    Apellidos = x.Usuario.Apellidos,
+                    Telefono = x.Usuario.Telefono                    
+
+
+                }
+                    
+                ).ToListAsync();
+
+
+
+                return listaVendedores;
             }
             catch (Exception ex)
             {
-                return new List<Vendedor>();
+                return listaVendedores;
             }
         }
 
