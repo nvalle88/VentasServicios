@@ -189,6 +189,9 @@
     <Compile Include="Controllers\API\SupervisorsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MVC\ClientesController.cs" />
+    <Compile Include="Controllers\MVC\EmpresasController.cs" />
+    <Compile Include="Controllers\MVC\GerentesController.cs" />
+    <Compile Include="Controllers\MVC\SupervisorsController.cs" />
     <Compile Include="Controllers\MVC\UsuariosController.cs" />
     <Compile Include="Controllers\MVC\VendedorsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -298,6 +301,21 @@
     <Content Include="Views\Usuarios\Details.cshtml" />
     <Content Include="Views\Usuarios\Edit.cshtml" />
     <Content Include="Views\Usuarios\Index.cshtml" />
+    <Content Include="Views\Empresas\Create.cshtml" />
+    <Content Include="Views\Empresas\Delete.cshtml" />
+    <Content Include="Views\Empresas\Details.cshtml" />
+    <Content Include="Views\Empresas\Edit.cshtml" />
+    <Content Include="Views\Empresas\Index.cshtml" />
+    <Content Include="Views\Gerentes\Create.cshtml" />
+    <Content Include="Views\Gerentes\Delete.cshtml" />
+    <Content Include="Views\Gerentes\Details.cshtml" />
+    <Content Include="Views\Gerentes\Edit.cshtml" />
+    <Content Include="Views\Gerentes\Index.cshtml" />
+    <Content Include="Views\Supervisors\Create.cshtml" />
+    <Content Include="Views\Supervisors\Delete.cshtml" />
+    <Content Include="Views\Supervisors\Details.cshtml" />
+    <Content Include="Views\Supervisors\Edit.cshtml" />
+    <Content Include="Views\Supervisors\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

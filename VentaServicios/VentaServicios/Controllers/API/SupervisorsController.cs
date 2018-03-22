@@ -61,7 +61,7 @@ namespace VentaServicios.Controllers.API
 
         // PUT: api/Supervisors/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutSupervisor(string id, Supervisor supervisor)
+        public async Task<IHttpActionResult> PutSupervisor(int id, Supervisor supervisor)
         {
             if (!ModelState.IsValid)
             {
@@ -149,7 +149,7 @@ namespace VentaServicios.Controllers.API
             base.Dispose(disposing);
         }
 
-        private bool SupervisorExists(string id)
+        private bool SupervisorExists(int id)
         {
             return db.Supervisor.Count(e => e.IdSupervisor == id) > 0;
         }

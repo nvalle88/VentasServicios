@@ -23,8 +23,7 @@ namespace VentaServicios.ModeloDato
 
         public int? TiempoSeguimiento { get; set; }
 
-        [StringLength(10)]
-        public string IdSupervisor { get; set; }
+        public int? IdSupervisor { get; set; }
 
         public int? IdUsuario { get; set; }
 
