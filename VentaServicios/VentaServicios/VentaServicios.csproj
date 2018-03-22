@@ -277,6 +277,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\API\" />
+    <Folder Include="Controllers\MVC\" />
     <Folder Include="Models\" />
     <Folder Include="ObjectRequest\" />
   </ItemGroup>
@@ -307,7 +308,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>53770</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
