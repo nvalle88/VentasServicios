@@ -5,14 +5,16 @@ using System.Web;
 
 namespace VentaServicios.ObjectRequest
 {
-    public class SupervisorRequest
+    public class UsuarioRequest
     {
-        public int IdSupervisor { get; set; }
+        public int IdUsuario { get; set; }
 
-        public int? IdUsuario { get; set; }
+        public string Foto { get; set; }
 
-        public int IdGerente { get; set; }
         public bool? Estado { get; set; }
+
+        public string Contrasena { get; set; }
+
         public string Correo { get; set; }
 
         public string Direccion { get; set; }
@@ -24,5 +26,7 @@ namespace VentaServicios.ObjectRequest
         public string Apellidos { get; set; }
 
         public string Telefono { get; set; }
+
+        public int? IdEmpresa { get; set; }
     }
 }
