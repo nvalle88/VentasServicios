@@ -16,8 +16,7 @@ namespace VentaServicios.ModeloDato
         }
 
         [Key]
-        [StringLength(10)]
-        public string IdSupervisor { get; set; }
+        public int IdSupervisor { get; set; }
 
         public int? IdUsuario { get; set; }
 

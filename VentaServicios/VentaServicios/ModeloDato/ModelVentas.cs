@@ -206,11 +206,6 @@ namespace VentaServicios.ModeloDato
                 .Property(e => e.Detalle)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Supervisor>()
-                .Property(e => e.IdSupervisor)
-                .IsFixedLength()
-                .IsUnicode(false);
-
             modelBuilder.Entity<TipoCliente>()
                 .Property(e => e.Tipo)
                 .IsFixedLength();
@@ -308,11 +303,6 @@ namespace VentaServicios.ModeloDato
                 .WithRequired(e => e.Usuario1)
                 .HasForeignKey(e => e.UsuarioRecibe)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Vendedor>()
-                .Property(e => e.IdSupervisor)
-                .IsFixedLength()
-                .IsUnicode(false);
 
             modelBuilder.Entity<Vendedor>()
                 .HasMany(e => e.Agenda)
