@@ -7,6 +7,7 @@ namespace VentaServicios.ObjectRequest
 {
     public class SupervisorRequest
     {
+
         public int IdSupervisor { get; set; }
 
         public string IdUsuario { get; set; }
