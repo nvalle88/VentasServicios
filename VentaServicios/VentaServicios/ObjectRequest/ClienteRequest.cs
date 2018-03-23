@@ -9,6 +9,8 @@ namespace VentaServicios.ObjectRequest
     {
         public int IdCliente { get; set;}
 
+        public int IdEmpresa { get; set; }
+
         public string Identificacion { get; set; }
 
         public string Foto { get; set; }

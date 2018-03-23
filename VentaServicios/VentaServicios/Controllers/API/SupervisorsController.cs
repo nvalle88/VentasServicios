@@ -31,7 +31,7 @@ namespace VentaServicios.Controllers.API
         [Route("ListarSupervisores")]
         public async Task<List<SupervisorRequest>> ListarSupervisores(EmpresaActual empresaActual)
         {
-            var lista = await db.Supervisor.Where(x=> x.AspNetUsers.IdEmpresa==empresaActual.IdEmpresa).Select(x => new SupervisorRequest
+            var lista = await db.Supervisor.Where(x=> x.AspNetUsers.IdEmpresa==empresaActual.IdEmpresa && x.AspNetUsers.Estado == 1).Select(x => new SupervisorRequest
             {
                 IdSupervisor = x.IdSupervisor,
                 Apellidos = x.AspNetUsers.Apellidos,
@@ -50,7 +50,7 @@ namespace VentaServicios.Controllers.API
         #region InsertarSupervisor
         [HttpPost]
         [Route("InsertarSupervisor")]
-        public async Task<Response> InsertarSupervisor([FromBody] SupervisorRequest supervisorRequest)
+        public async Task<Response> InsertarSupervisor(SupervisorRequest supervisorRequest)
         {
             using (var transaction = db.Database.BeginTransaction())
             {
@@ -90,136 +90,79 @@ namespace VentaServicios.Controllers.API
                 }
 
                 catch (Exception ex)
-
                 {
-
                     transaction.Rollback();
-
                     return new Response
-
                     {
-
                         IsSuccess = false,
-
                         Message = Mensaje.Error,
-
                     };
-
                 }
-
             }
-
         }
         #endregion
 
 
 
-        // GET: api/Supervisors/5
-        [ResponseType(typeof(Supervisor))]
-        public async Task<IHttpActionResult> GetSupervisor(string id)
+        // [HttpGet("{id}")]
+        //[ResponseType(typeof(Supervisor))]
+        [HttpPost]
+        [Route("obtenerSupervisor")]
+        public async Task<Response> obtenerSupervisor( SupervisorRequest id)
         {
-            Supervisor supervisor = await db.Supervisor.FindAsync(id);
-            if (supervisor == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(supervisor);
-        }
-
-        // PUT: api/Supervisors/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutSupervisor(int id, Supervisor supervisor)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != supervisor.IdSupervisor)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(supervisor).State = EntityState.Modified;
-
             try
             {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SupervisorExists(id))
+                if (!ModelState.IsValid)
                 {
-                    return NotFound();
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = Mensaje.ModeloInvalido,
+                    };
                 }
-                else
+                var super = await db.Supervisor.Where(m => m.IdSupervisor == id.IdSupervisor).Select(x => new SupervisorRequest
+                { 
+                    IdUsuario = x.AspNetUsers.Id,
+                    IdSupervisor = x.IdSupervisor,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Telefono = x.AspNetUsers.Telefono,
+                    Correo = x.AspNetUsers.Email,
+                    IdEmpresa = x.AspNetUsers.IdEmpresa,
+                    IdGerente=x.IdGerente
+                   }).SingleOrDefaultAsync();
+
+                if (super == null)
                 {
-                    throw;
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = Mensaje.RegistroNoEncontrado,
+                    };
+
                 }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Supervisors
-        [ResponseType(typeof(Supervisor))]
-        public async Task<IHttpActionResult> PostSupervisor(Supervisor supervisor)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Supervisor.Add(supervisor);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (SupervisorExists(supervisor.IdSupervisor))
+                return new Response
                 {
-                    return Conflict();
-                }
-                else
+                    IsSuccess = true,
+                    Message = Mensaje.Satisfactorio,
+                    Resultado = super,
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return new Response
                 {
-                    throw;
-                }
+                    IsSuccess = false,
+                    Message = Mensaje.Error,
+                };
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = supervisor.IdSupervisor }, supervisor);
         }
 
-        // DELETE: api/Supervisors/5
-        [ResponseType(typeof(Supervisor))]
-        public async Task<IHttpActionResult> DeleteSupervisor(string id)
-        {
-            Supervisor supervisor = await db.Supervisor.FindAsync(id);
-            if (supervisor == null)
-            {
-                return NotFound();
-            }
-
-            db.Supervisor.Remove(supervisor);
-            await db.SaveChangesAsync();
-
-            return Ok(supervisor);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool SupervisorExists(int id)
-        {
-            return db.Supervisor.Count(e => e.IdSupervisor == id) > 0;
-        }
+        
     }
 }
