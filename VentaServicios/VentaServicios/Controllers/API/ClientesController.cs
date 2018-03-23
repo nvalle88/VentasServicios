@@ -24,6 +24,26 @@ namespace VentaServicios.Controllers.API
         private readonly ModelVentas db = new ModelVentas();
 
 
+        [HttpPost]
+        [Route("ObtenerTipoClientePorEmpresa")]
+        public async Task<List<TipoClienteRequest>> ObtenerTipoClientePorEmpresa(EmpresaActual empresaActual)
+        {
+            try
+            {
+                var lista = await db.TipoCliente.Where(x=>x.IdEmpresa==empresaActual.IdEmpresa).Select(x => new TipoClienteRequest
+                {
+                    idTipoCliente=x.idTipoCliente,
+                    Tipo=x.Tipo,
+
+                }).ToListAsync();
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                return new List<TipoClienteRequest>();
+            }
+        }
+
         // GET: api/Clientes
         [HttpPost]
         [Route("ListarClientes")]

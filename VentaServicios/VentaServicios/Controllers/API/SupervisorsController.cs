@@ -26,12 +26,12 @@ namespace VentaServicios.Controllers.API
         //    return db.Supervisor;
         //}
         #region listarSupervisor
-        
-        [HttpGet]
+
+        [HttpPost]
         [Route("ListarSupervisores")]
-        public async Task<List<SupervisorRequest>> ListarSupervisores()
+        public async Task<List<SupervisorRequest>> ListarSupervisores(EmpresaActual empresaActual)
         {
-            var lista = await db.Supervisor.Select(x => new SupervisorRequest
+            var lista = await db.Supervisor.Where(x=> x.AspNetUsers.IdEmpresa==empresaActual.IdEmpresa).Select(x => new SupervisorRequest
             {
                 IdSupervisor = x.IdSupervisor,
                 Apellidos = x.AspNetUsers.Apellidos,
@@ -50,47 +50,62 @@ namespace VentaServicios.Controllers.API
         #region InsertarSupervisor
         [HttpPost]
         [Route("InsertarSupervisor")]
-        public async Task<Response> InsertarSupervisor([FromBody] Cliente cliente)
+        public async Task<Response> InsertarSupervisor([FromBody] SupervisorRequest supervisorRequest)
         {
-            Response response = new Response();
-
-            if (!ModelState.IsValid)
+            using (var transaction = db.Database.BeginTransaction())
             {
-                response = new Response
+                try
                 {
-                    IsSuccess = false,
-                    Message = Mensaje.ModeloInvalido,
-                    Resultado = null
-                };
+                    //var user = new  AspNetUsers();
+                    //user.IdEmpresa = supervisorRequest.IdEmpresa;
+                    //user.Identificacion = supervisorRequest.Identificacion;
+                    //user.Apellidos = supervisorRequest.Apellidos;
+                    //user.Nombres = supervisorRequest.Nombres;
+                    //user.Direccion = supervisorRequest.Direccion;
+                    //user.Telefono = supervisorRequest.Telefono;
+                    //user.Email = supervisorRequest.Correo;
+                    //user.UserName = supervisorRequest.Correo;
+                    //user.PasswordHash = "123";
+                    //db.AspNetUsers.Add(user);
+                    //await db.SaveChangesAsync();
 
-                return response;
-            }
+                    var gerente = db.Gerente.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa);
+                    if (gerente !=null)
+                    {
+                        var super = new Supervisor();
+                        super.IdGerente = gerente.FirstOrDefault().IdGerente;
+                        super.IdUsuario = supervisorRequest.IdUsuario;
+                        db.Supervisor.Add(super);
 
-            try
-            {
-                db.Cliente.Add(cliente);
-                await db.SaveChangesAsync();
+                    }
+                    await db.SaveChangesAsync();
+                    transaction.Commit();
 
-                response = new Response
+                    return new Response
+                    {
+                        IsSuccess = true,
+                        Message = Mensaje.Satisfactorio
+                    };
+
+                }
+
+                catch (Exception ex)
+
                 {
-                    IsSuccess = true,
-                    Message = Mensaje.Satisfactorio,
-                    Resultado = cliente
-                };
 
-                return response;
+                    transaction.Rollback();
 
-            }
-            catch (Exception ex)
-            {
-                response = new Response
-                {
-                    IsSuccess = false,
-                    Message = Mensaje.Excepcion,
-                    Resultado = null
-                };
+                    return new Response
 
-                return response;
+                    {
+
+                        IsSuccess = false,
+
+                        Message = Mensaje.Error,
+
+                    };
+
+                }
 
             }
 
