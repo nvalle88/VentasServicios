@@ -27,7 +27,7 @@ namespace VentaServicios.Controllers.API
         // GET: api/Vendedores
         [HttpPost]
         [Route("ListarVendedores")]
-        public async Task<List<VendedorRequest>> ListarVendedores([FromBody] Vendedor Vendedor)
+        public async Task<List<VendedorRequest>> ListarVendedores([FromBody] VendedorRequest vendedorRequest)
         {
 
             var listaVendedores = new List<VendedorRequest>();
@@ -39,22 +39,22 @@ namespace VentaServicios.Controllers.API
                     IdVendedor = x.IdVendedor,
                     TiempoSeguimiento = x.TiempoSeguimiento,
                     IdSupervisor = 0 + (int)(x.IdSupervisor),
-                    IdUsuario = x.Usuario.IdUsuario,
-                    TokenContrasena = x.Usuario.TokenContrasena,
-                    Foto = x.Usuario.Foto,
-                    Estado = x.Usuario.Estado,
-                    Contrasena = x.Usuario.Contrasena,
-                    Correo = x.Usuario.Correo,
-                    Direccion = x.Usuario.Direccion,
-                    Identificacion = x.Usuario.Identificacion,
-                    Nombres = x.Usuario.Nombres,
-                    Apellidos = x.Usuario.Apellidos,
-                    Telefono = x.Usuario.Telefono                    
+                    IdUsuario = x.AspNetUsers.Id,
 
-
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = vendedorRequest.idEmpresa
+                    
                 }
                     
-                ).ToListAsync();
+                ).Where( x=> x.idEmpresa == vendedorRequest.idEmpresa).ToListAsync();
 
 
 

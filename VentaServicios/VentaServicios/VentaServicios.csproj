@@ -229,6 +229,7 @@
     <Compile Include="ObjectRequest\EmpresaActual.cs" />
     <Compile Include="ObjectRequest\GerenteRequest.cs" />
     <Compile Include="ObjectRequest\SupervisorRequest.cs" />
+    <Compile Include="ObjectRequest\UserRequest.cs" />
     <Compile Include="ObjectRequest\VendedorRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Mensaje.cs" />
