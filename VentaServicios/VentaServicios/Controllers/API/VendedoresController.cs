@@ -24,11 +24,15 @@ namespace VentaServicios.Controllers.API
         private readonly ModelVentas db = new ModelVentas();
 
 
+
+        
         // GET: api/Vendedores
         [HttpPost]
         [Route("ListarVendedores")]
         public async Task<List<VendedorRequest>> ListarVendedores([FromBody] VendedorRequest vendedorRequest)
         {
+
+            //Solo necesita el IdEmpresa
 
             var listaVendedores = new List<VendedorRequest>();
 
@@ -51,7 +55,6 @@ namespace VentaServicios.Controllers.API
                     Apellidos = x.AspNetUsers.Apellidos,
                     Telefono = x.AspNetUsers.Telefono,
                     idEmpresa = vendedorRequest.idEmpresa
-                    
                 }
                     
                 ).Where( x=> x.idEmpresa == vendedorRequest.idEmpresa).ToListAsync();
@@ -67,9 +70,61 @@ namespace VentaServicios.Controllers.API
         }
 
 
+        // GET: api/Vendedores
+        [HttpPost]
+        [Route("ListarClientesPorVendedor")]
+        public async Task<VendedorRequest> ListarClientesPorVendedor([FromBody] VendedorRequest vendedorRequest)
+        {
+            //Necesarios : idEmpresa e idVendedor
+
+            var vendedor = new VendedorRequest();
+            var listaClientes = new List<ClienteRequest>();
+
+            int idEmpresa = Convert.ToInt32( vendedorRequest.idEmpresa );
+            EmpresaActual empresaActual = new EmpresaActual { IdEmpresa = idEmpresa };
+
+            ClientesController ctl = new ClientesController();
+            listaClientes = await ctl.ListarClientes( empresaActual );
+
+            
 
 
-        
+            try
+            {
+                vendedor = await db.Vendedor.Select(x => new VendedorRequest
+                    {
+                        IdVendedor = x.IdVendedor,
+                        TiempoSeguimiento = x.TiempoSeguimiento,
+                        IdSupervisor = 0 + (int)(x.IdSupervisor),
+                        IdUsuario = x.AspNetUsers.Id,
+
+                        TokenContrasena = x.AspNetUsers.TokenContrasena,
+                        Foto = x.AspNetUsers.Foto,
+                        Estado = x.AspNetUsers.Estado,
+                        Correo = x.AspNetUsers.Email,
+                        Direccion = x.AspNetUsers.Direccion,
+                        Identificacion = x.AspNetUsers.Identificacion,
+                        Nombres = x.AspNetUsers.Nombres,
+                        Apellidos = x.AspNetUsers.Apellidos,
+                        Telefono = x.AspNetUsers.Telefono,
+                        idEmpresa = vendedorRequest.idEmpresa
+                    }
+
+                ).Where(x => x.idEmpresa == vendedorRequest.idEmpresa && x.IdVendedor == vendedorRequest.IdVendedor).FirstOrDefaultAsync();
+
+               
+                vendedor.ListaClientes = listaClientes;
+               
+
+                return vendedor;
+            }
+            catch (Exception ex)
+            {
+                return vendedor;
+            }
+        }
+
+
 
         // POST: api/Vendedores
         [HttpPost]

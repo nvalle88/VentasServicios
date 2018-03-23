@@ -48,6 +48,7 @@ namespace VentaServicios.Controllers.API
                     Telefono=x.Telefono,
                     TipoCliente=x.TipoCliente.Tipo,
                     Identificacion=x.Identificacion,
+                    Direccion=x.Direccion
 
                 }).ToListAsync();
                 return lista;

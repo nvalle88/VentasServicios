@@ -39,6 +39,8 @@ namespace VentaServicios.ObjectRequest
 
         public string ApellidosVendedor { get; set; }
 
+        public string Direccion { get; set; }
+
 
     }
 }
