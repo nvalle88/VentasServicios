@@ -68,6 +68,7 @@ namespace VentaServicios.Controllers.API
                     Telefono=x.Telefono,
                     TipoCliente=x.TipoCliente.Tipo,
                     Identificacion=x.Identificacion,
+                    Direccion=x.Direccion
 
                 }).ToListAsync();
                 return lista;
@@ -78,56 +79,65 @@ namespace VentaServicios.Controllers.API
             }
         }
 
+        [HttpPost]
+        [Route("ExisteClientePorEmpresa")]
+        public async Task<Response> ExisteClientePorEmpresa(ClienteRequest clienteRequest)
+        {
+            try
+            {
+                var cliente = await db.Cliente.
+                                             Where(x => x.Vendedor.AspNetUsers.IdEmpresa==clienteRequest.IdEmpresa 
+                                                     && x.Identificacion==clienteRequest.Identificacion)
+                                             .FirstOrDefaultAsync();
+
+                if (cliente==null)
+                {
+                    return new Response { IsSuccess = false };
+                }
+                return new Response { IsSuccess = true };
+            }
+            catch (Exception ex)
+            {
+                return new Response();
+            }
+        }
 
 
 
-        
+
+
 
         // POST: api/Clientes
         [HttpPost]
         [Route("InsertarCliente")]
-        public async Task<Response> InsertarCliente([FromBody] Cliente cliente)
+        public async Task<Response> InsertarCliente(ClienteRequest clienteRequest)
         {
 
-            Response response = new Response();
-
-            if (!ModelState.IsValid)
+            var cliente = new Cliente
             {
-                response = new Response
-                {
-                    IsSuccess = false,
-                    Message = Mensaje.ModeloInvalido,
-                    Resultado = null
-                };
-
-                return response;
-            }
+                Apellido=clienteRequest.Apellido,
+                Email=clienteRequest.Email,
+                Foto=clienteRequest.Foto,
+                Identificacion=clienteRequest.Identificacion,
+                idTipoCliente=clienteRequest.IdTipoCliente,
+                IdVendedor=clienteRequest.IdVendedor,
+                Latitud=clienteRequest.Latitud,
+                Longitud=clienteRequest.Longitud,
+                Nombre=clienteRequest.Nombre,
+                Telefono=clienteRequest.Telefono,
+                TelefonoMovil=clienteRequest.TelefonoMovil,
+            };
 
             try
             {
                 db.Cliente.Add(cliente);
                 await db.SaveChangesAsync();
-
-                response = new Response
-                {
-                    IsSuccess = true,
-                    Message = Mensaje.Satisfactorio,
-                    Resultado = cliente
-                };
-
-                return response;
+                return new Response {IsSuccess=true, };
 
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                response = new Response
-                {
-                    IsSuccess = false,
-                    Message = Mensaje.Excepcion,
-                    Resultado = null
-                };
-                
-                return response;
+                return new Response {IsSuccess=false};
 
             }
             

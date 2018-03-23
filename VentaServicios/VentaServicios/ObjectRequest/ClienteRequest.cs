@@ -9,6 +9,8 @@ namespace VentaServicios.ObjectRequest
     {
         public int IdCliente { get; set;}
 
+        public int IdEmpresa { get; set; }
+
         public string Identificacion { get; set; }
 
         public string Foto { get; set; }
@@ -38,6 +40,8 @@ namespace VentaServicios.ObjectRequest
         public string NombresVendedor { get; set; }
 
         public string ApellidosVendedor { get; set; }
+
+        public string Direccion { get; set; }
 
 
     }
