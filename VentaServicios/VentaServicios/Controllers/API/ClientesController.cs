@@ -126,6 +126,7 @@ namespace VentaServicios.Controllers.API
                 Nombre=clienteRequest.Nombre,
                 Telefono=clienteRequest.Telefono,
                 TelefonoMovil=clienteRequest.TelefonoMovil,
+                Direccion=clienteRequest.Direccion,
             };
 
             try
