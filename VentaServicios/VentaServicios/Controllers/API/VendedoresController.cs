@@ -25,9 +25,9 @@ namespace VentaServicios.Controllers.API
 
 
         // GET: api/Vendedores
-        [HttpGet]
+        [HttpPost]
         [Route("ListarVendedores")]
-        public async Task<List<VendedorRequest>> ListarVendedores()
+        public async Task<List<VendedorRequest>> ListarVendedores([FromBody] Vendedor Vendedor)
         {
 
             var listaVendedores = new List<VendedorRequest>();

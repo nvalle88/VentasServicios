@@ -54,7 +54,7 @@ namespace VentaServicios.ModeloDato
 
         public string Foto { get; set; }
 
-        public bool Estado { get; set; }
+        public int Estado { get; set; }
 
         public string Direccion { get; set; }
 

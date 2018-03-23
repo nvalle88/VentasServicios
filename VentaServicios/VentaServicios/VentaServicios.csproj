@@ -185,9 +185,11 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API\ClientesController.cs" />
+    <Compile Include="Controllers\API\EmpresasController.cs" />
     <Compile Include="Controllers\API\GerentesController.cs" />
     <Compile Include="Controllers\API\SupervisorsController.cs" />
     <Compile Include="Controllers\API\TiposClientesController.cs" />
+    <Compile Include="Controllers\API\VendedoresController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -224,6 +226,7 @@
     <Compile Include="ModeloDato\Vendedor.cs" />
     <Compile Include="ModeloDato\Visita.cs" />
     <Compile Include="ObjectRequest\ClienteRequest.cs" />
+    <Compile Include="ObjectRequest\EmpresaActual.cs" />
     <Compile Include="ObjectRequest\GerenteRequest.cs" />
     <Compile Include="ObjectRequest\SupervisorRequest.cs" />
     <Compile Include="ObjectRequest\VendedorRequest.cs" />
