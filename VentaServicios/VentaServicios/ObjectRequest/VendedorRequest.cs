@@ -20,7 +20,7 @@ namespace VentaServicios.ObjectRequest
 
 
         //Campos de tabla usuario
-        public int IdUsuario { get; set; }
+        public string IdUsuario { get; set; }
 
         [StringLength(250)]
         public string TokenContrasena { get; set; }
@@ -28,7 +28,7 @@ namespace VentaServicios.ObjectRequest
         [StringLength(500)]
         public string Foto { get; set; }
 
-        public bool? Estado { get; set; }
+        public int Estado { get; set; }
 
         [StringLength(500)]
         public string Contrasena { get; set; }
