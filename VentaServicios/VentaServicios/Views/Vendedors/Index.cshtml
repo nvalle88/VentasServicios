@@ -12,10 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Supervisor.IdSupervisor)
+            @Html.DisplayNameFor(model => model.AspNetUsers.Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Usuario.TokenContrasena)
+            @Html.DisplayNameFor(model => model.Supervisor.IdUsuario)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.TiempoSeguimiento)
@@ -26,10 +26,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Supervisor.IdSupervisor)
+            @Html.DisplayFor(modelItem => item.AspNetUsers.Email)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Usuario.TokenContrasena)
+            @Html.DisplayFor(modelItem => item.Supervisor.IdUsuario)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.TiempoSeguimiento)

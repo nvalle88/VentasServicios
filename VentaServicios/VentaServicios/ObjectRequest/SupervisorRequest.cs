@@ -24,5 +24,6 @@ namespace VentaServicios.ObjectRequest
         public string Apellidos { get; set; }
 
         public string Telefono { get; set; }
+        public int IdEmpresa { get; set; }
     }
 }

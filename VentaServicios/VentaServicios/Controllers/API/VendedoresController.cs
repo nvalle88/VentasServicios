@@ -34,27 +34,27 @@ namespace VentaServicios.Controllers.API
 
             try
             {
-                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest 
-                {
-                    IdVendedor = x.IdVendedor,
-                    TiempoSeguimiento = x.TiempoSeguimiento,
-                    IdSupervisor = 0 + (int)(x.IdSupervisor),
-                    IdUsuario = x.Usuario.IdUsuario,
-                    TokenContrasena = x.Usuario.TokenContrasena,
-                    Foto = x.Usuario.Foto,
-                    Estado = x.Usuario.Estado,
-                    Contrasena = x.Usuario.Contrasena,
-                    Correo = x.Usuario.Correo,
-                    Direccion = x.Usuario.Direccion,
-                    Identificacion = x.Usuario.Identificacion,
-                    Nombres = x.Usuario.Nombres,
-                    Apellidos = x.Usuario.Apellidos,
-                    Telefono = x.Usuario.Telefono                    
+               // listaVendedores = await db.Vendedor.Select(x => new VendedorRequest 
+                //{
+                //    IdVendedor = x.IdVendedor,
+                //    TiempoSeguimiento = x.TiempoSeguimiento,
+                //    IdSupervisor = 0 + (int)(x.IdSupervisor),
+                //    IdUsuario = x.AspNetUsers.Id,
+                //    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                //    Foto = x.AspNetUsers.Foto,
+                //    Estado = x.AspNetUsers.Estado,
+                //    Contrasena = x.AspNetUsers.Contrasena,
+                //    Correo = x.AspNetUsers.Correo,
+                //    Direccion = x.AspNetUsers.Direccion,
+                //    Identificacion = x.AspNetUsers.Identificacion,
+                //    Nombres = x.AspNetUsers.Nombres,
+                //    Apellidos = x.AspNetUsers.Apellidos,
+                //    Telefono = x.AspNetUsers.Telefono                    
 
 
-                }
+                //}
                     
-                ).ToListAsync();
+                //).ToListAsync();
 
 
 
