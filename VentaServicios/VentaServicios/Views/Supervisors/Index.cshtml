@@ -12,10 +12,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Gerente.IdGerente)
+            @Html.DisplayNameFor(model => model.AspNetUsers.Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Usuario.TokenContrasena)
+            @Html.DisplayNameFor(model => model.Gerente.IdUsuario)
         </th>
         <th></th>
     </tr>
@@ -23,10 +23,10 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Gerente.IdGerente)
+            @Html.DisplayFor(modelItem => item.AspNetUsers.Email)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Usuario.TokenContrasena)
+            @Html.DisplayFor(modelItem => item.Gerente.IdUsuario)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.IdSupervisor }) |

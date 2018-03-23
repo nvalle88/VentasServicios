@@ -53,6 +53,7 @@ namespace VentaServicios.ObjectRequest
 
         public int? idEmpresa { get; set; }
 
+        public List<ClienteRequest> ListaClientes { get; set; }
 
     }
 }
