@@ -41,7 +41,7 @@ namespace VentaServicios.ModeloDato
         [StringLength(200)]
         public string Email { get; set; }
 
-        public int? idTipoCliente { get; set; }
+        public int idTipoCliente { get; set; }
 
         public int IdVendedor { get; set; }
 

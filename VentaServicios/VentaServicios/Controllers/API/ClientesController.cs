@@ -25,13 +25,13 @@ namespace VentaServicios.Controllers.API
 
 
         // GET: api/Clientes
-        [HttpGet]
+        [HttpPost]
         [Route("ListarClientes")]
-        public async Task<List<ClienteRequest>> ListarClientes(Empresa empresa)
+        public async Task<List<ClienteRequest>> ListarClientes(EmpresaActual empresaActual)
         {
             try
             {
-                return await db.Cliente.Select(x=>new ClienteRequest
+                var lista= await db.Cliente.Where(x=>x.Vendedor.AspNetUsers.IdEmpresa==empresaActual.IdEmpresa).Select(x=>new ClienteRequest
                 {
                     Apellido=x.Apellido,
                     ApellidosVendedor=x.Vendedor.AspNetUsers.Apellidos,
@@ -39,7 +39,7 @@ namespace VentaServicios.Controllers.API
                     Firma=x.Firma,
                     Foto=x.Foto,
                     IdCliente=x.idCliente,
-                    IdTipoCliente=Convert.ToInt32(x.idTipoCliente),
+                    IdTipoCliente=x.idTipoCliente,
                     IdVendedor=x.IdVendedor,
                     Latitud=x.Latitud,
                     Longitud=x.Longitud,
@@ -50,6 +50,7 @@ namespace VentaServicios.Controllers.API
                     Identificacion=x.Identificacion,
 
                 }).ToListAsync();
+                return lista;
             }
             catch (Exception ex)
             {
