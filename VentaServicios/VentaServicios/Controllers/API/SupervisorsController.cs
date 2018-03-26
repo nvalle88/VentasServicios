@@ -110,6 +110,18 @@ namespace VentaServicios.Controllers.API
         [Route("obtenerSupervisor")]
         public async Task<Response> obtenerSupervisor( SupervisorRequest id)
         {
+            var supervisor = new SupervisorRequest();
+            var vendedor = new VendedorRequest();
+            var listaVendedores = new List<VendedorRequest>();
+
+            int idEmpresa = Convert.ToInt32(id.IdEmpresa);
+            supervisor.IdEmpresa = idEmpresa;
+            vendedor.idEmpresa = idEmpresa;
+
+            VendedoresController ctl = new VendedoresController();
+            
+            //supervisor.ListaVendedoresAsignados = supervisor.ListaVendedores.Where(x => x.IdSupervisor == id.IdSupervisor).ToList();
+            //supervisor.ListaVendedoresSinAsignar = supervisor.ListaVendedores.Where(x => x.IdSupervisor != id.IdSupervisor).ToList();
             try
             {
                 if (!ModelState.IsValid)
@@ -121,8 +133,8 @@ namespace VentaServicios.Controllers.API
                     };
                 }
 
-                var super = await db.Supervisor.Where(m => m.IdSupervisor == id.IdSupervisor).Select(x => new SupervisorRequest
-                { 
+                supervisor = await db.Supervisor.Where(m => m.IdSupervisor == id.IdSupervisor).Select(x => new SupervisorRequest
+                {
                     IdUsuario = x.AspNetUsers.Id,
                     IdSupervisor = x.IdSupervisor,
                     Identificacion = x.AspNetUsers.Identificacion,
@@ -132,10 +144,15 @@ namespace VentaServicios.Controllers.API
                     Telefono = x.AspNetUsers.Telefono,
                     Correo = x.AspNetUsers.Email,
                     IdEmpresa = x.AspNetUsers.IdEmpresa,
-                    IdGerente=x.IdGerente
+                    IdGerente = x.IdGerente
                    }).SingleOrDefaultAsync();
+                
+                supervisor.ListaVendedores = await ctl.ListarVendedores(vendedor);
+                supervisor.ListaVendedoresAsignados = supervisor.ListaVendedores.Where(x => x.IdSupervisor == id.IdSupervisor).ToList();
+                supervisor.ListaVendedoresSinAsignar = supervisor.ListaVendedores.Where(x => x.IdSupervisor != id.IdSupervisor).ToList();
 
-                if (super == null)
+
+                if (supervisor == null)
                 {
                     return new Response
                     {
@@ -148,7 +165,7 @@ namespace VentaServicios.Controllers.API
                 {
                     IsSuccess = true,
                     Message = Mensaje.Satisfactorio,
-                    Resultado = super,
+                    Resultado = supervisor,
 
                 };
             }
@@ -163,7 +180,69 @@ namespace VentaServicios.Controllers.API
             }
 
         }
+        [HttpPost]
+        [Route("Quitarvendedor")]
+        public async Task<Response> Quitarvendedor(SupervisorRequest supervisorRequestd)
+        {
+                try
+                {
+                    var vendedor =  await db.Vendedor.Where(x => x.IdVendedor == supervisorRequestd.IdVendedor).FirstOrDefaultAsync();
+                    if (vendedor != null)
+                    {
+                    vendedor.IdSupervisor = null;
+                        db.Entry(vendedor).State= EntityState.Modified;
+                        await db.SaveChangesAsync();
 
-        
+                    }
+
+                    return new Response
+                    {
+                        IsSuccess = true,
+                        Message = Mensaje.Satisfactorio
+                    };
+
+                }
+
+                catch (Exception ex)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = Mensaje.Error,
+                    };
+                }
+        }
+        [HttpPost]
+        [Route("Asignarvendedor")]
+        public async Task<Response> Asignarvendedor(SupervisorRequest supervisorRequestd)
+        {
+            try
+            {
+                var vendedor = await db.Vendedor.Where(x => x.IdVendedor == supervisorRequestd.IdVendedor).FirstOrDefaultAsync();
+                if (vendedor != null)
+                {
+                    vendedor.IdSupervisor = supervisorRequestd.IdSupervisor;
+                    db.Entry(vendedor).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                }
+
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = Mensaje.Satisfactorio
+                };
+
+            }
+
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = Mensaje.Error,
+                };
+            }
+        }
     }
 }
