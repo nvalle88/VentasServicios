@@ -120,6 +120,7 @@ namespace VentaServicios.Controllers.API
                         Message = Mensaje.ModeloInvalido,
                     };
                 }
+
                 var super = await db.Supervisor.Where(m => m.IdSupervisor == id.IdSupervisor).Select(x => new SupervisorRequest
                 { 
                     IdUsuario = x.AspNetUsers.Id,
