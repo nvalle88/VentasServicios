@@ -141,30 +141,6 @@ namespace VentaServicios.Controllers.API
             {
                 try
                 {
-                    //var user = new  AspNetUsers();
-                    //user.IdEmpresa = supervisorRequest.IdEmpresa;
-                    //user.Identificacion = supervisorRequest.Identificacion;
-                    //user.Apellidos = supervisorRequest.Apellidos;
-                    //user.Nombres = supervisorRequest.Nombres;
-                    //user.Direccion = supervisorRequest.Direccion;
-                    //user.Telefono = supervisorRequest.Telefono;
-                    //user.Email = supervisorRequest.Correo;
-                    //user.UserName = supervisorRequest.Correo;
-                    //user.PasswordHash = "123";
-                    //db.AspNetUsers.Add(user);
-                    //await db.SaveChangesAsync();
-
-                    /*
-                    var gerente = db.Gerente.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa);
-                    if (gerente != null)
-                    {
-                        var super = new Supervisor();
-                        super.IdGerente = gerente.FirstOrDefault().IdGerente;
-                        super.IdUsuario = supervisorRequest.IdUsuario;
-                        db.Supervisor.Add(super);
-
-                    }
-                    */
 
                     Vendedor vendedor = new Vendedor();
                     vendedor.IdUsuario = vendedorRequest.IdUsuario;
@@ -178,7 +154,7 @@ namespace VentaServicios.Controllers.API
                     return new Response
                     {
                         IsSuccess = true,
-                        Message = Mensaje.Satisfactorio
+                        Message = Mensaje.GuardadoSatisfactorio
                     };
 
                 }
@@ -211,21 +187,28 @@ namespace VentaServicios.Controllers.API
 
         //[HttpPut("{id}")]
         [Route("EditarVendedor")]
-        public async Task<Response> EditarVendedor([FromBody] Vendedor Vendedor )
+        public async Task<Response> EditarVendedor(VendedorRequest vendedorRequest)
         {
             Response response = new Response();
+
+            var vendedor = new Vendedor();
+            vendedor.IdVendedor =  vendedorRequest.IdVendedor;
+            vendedor.TiempoSeguimiento = vendedorRequest.TiempoSeguimiento;
+            vendedor.IdSupervisor = vendedorRequest.IdSupervisor;
+            vendedor.IdUsuario = vendedorRequest.IdUsuario;
+
 
             try
             {
 
-                db.Entry(Vendedor).State = EntityState.Modified;
+                db.Entry(vendedor).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
                 response = new Response
                 {
                     IsSuccess = true,
-                    Message = Mensaje.Satisfactorio,
-                    Resultado = Vendedor
+                    Message = Mensaje.GuardadoSatisfactorio,
+                    Resultado = vendedor
                 };
 
                 return response;
@@ -236,7 +219,7 @@ namespace VentaServicios.Controllers.API
                 response = new Response
                 {
                     IsSuccess = false,
-                    Message = Mensaje.Excepcion,
+                    Message = Mensaje.Excepcion + ex,
                     Resultado = null
                 };
 
