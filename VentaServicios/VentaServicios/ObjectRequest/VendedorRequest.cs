@@ -14,7 +14,7 @@ namespace VentaServicios.ObjectRequest
 
         public int? TiempoSeguimiento { get; set; } 
         
-        public int IdSupervisor { get; set; }
+        public int? IdSupervisor { get; set; }
         
 
 

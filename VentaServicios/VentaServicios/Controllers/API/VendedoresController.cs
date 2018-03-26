@@ -29,10 +29,11 @@ namespace VentaServicios.Controllers.API
         // GET: api/Vendedores
         [HttpPost]
         [Route("ListarVendedores")]
-        public async Task<List<VendedorRequest>> ListarVendedores([FromBody] VendedorRequest vendedorRequest)
+        public async Task<List<VendedorRequest>> ListarVendedores(VendedorRequest vendedorRequest)
         {
 
             //Solo necesita el IdEmpresa
+            // solo muestra vendedores con estado 1("Activado")
 
             var listaVendedores = new List<VendedorRequest>();
 
@@ -42,7 +43,7 @@ namespace VentaServicios.Controllers.API
                 {
                     IdVendedor = x.IdVendedor,
                     TiempoSeguimiento = x.TiempoSeguimiento,
-                    IdSupervisor = 0 + (int)(x.IdSupervisor),
+                    IdSupervisor = x.IdSupervisor,
                     IdUsuario = x.AspNetUsers.Id,
 
                     TokenContrasena = x.AspNetUsers.TokenContrasena,
@@ -55,11 +56,12 @@ namespace VentaServicios.Controllers.API
                     Apellidos = x.AspNetUsers.Apellidos,
                     Telefono = x.AspNetUsers.Telefono,
                     idEmpresa = vendedorRequest.idEmpresa
+                    
                 }
                     
-                ).Where( x=> x.idEmpresa == vendedorRequest.idEmpresa).ToListAsync();
+                ).Where( x=> x.idEmpresa == vendedorRequest.idEmpresa && x.Estado == 1).ToListAsync();
 
-
+                
 
                 return listaVendedores;
             }
@@ -73,9 +75,10 @@ namespace VentaServicios.Controllers.API
         // GET: api/Vendedores
         [HttpPost]
         [Route("ListarClientesPorVendedor")]
-        public async Task<VendedorRequest> ListarClientesPorVendedor([FromBody] VendedorRequest vendedorRequest)
+        public async Task<VendedorRequest> ListarClientesPorVendedor(VendedorRequest vendedorRequest)
         {
             //Necesarios : idEmpresa e idVendedor
+            // solo muestra vendedores con estado 1("Activado")
 
             var vendedor = new VendedorRequest();
             var listaClientes = new List<ClienteRequest>();
@@ -110,7 +113,10 @@ namespace VentaServicios.Controllers.API
                         idEmpresa = vendedorRequest.idEmpresa
                     }
 
-                ).Where(x => x.idEmpresa == vendedorRequest.idEmpresa && x.IdVendedor == vendedorRequest.IdVendedor).FirstOrDefaultAsync();
+                ).Where(x => x.idEmpresa == vendedorRequest.idEmpresa 
+                    && x.IdVendedor == vendedorRequest.IdVendedor
+                    && x.Estado == 1
+                ).FirstOrDefaultAsync();
 
                
                 vendedor.ListaClientes = listaClientes;
@@ -129,51 +135,73 @@ namespace VentaServicios.Controllers.API
         // POST: api/Vendedores
         [HttpPost]
         [Route("InsertarVendedor")]
-        public async Task<Response> InsertarVendedor([FromBody] Vendedor Vendedor)
+        public async Task<Response> InsertarVendedor( VendedorRequest vendedorRequest )
         {
-
-            Response response = new Response();
-
-            if (!ModelState.IsValid)
+            using (var transaction = db.Database.BeginTransaction())
             {
-                response = new Response
+                try
                 {
-                    IsSuccess = false,
-                    Message = Mensaje.ModeloInvalido,
-                    Resultado = null
-                };
+                    //var user = new  AspNetUsers();
+                    //user.IdEmpresa = supervisorRequest.IdEmpresa;
+                    //user.Identificacion = supervisorRequest.Identificacion;
+                    //user.Apellidos = supervisorRequest.Apellidos;
+                    //user.Nombres = supervisorRequest.Nombres;
+                    //user.Direccion = supervisorRequest.Direccion;
+                    //user.Telefono = supervisorRequest.Telefono;
+                    //user.Email = supervisorRequest.Correo;
+                    //user.UserName = supervisorRequest.Correo;
+                    //user.PasswordHash = "123";
+                    //db.AspNetUsers.Add(user);
+                    //await db.SaveChangesAsync();
 
-                return response;
-            }
+                    /*
+                    var gerente = db.Gerente.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa);
+                    if (gerente != null)
+                    {
+                        var super = new Supervisor();
+                        super.IdGerente = gerente.FirstOrDefault().IdGerente;
+                        super.IdUsuario = supervisorRequest.IdUsuario;
+                        db.Supervisor.Add(super);
 
-            try
-            {
-                db.Vendedor.Add(Vendedor);
-                await db.SaveChangesAsync();
+                    }
+                    */
 
-                response = new Response
+                    Vendedor vendedor = new Vendedor();
+                    vendedor.IdUsuario = vendedorRequest.IdUsuario;
+                    vendedor.TiempoSeguimiento = vendedorRequest.TiempoSeguimiento;
+
+                    db.Vendedor.Add(vendedor);
+
+                    await db.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return new Response
+                    {
+                        IsSuccess = true,
+                        Message = Mensaje.Satisfactorio
+                    };
+
+                }
+
+                catch (Exception ex)
+
                 {
-                    IsSuccess = true,
-                    Message = Mensaje.Satisfactorio,
-                    Resultado = Vendedor
-                };
 
-                return response;
+                    transaction.Rollback();
 
-            }
-            catch (Exception ex)
-            {
-                response = new Response
-                {
-                    IsSuccess = false,
-                    Message = Mensaje.Excepcion,
-                    Resultado = null
-                };
-                
-                return response;
+                    return new Response
+
+                    {
+
+                        IsSuccess = false,
+
+                        Message = Mensaje.Error,
+
+                    };
+
+                }
 
             }
-            
 
         }
 
