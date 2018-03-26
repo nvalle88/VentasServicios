@@ -16,7 +16,6 @@ namespace VentaServicios.ModeloDato
         }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int idTipoCliente { get; set; }
 
         [StringLength(100)]
