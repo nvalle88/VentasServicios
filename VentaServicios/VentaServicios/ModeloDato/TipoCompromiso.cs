@@ -16,8 +16,7 @@ namespace VentaServicios.ModeloDato
         }
 
         [Key]
-        [StringLength(10)]
-        public string IdTipoCompromiso { get; set; }
+        public int IdTipoCompromiso { get; set; }
 
         [Required]
         [StringLength(80)]
