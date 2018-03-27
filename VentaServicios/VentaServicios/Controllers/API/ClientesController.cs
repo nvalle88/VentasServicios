@@ -81,6 +81,41 @@ namespace VentaServicios.Controllers.API
             }
         }
 
+        public async Task<List<ClienteRequest>> ListarClientesPorVendedor(int IdEmpresa, int IdVendedor)
+        {
+            try
+            {
+                var lista = await db.Cliente.Where(x => x.Vendedor.AspNetUsers.IdEmpresa == IdEmpresa && x.IdVendedor == IdVendedor).Select(x => new ClienteRequest
+                {
+                    Apellido = x.Apellido,
+                    ApellidosVendedor = x.Vendedor.AspNetUsers.Apellidos,
+                    Email = x.Email,
+                    Firma = x.Firma,
+                    Foto = x.Foto,
+                    IdCliente = x.idCliente,
+                    IdTipoCliente = x.idTipoCliente,
+                    IdVendedor = x.IdVendedor,
+                    Latitud = x.Latitud,
+                    Longitud = x.Longitud,
+                    Nombre = x.Nombre,
+                    NombresVendedor = x.Vendedor.AspNetUsers.Nombres,
+                    Telefono = x.Telefono,
+                    TipoCliente = x.TipoCliente.Tipo,
+                    Identificacion = x.Identificacion,
+                    Direccion = x.Direccion,
+                    IdEmpresa = x.TipoCliente.IdEmpresa,
+                    TelefonoMovil = x.TelefonoMovil
+
+                }).ToListAsync();
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                return new List<ClienteRequest>();
+            }
+        }
+
+
         [HttpPost]
         [Route("ExisteClientePorEmpresa")]
         public async Task<Response> ExisteClientePorEmpresa(ClienteRequest clienteRequest)

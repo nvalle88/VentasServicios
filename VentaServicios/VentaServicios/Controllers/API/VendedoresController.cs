@@ -26,7 +26,7 @@ namespace VentaServicios.Controllers.API
 
 
         
-        // GET: api/Vendedores
+        // POST: api/Vendedores
         [HttpPost]
         [Route("ListarVendedores")]
         public async Task<List<VendedorRequest>> ListarVendedores(VendedorRequest vendedorRequest)
@@ -71,8 +71,57 @@ namespace VentaServicios.Controllers.API
             }
         }
 
+        // POST: api/Vendedores
+        [HttpPost]
+        [Route("ListarVendedoresPorSupervisor")]
+        public async Task<List<VendedorRequest>> ListarVendedoresPorSupervisor(VendedorRequest vendedorRequest)
+        {
 
-        // GET: api/Vendedores
+            //Necesarios : idEmpresa e idSupervisor
+            // solo muestra vendedores con estado 1("Activado")
+
+            var listaVendedores = new List<VendedorRequest>();
+
+            try
+            {
+                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = vendedorRequest.idEmpresa
+
+                }
+
+                ).Where(x => 
+                    x.idEmpresa == vendedorRequest.idEmpresa 
+                    && x.IdSupervisor == vendedorRequest.IdSupervisor
+                    && x.Estado == 1
+                ).ToListAsync();
+
+
+
+                return listaVendedores;
+            }
+            catch (Exception ex)
+            {
+                return listaVendedores;
+            }
+        }
+
+
+        // POST: api/Vendedores
         [HttpPost]
         [Route("ListarClientesPorVendedor")]
         public async Task<VendedorRequest> ListarClientesPorVendedor(VendedorRequest vendedorRequest)
@@ -84,10 +133,10 @@ namespace VentaServicios.Controllers.API
             var listaClientes = new List<ClienteRequest>();
 
             int idEmpresa = Convert.ToInt32( vendedorRequest.idEmpresa );
-            EmpresaActual empresaActual = new EmpresaActual { IdEmpresa = idEmpresa };
+            //EmpresaActual empresaActual = new EmpresaActual { IdEmpresa = idEmpresa };
 
             ClientesController ctl = new ClientesController();
-            listaClientes = await ctl.ListarClientes( empresaActual );
+            listaClientes = await ctl.ListarClientesPorVendedor( idEmpresa, vendedorRequest.IdVendedor );
 
             
 
@@ -232,7 +281,7 @@ namespace VentaServicios.Controllers.API
         }
 
 
-
+        // POST: api/Vendedore
         [HttpPost]
         [Route("obtenerSupervisorPorIdUsuario")]
         public async Task<Response> obtenerSupervisorPorIdUsuario(SupervisorRequest supervisorRequest)
