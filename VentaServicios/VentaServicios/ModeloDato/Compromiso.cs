@@ -10,11 +10,9 @@ namespace VentaServicios.ModeloDato
     public partial class Compromiso
     {
         [Key]
-        [StringLength(10)]
-        public string IdCompromiso { get; set; }
+        public int IdCompromiso { get; set; }
 
-        [StringLength(10)]
-        public string IdTipoCompromiso { get; set; }
+        public int? IdTipoCompromiso { get; set; }
 
         public int? idVisita { get; set; }
 
