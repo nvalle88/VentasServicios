@@ -129,19 +129,13 @@ namespace VentaServicios.ModeloDato
                 .IsUnicode(false);
 
             modelBuilder.Entity<Cliente>()
+                .Property(e => e.Direccion)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Cliente>()
                 .HasMany(e => e.Agenda)
                 .WithRequired(e => e.Cliente)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Compromiso>()
-                .Property(e => e.IdCompromiso)
-                .IsFixedLength()
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Compromiso>()
-                .Property(e => e.IdTipoCompromiso)
-                .IsFixedLength()
-                .IsUnicode(false);
 
             modelBuilder.Entity<Compromiso>()
                 .Property(e => e.Descripcion)
@@ -192,11 +186,6 @@ namespace VentaServicios.ModeloDato
                 .HasMany(e => e.Suscripcion)
                 .WithOptional(e => e.Empresa)
                 .HasForeignKey(e => e.id);
-
-            modelBuilder.Entity<Empresa>()
-                .HasMany(e => e.TipoCliente)
-                .WithOptional(e => e.Empresa)
-                .HasForeignKey(e => e.IdEmpresa);
 
             modelBuilder.Entity<Formulario>()
                 .Property(e => e.Titulo)
@@ -259,11 +248,6 @@ namespace VentaServicios.ModeloDato
             modelBuilder.Entity<TipoCliente>()
                 .Property(e => e.Tipo)
                 .IsFixedLength();
-
-            modelBuilder.Entity<TipoCompromiso>()
-                .Property(e => e.IdTipoCompromiso)
-                .IsFixedLength()
-                .IsUnicode(false);
 
             modelBuilder.Entity<TipoCompromiso>()
                 .Property(e => e.Descripcion)

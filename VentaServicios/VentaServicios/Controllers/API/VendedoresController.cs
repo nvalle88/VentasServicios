@@ -138,7 +138,7 @@ namespace VentaServicios.Controllers.API
                     {
                         IdVendedor = x.IdVendedor,
                         TiempoSeguimiento = x.TiempoSeguimiento,
-                        IdSupervisor = 0 + (int)(x.IdSupervisor),
+                        IdSupervisor = x.IdSupervisor,
                         IdUsuario = x.AspNetUsers.Id,
 
                         TokenContrasena = x.AspNetUsers.TokenContrasena,
@@ -185,6 +185,7 @@ namespace VentaServicios.Controllers.API
                     Vendedor vendedor = new Vendedor();
                     vendedor.IdUsuario = vendedorRequest.IdUsuario;
                     vendedor.TiempoSeguimiento = vendedorRequest.TiempoSeguimiento;
+                    vendedor.IdSupervisor = vendedorRequest.IdSupervisor;
 
                     db.Vendedor.Add(vendedor);
 
@@ -231,24 +232,26 @@ namespace VentaServicios.Controllers.API
         {
             Response response = new Response();
 
-            var vendedor = new Vendedor();
-            vendedor.IdVendedor =  vendedorRequest.IdVendedor;
-            vendedor.TiempoSeguimiento = vendedorRequest.TiempoSeguimiento;
-            vendedor.IdSupervisor = vendedorRequest.IdSupervisor;
-            vendedor.IdUsuario = vendedorRequest.IdUsuario;
+            db.Configuration.ProxyCreationEnabled = false;
 
 
             try
             {
+                var modelo = await db.Vendedor.Where(x => x.IdVendedor == vendedorRequest.IdVendedor).FirstOrDefaultAsync();
 
-                db.Entry(vendedor).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                if (modelo.TiempoSeguimiento != vendedorRequest.TiempoSeguimiento || modelo.IdSupervisor != vendedorRequest.IdSupervisor) {
+                    
+                    modelo.TiempoSeguimiento = vendedorRequest.TiempoSeguimiento;
+                    modelo.IdSupervisor = vendedorRequest.IdSupervisor;
+
+                    db.Entry(modelo).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
 
                 response = new Response
                 {
                     IsSuccess = true,
-                    Message = Mensaje.GuardadoSatisfactorio,
-                    Resultado = vendedor
+                    Message = Mensaje.GuardadoSatisfactorio
                 };
 
                 return response;
@@ -269,6 +272,65 @@ namespace VentaServicios.Controllers.API
         }
 
 
+
+        [HttpPost]
+        [Route("obtenerSupervisorPorIdUsuario")]
+        public async Task<Response> obtenerSupervisorPorIdUsuario(SupervisorRequest supervisorRequest)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = Mensaje.ModeloInvalido,
+                    };
+                }
+
+                var supervisor = await db.Supervisor.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa && x.IdUsuario == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
+                {
+                    IdUsuario = x.AspNetUsers.Id,
+                    IdSupervisor = x.IdSupervisor,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Telefono = x.AspNetUsers.Telefono,
+                    Correo = x.AspNetUsers.Email,
+                    IdEmpresa = x.AspNetUsers.IdEmpresa,
+                    IdGerente = x.IdGerente
+
+                }).SingleOrDefaultAsync();
+
+
+                if (supervisor == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = Mensaje.RegistroNoEncontrado
+                    };
+
+                }
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = Mensaje.Satisfactorio,
+                    Resultado = supervisor
+
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = Mensaje.Excepcion
+                };
+            }
+
+        }
 
 
 
