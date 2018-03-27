@@ -71,6 +71,67 @@ namespace VentaServicios.Controllers.API
             }
         }
 
+        // POST: api/Vendedores
+        [HttpPost]
+        [Route("ListarVendedoresConUbicacionPorSupervisor")]
+        public async Task<List<UbicacionPersonaRequest>> ListarVendedoresConUbicacionPorSupervisor(VendedorRequest vendedorRequest)
+        {
+
+            // Necesarios: IdEmpresa E idSupervisor
+            // solo muestra vendedores con estado 1("Activado")
+            
+
+            var listaVendedores = new List<UbicacionPersonaRequest>();
+
+            
+            //var vLongitud = db.LogRutaVendedor.Where(y => y.IdVendedor == 16 && y.Fecha == DateTime.Today).OrderByDescending(y => y.Fecha).FirstOrDefault().Longitud;
+
+            try
+            {
+                listaVendedores = await db.Vendedor.Select(x => new UbicacionPersonaRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = vendedorRequest.idEmpresa,
+
+                    //ListaUbicaciones = db.LogRutaVendedor.Where(y => y.IdVendedor == x.IdVendedor).ToList(),
+
+                    Latitud = db.LogRutaVendedor.Where(y => y.IdVendedor == x.IdVendedor).OrderByDescending(y => y.Fecha).FirstOrDefault().Latitud,
+                    Longitud = db.LogRutaVendedor.Where(y => y.IdVendedor == x.IdVendedor).OrderByDescending(y => y.Fecha).FirstOrDefault().Longitud
+                }
+
+
+                ).Where(x => 
+                    x.idEmpresa == vendedorRequest.idEmpresa
+                    && x.IdSupervisor == vendedorRequest.IdSupervisor
+                    && x.Estado == 1
+                ).ToListAsync();
+
+                
+
+
+
+                return listaVendedores;
+            }
+            catch (Exception ex)
+            {
+                return listaVendedores;
+            }
+        }
+
+
         [HttpPost]
         [Route("VendedorbyEmail")]
         public async Task<VendedorRequest> VendedorByEmail(VendedorRequest vendedorRequest)
@@ -381,6 +442,54 @@ namespace VentaServicios.Controllers.API
 
         }
 
+        // POST: api/Vendedores
+        [HttpPost]
+        [Route("ListarClientesPorSupervisor")]
+        public async Task<List<ClienteRequest>> ListarClientesPorSupervisor(VendedorRequest vendedorRequest)
+        {
+
+            //Necesita: IdSupervisor
+            // solo muestra vendedores con estado 1("Activado")
+
+            var lista = new List<ClienteRequest>();
+
+            try
+            {
+
+                lista = await db.Vendedor
+                    .Join(db.Cliente
+                        , rta => rta.IdVendedor, ind => ind.IdVendedor,
+                        (rta, ind) => new { hm = rta, gh = ind })
+                        .Join(db.Supervisor
+                            , ind_1 => ind_1.hm.IdSupervisor, valor => valor.IdSupervisor,
+                            (ind_1, valor) => new { ca = ind_1, rt = valor })
+                 .Where(ds =>
+                    ds.rt.IdSupervisor == vendedorRequest.IdSupervisor
+                    //&& ds.ca.hm.e
+                  )
+                  .Select(t => new ClienteRequest
+                  {
+                        IdVendedor=t.ca.hm.IdVendedor,
+                        IdCliente=t.ca.gh.idCliente,
+
+                        Nombre = t.ca.gh.Nombre,
+                        Apellido = t.ca.gh.Apellido,
+
+                        Latitud = t.ca.gh.Latitud,
+                        Longitud = t.ca.gh.Longitud
+                  })
+                  .ToListAsync();
+
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                return lista;
+            }
+        }
+
+        
 
 
     }
