@@ -273,7 +273,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\ventasDemoWS - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\ventasDemoWS - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -294,21 +295,16 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Clientes\Create.cshtml" />
+    <Content Include="Views\Clientes\Delete.cshtml" />
+    <Content Include="Views\Clientes\Details.cshtml" />
+    <Content Include="Views\Clientes\Edit.cshtml" />
+    <Content Include="Views\Clientes\Index.cshtml" />
     <Content Include="Views\Vendedors\Create.cshtml" />
     <Content Include="Views\Vendedors\Delete.cshtml" />
     <Content Include="Views\Vendedors\Details.cshtml" />
     <Content Include="Views\Vendedors\Edit.cshtml" />
     <Content Include="Views\Vendedors\Index.cshtml" />
-    <Content Include="Views\Usuarios\Create.cshtml" />
-    <Content Include="Views\Usuarios\Delete.cshtml" />
-    <Content Include="Views\Usuarios\Details.cshtml" />
-    <Content Include="Views\Usuarios\Edit.cshtml" />
-    <Content Include="Views\Usuarios\Index.cshtml" />
-    <Content Include="Views\Empresas\Create.cshtml" />
-    <Content Include="Views\Empresas\Delete.cshtml" />
-    <Content Include="Views\Empresas\Details.cshtml" />
-    <Content Include="Views\Empresas\Edit.cshtml" />
-    <Content Include="Views\Empresas\Index.cshtml" />
     <Content Include="Views\Gerentes\Create.cshtml" />
     <Content Include="Views\Gerentes\Delete.cshtml" />
     <Content Include="Views\Gerentes\Details.cshtml" />
@@ -323,7 +319,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Clientes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
