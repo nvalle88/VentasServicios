@@ -25,6 +25,48 @@ namespace VentaServicios.Controllers.API
         //{
         //    return db.Supervisor;
         //}
+        #region listarVendedores
+
+        [HttpPost]
+        [Route("ListarVendedores")]
+        public async Task<List<SupervisorRequest>> ListarVendedores(SupervisorRequest supervisorRequest)
+        {
+            var supervisor = new SupervisorRequest();
+            var vendedor = new VendedorRequest();
+            var listaVendedores = new List<VendedorRequest>();
+            var listackiente = new List<ClienteRequest>();
+            VendedoresController ctl = new VendedoresController();
+            ClientesController cli = new ClientesController();
+
+            var super = db.Supervisor.Where(x => x.IdUsuario == supervisorRequest.IdUsuario).FirstOrDefault();
+            supervisor = await db.Supervisor.Where(m => m.IdSupervisor == supervisorRequest.IdSupervisor).Select(x => new SupervisorRequest
+            {
+                IdUsuario = x.AspNetUsers.Id,
+                IdSupervisor = x.IdSupervisor,
+                Identificacion = x.AspNetUsers.Identificacion,
+                Nombres = x.AspNetUsers.Nombres,
+                Apellidos = x.AspNetUsers.Apellidos,
+                Direccion = x.AspNetUsers.Direccion,
+                Telefono = x.AspNetUsers.Telefono,
+                Correo = x.AspNetUsers.Email,
+                IdEmpresa = x.AspNetUsers.IdEmpresa,
+                IdGerente = x.IdGerente
+            }).SingleOrDefaultAsync();
+
+            supervisor.ListaVendedores = await ctl.ListarVendedores(vendedor);
+           // supervisor.ListaCliente = await cli.
+            //.ListaVendedoresAsignados = supervisor.ListaVendedores.Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor).ToList();
+            supervisor.ListaVendedoresSinAsignar = supervisor.ListaVendedores.Where(x => x.IdSupervisor != supervisorRequest.IdSupervisor).ToList();
+
+            //supervisor.ListaCliente = db.Cliente.Where(x => x.IdVendedor == vendedor.IdVendedor).ToList();
+
+            return supervisor;
+        }
+        #endregion
+
+
+
+
         #region listarSupervisor
 
         [HttpPost]
