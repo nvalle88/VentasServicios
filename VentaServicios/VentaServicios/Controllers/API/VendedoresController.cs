@@ -71,6 +71,46 @@ namespace VentaServicios.Controllers.API
             }
         }
 
+        [HttpPost]
+        [Route("VendedorbyEmail")]
+        public async Task<VendedorRequest> VendedorByEmail(VendedorRequest vendedorRequest)
+        {
+            var Vendedor = new VendedorRequest();
+            try
+            {
+                db.Configuration.ProxyCreationEnabled = false;
+                //var resultAgente = await db.AspNetUsers.Where(x => x.Email == vendedorRequest.Correo).FirstOrDefaultAsync();
+
+
+                Vendedor = await db.Vendedor.Select(x => new VendedorRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = vendedorRequest.idEmpresa
+
+                }
+
+                ).Where(x => x.Correo== vendedorRequest.Correo).FirstOrDefaultAsync();
+
+
+                return Vendedor;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
         // GET: api/Vendedores
         [HttpPost]
