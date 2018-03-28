@@ -97,7 +97,7 @@ namespace VentaServicios.Controllers.API
                     Nombres = x.AspNetUsers.Nombres,
                     Apellidos = x.AspNetUsers.Apellidos,
                     Telefono = x.AspNetUsers.Telefono,
-                    idEmpresa = vendedorRequest.idEmpresa
+                    idEmpresa = x.AspNetUsers.IdEmpresa
 
                 }
 
@@ -128,9 +128,6 @@ namespace VentaServicios.Controllers.API
 
             ClientesController ctl = new ClientesController();
             listaClientes = await ctl.ListarClientes( empresaActual );
-
-            
-
 
             try
             {
@@ -221,8 +218,6 @@ namespace VentaServicios.Controllers.API
             }
 
         }
-
-
 
         // PUT: api/Vendedores
 
