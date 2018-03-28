@@ -83,11 +83,12 @@ namespace VentaServicios.Controllers.API
             }
         }
 
-        public async Task<List<ClienteRequest>> ListarClientesPorVendedor(int IdEmpresa, int IdVendedor)
+        [Route("ListarClientesPorVendedor")]
+        public async Task<List<ClienteRequest>> ListarClientesPorVendedor(VendedorRequest vendedor)
         {
             try
             {
-                var lista = await db.Cliente.Where(x => x.Vendedor.AspNetUsers.IdEmpresa == IdEmpresa && x.IdVendedor == IdVendedor).Select(x => new ClienteRequest
+                var lista = await db.Cliente.Where(x => x.IdVendedor == vendedor.IdVendedor).Select(x => new ClienteRequest
                 {
                     Apellido = x.Apellido,
                     ApellidosVendedor = x.Vendedor.AspNetUsers.Apellidos,
@@ -107,7 +108,6 @@ namespace VentaServicios.Controllers.API
                     Direccion = x.Direccion,
                     IdEmpresa = x.TipoCliente.IdEmpresa,
                     TelefonoMovil = x.TelefonoMovil
-
                 }).ToListAsync();
                 return lista;
             }
