@@ -184,6 +184,7 @@ namespace VentaServicios.Controllers.API
                 Telefono=clienteRequest.Telefono,
                 TelefonoMovil=clienteRequest.TelefonoMovil,
                 Direccion=clienteRequest.Direccion,
+                Firma=clienteRequest.Firma,
             };
 
             try
