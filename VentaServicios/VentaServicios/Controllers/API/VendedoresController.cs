@@ -237,7 +237,7 @@ namespace VentaServicios.Controllers.API
             //EmpresaActual empresaActual = new EmpresaActual { IdEmpresa = idEmpresa };
 
             ClientesController ctl = new ClientesController();
-            listaClientes = await ctl.ListarClientesPorVendedor( idEmpresa, vendedorRequest.IdVendedor );
+            listaClientes = await ctl.ListarClientesPorVendedor( vendedorRequest );
 
             try
             {
@@ -512,7 +512,7 @@ namespace VentaServicios.Controllers.API
 
                 }
 
-                ).ToListAsync();
+                ).OrderBy(or =>or.Fecha).ToListAsync();
 
 
 
