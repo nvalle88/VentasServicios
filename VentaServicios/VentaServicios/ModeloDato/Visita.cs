@@ -27,12 +27,11 @@ namespace VentaServicios.ModeloDato
 
         public double? Venta { get; set; }
 
-        [Column(TypeName = "datetime2")]
         public DateTime Fecha { get; set; }
 
-        public double? Latitud { get; set; }
+        public double Latitud { get; set; }
 
-        public double? Longitud { get; set; }
+        public double Longitud { get; set; }
 
         [StringLength(100)]
         public string Foto { get; set; }
@@ -41,7 +40,7 @@ namespace VentaServicios.ModeloDato
 
         public int idTipoVisita { get; set; }
 
-        public int? idCliente { get; set; }
+        public int idCliente { get; set; }
 
         public virtual Cliente Cliente { get; set; }
 

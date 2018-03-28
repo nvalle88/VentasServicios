@@ -180,6 +180,7 @@ namespace VentaServicios.Controllers.API
 
             //Necesarios : idEmpresa e idSupervisor
             // solo muestra vendedores con estado 1("Activado")
+            var super = db.Supervisor.Where(x => x.IdUsuario == vendedorRequest.IdUsuario).FirstOrDefault();
 
             var listaVendedores = new List<VendedorRequest>();
 
@@ -218,6 +219,49 @@ namespace VentaServicios.Controllers.API
             catch (Exception ex)
             {
                 return listaVendedores;
+            }
+        }
+
+        [HttpPost]
+        [Route("ListarVendedoresPorSupervisor2")]
+        public async Task<SupervisorRequest> ListarVendedoresPorSupervisor2(SupervisorRequest supervisorRequest)
+        {
+           
+            var listaVendedores = new List<VendedorRequest>();
+
+            try
+            {
+                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = supervisorRequest.IdEmpresa
+
+                }
+
+                ).Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor
+                    && x.Estado == 1
+                ).ToListAsync();
+
+                supervisorRequest.ListaVendedores = listaVendedores;
+
+                return supervisorRequest;
+            }
+            catch (Exception ex)
+            {
+                return supervisorRequest;
             }
         }
 
@@ -384,6 +428,7 @@ namespace VentaServicios.Controllers.API
         {
             try
             {
+                /*
                 if (!ModelState.IsValid)
                 {
                     return new Response
@@ -392,7 +437,7 @@ namespace VentaServicios.Controllers.API
                         Message = Mensaje.ModeloInvalido,
                     };
                 }
-
+                */
                 var supervisor = await db.Supervisor.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa && x.IdUsuario == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
                 {
                     IdUsuario = x.AspNetUsers.Id,
