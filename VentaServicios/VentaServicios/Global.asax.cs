@@ -19,7 +19,24 @@ namespace VentaServicios
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            
+
+
+            CorreoUtil.SmtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+            CorreoUtil.Port = System.Configuration.ConfigurationManager.AppSettings["SmtpPort"];
+            var Ssl = true;
+            if (System.Configuration.ConfigurationManager.AppSettings["EnableSsl"]=="True")
+            {
+                Ssl = true;
+            }
+            else
+            {
+                Ssl = false;
+            }
+
+            CorreoUtil.EnableSsl = Ssl;
+            CorreoUtil.UserName = System.Configuration.ConfigurationManager.AppSettings["Usuario"];
+            CorreoUtil.Password = System.Configuration.ConfigurationManager.AppSettings["Contrasena"];
+
 
             Constantes.CuotaInferiorCodigo = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["CuotaInferiorCodigo"]);
             Constantes.CuotaSuperiorCodigo = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["CuotaSuperiorCodigo"]);

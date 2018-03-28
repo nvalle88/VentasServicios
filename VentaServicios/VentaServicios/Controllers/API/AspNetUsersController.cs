@@ -72,24 +72,24 @@ namespace VentaServicios.Controllers.API
                 await db.SaveChangesAsync();
                 //Configuring webMail class to send emails  
                 //gmail smtp server  
-                WebMail.SmtpServer = "smtp.gmail.com";
+                WebMail.SmtpServer = CorreoUtil.SmtpServer;
                 //gmail port to send emails  
-                WebMail.SmtpPort = 587;
+                WebMail.SmtpPort = Convert.ToInt32(CorreoUtil.Port);
                 WebMail.SmtpUseDefaultCredentials = true;
                 //sending emails with secure protocol  
                 WebMail.EnableSsl = true;
                 //EmailId used to send emails from application  
-                WebMail.UserName = "nestorvalle880416@gmail.com";
-                WebMail.Password = "nvr1604**NVR";
+                WebMail.UserName = CorreoUtil.UserName;
+                WebMail.Password = CorreoUtil.Password;
 
                 //Sender email address.  
-                WebMail.From = "nestorvalle880416@gmail.com";
+                WebMail.From = CorreoUtil.UserName;
 
                 //Send email  
                 WebMail.Send(to: aspNetUsers.Email, subject: "Código: "+aspNetUsers.TokenContrasena, body: "Código: " + aspNetUsers.TokenContrasena,isBodyHtml: true);
                 return new Response { IsSuccess = true };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;

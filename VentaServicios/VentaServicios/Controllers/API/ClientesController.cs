@@ -175,6 +175,7 @@ namespace VentaServicios.Controllers.API
                 Apellido=clienteRequest.Apellido,
                 Email=clienteRequest.Email,
                 Foto=clienteRequest.Foto,
+                RazonSocial=clienteRequest.RazonSocial,
                 Identificacion=clienteRequest.Identificacion,
                 idTipoCliente=clienteRequest.IdTipoCliente,
                 IdVendedor=clienteRequest.IdVendedor,
@@ -184,6 +185,7 @@ namespace VentaServicios.Controllers.API
                 Telefono=clienteRequest.Telefono,
                 TelefonoMovil=clienteRequest.TelefonoMovil,
                 Direccion=clienteRequest.Direccion,
+                Firma=clienteRequest.Firma,
             };
 
             try
@@ -201,6 +203,7 @@ namespace VentaServicios.Controllers.API
             
 
         }
+       
 
         [HttpPost]
         [Route("EditarCliente")]

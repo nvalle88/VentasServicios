@@ -61,8 +61,6 @@ namespace VentaServicios.Controllers.API
                     
                 ).Where( x=> x.idEmpresa == vendedorRequest.idEmpresa && x.Estado == 1).ToListAsync();
 
-                
-
                 return listaVendedores;
             }
             catch (Exception ex)
@@ -421,23 +419,14 @@ namespace VentaServicios.Controllers.API
         }
 
 
-        // POST: api/Vendedore
+        // POST: api/Vendedores
         [HttpPost]
         [Route("obtenerSupervisorPorIdUsuario")]
         public async Task<Response> obtenerSupervisorPorIdUsuario(SupervisorRequest supervisorRequest)
         {
             try
             {
-                /*
-                if (!ModelState.IsValid)
-                {
-                    return new Response
-                    {
-                        IsSuccess = false,
-                        Message = Mensaje.ModeloInvalido,
-                    };
-                }
-                */
+                
                 var supervisor = await db.Supervisor.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa && x.IdUsuario == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
                 {
                     IdUsuario = x.AspNetUsers.Id,
@@ -540,6 +529,9 @@ namespace VentaServicios.Controllers.API
             // solo muestra vendedores con estado 1("Activado")
 
             var lista = new List<RutaRequest>();
+            var lista2 = new List<RutaRequest>();
+
+            DateTime hoy = DateTime.Now;
 
             try
             {
@@ -559,9 +551,42 @@ namespace VentaServicios.Controllers.API
 
                 ).OrderBy(or =>or.Fecha).ToListAsync();
 
+                
+                lista2 = await db.Visita
+                    .Join(db.Vendedor, lrv => lrv.IdVendedor, v => v.IdVendedor, (lrv, v) => new { tlrv = lrv, tv = v })
+                    .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id, (conjunto, asp) => new { varConjunto = conjunto, tAsp = asp })
+                .Where(y => y.tAsp.IdEmpresa == vendedorRequest.idEmpresa && y.tAsp.Estado == 1 && y.varConjunto.tv.IdVendedor == vendedorRequest.IdVendedor)
+                .Select(x => new RutaRequest
+                {
+                    IdLogRutaVendedor = 0,
+                    IdVendedor = x.varConjunto.tlrv.IdVendedor,
+                    Fecha = x.varConjunto.tlrv.Fecha,
+                    Latitud = x.varConjunto.tlrv.Latitud,
+                    Longitud = x.varConjunto.tlrv.Longitud
 
+                }
 
-                return lista;
+                ).OrderBy(or => or.Fecha).ToListAsync();
+
+                for (int i = 0; i<lista2.Count; i++)
+                {
+                    lista.Add(lista2.ElementAt(i));
+                }
+
+                lista2.Clear();
+
+                for (int i = 0; i<lista.Count; i++)
+                {
+                    if ( Convert.ToDateTime(lista.ElementAt(i).Fecha).Day == hoy.Day )
+                    {
+                        lista2.Add(lista.ElementAt(i));
+                    }
+                }
+
+                
+                var lista3 = lista2.OrderBy(t => t.Fecha).ToList();
+                
+                return lista3;
             }
             catch (Exception ex)
             {
