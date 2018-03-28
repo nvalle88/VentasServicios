@@ -11,6 +11,7 @@ namespace VentaServicios.ObjectRequest
         public int IdSupervisor { get; set; }
 
         public string IdUsuario { get; set; }
+        public string NombresApellido { get; set; }
 
         public int IdGerente { get; set; }
         public int IdVendedor { get; set; }
@@ -27,8 +28,11 @@ namespace VentaServicios.ObjectRequest
 
         public string Telefono { get; set; }
         public int IdEmpresa { get; set; }
+        public List<ClienteRequest> ListaCliente { get; set; }
         public List<VendedorRequest> ListaVendedores { get; set; }
         public List<VendedorRequest> ListaVendedoresAsignados { get; set; }
         public List<VendedorRequest> ListaVendedoresSinAsignar { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFin { get; set; }
     }
 }
