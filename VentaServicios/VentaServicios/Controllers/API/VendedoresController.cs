@@ -375,23 +375,14 @@ namespace VentaServicios.Controllers.API
         }
 
 
-        // POST: api/Vendedore
+        // POST: api/Vendedores
         [HttpPost]
         [Route("obtenerSupervisorPorIdUsuario")]
         public async Task<Response> obtenerSupervisorPorIdUsuario(SupervisorRequest supervisorRequest)
         {
             try
             {
-                /*
-                if (!ModelState.IsValid)
-                {
-                    return new Response
-                    {
-                        IsSuccess = false,
-                        Message = Mensaje.ModeloInvalido,
-                    };
-                }
-                */
+                
                 var supervisor = await db.Supervisor.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa && x.IdUsuario == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
                 {
                     IdUsuario = x.AspNetUsers.Id,
@@ -496,6 +487,8 @@ namespace VentaServicios.Controllers.API
             var lista = new List<RutaRequest>();
             var lista2 = new List<RutaRequest>();
 
+            DateTime hoy = DateTime.Now;
+
             try
             {
                 lista = await db.LogRutaVendedor
@@ -514,7 +507,7 @@ namespace VentaServicios.Controllers.API
 
                 ).OrderBy(or =>or.Fecha).ToListAsync();
 
-
+                
                 lista2 = await db.Visita
                     .Join(db.Vendedor, lrv => lrv.IdVendedor, v => v.IdVendedor, (lrv, v) => new { tlrv = lrv, tv = v })
                     .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id, (conjunto, asp) => new { varConjunto = conjunto, tAsp = asp })
@@ -536,9 +529,20 @@ namespace VentaServicios.Controllers.API
                     lista.Add(lista2.ElementAt(i));
                 }
 
+                lista2.Clear();
 
+                for (int i = 0; i<lista.Count; i++)
+                {
+                    if ( Convert.ToDateTime(lista.ElementAt(i).Fecha).Day == hoy.Day )
+                    {
+                        lista2.Add(lista.ElementAt(i));
+                    }
+                }
 
-                return lista;
+                
+                var lista3 = lista2.OrderBy(t => t.Fecha).ToList();
+                
+                return lista3;
             }
             catch (Exception ex)
             {
