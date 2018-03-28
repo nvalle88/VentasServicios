@@ -174,6 +174,7 @@ namespace VentaServicios.Controllers.API
                 Apellido=clienteRequest.Apellido,
                 Email=clienteRequest.Email,
                 Foto=clienteRequest.Foto,
+                RazonSocial=clienteRequest.RazonSocial,
                 Identificacion=clienteRequest.Identificacion,
                 idTipoCliente=clienteRequest.IdTipoCliente,
                 IdVendedor=clienteRequest.IdVendedor,

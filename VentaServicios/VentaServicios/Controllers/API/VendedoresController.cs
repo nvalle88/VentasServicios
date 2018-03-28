@@ -61,8 +61,6 @@ namespace VentaServicios.Controllers.API
                     
                 ).Where( x=> x.idEmpresa == vendedorRequest.idEmpresa && x.Estado == 1).ToListAsync();
 
-                
-
                 return listaVendedores;
             }
             catch (Exception ex)

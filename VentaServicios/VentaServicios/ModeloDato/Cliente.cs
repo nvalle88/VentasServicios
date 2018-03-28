@@ -29,6 +29,8 @@ namespace VentaServicios.ModeloDato
 
         public double Longitud { get; set; }
 
+        public string RazonSocial { get; set; }
+
         [StringLength(200)]
         public string Nombre { get; set; }
 
