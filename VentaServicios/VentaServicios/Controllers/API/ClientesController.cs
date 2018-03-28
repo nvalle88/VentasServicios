@@ -80,7 +80,6 @@ namespace VentaServicios.Controllers.API
                 return new List<ClienteRequest>();
             }
         }
-
         public async Task<List<ClienteRequest>> ListarClientesPorVendedor(int IdEmpresa, int IdVendedor)
         {
             try

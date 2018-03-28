@@ -191,6 +191,7 @@
     <Compile Include="Controllers\API\SupervisorsController.cs" />
     <Compile Include="Controllers\API\TiposClientesController.cs" />
     <Compile Include="Controllers\API\VendedoresController.cs" />
+    <Compile Include="Controllers\API\VisitaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MVC\GerentesController.cs" />
     <Compile Include="Controllers\MVC\SupervisorsController.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="ObjectRequest\TipoClienteRequest.cs" />
     <Compile Include="ObjectRequest\UserRequest.cs" />
     <Compile Include="ObjectRequest\VendedorRequest.cs" />
+    <Compile Include="ObjectRequest\VisitaRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Constantes.cs" />
     <Compile Include="Utils\Mensaje.cs" />
