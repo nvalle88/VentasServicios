@@ -235,7 +235,7 @@ namespace VentaServicios.Controllers.API
             //EmpresaActual empresaActual = new EmpresaActual { IdEmpresa = idEmpresa };
 
             ClientesController ctl = new ClientesController();
-            listaClientes = await ctl.ListarClientesPorVendedor( idEmpresa, vendedorRequest.IdVendedor );
+            listaClientes = await ctl.ListarClientesPorVendedor( vendedorRequest );
 
             try
             {
@@ -382,6 +382,7 @@ namespace VentaServicios.Controllers.API
         {
             try
             {
+                /*
                 if (!ModelState.IsValid)
                 {
                     return new Response
@@ -390,7 +391,7 @@ namespace VentaServicios.Controllers.API
                         Message = Mensaje.ModeloInvalido,
                     };
                 }
-
+                */
                 var supervisor = await db.Supervisor.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa && x.IdUsuario == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
                 {
                     IdUsuario = x.AspNetUsers.Id,
@@ -493,6 +494,7 @@ namespace VentaServicios.Controllers.API
             // solo muestra vendedores con estado 1("Activado")
 
             var lista = new List<RutaRequest>();
+            var lista2 = new List<RutaRequest>();
 
             try
             {
@@ -511,6 +513,28 @@ namespace VentaServicios.Controllers.API
                 }
 
                 ).OrderBy(or =>or.Fecha).ToListAsync();
+
+
+                lista2 = await db.Visita
+                    .Join(db.Vendedor, lrv => lrv.IdVendedor, v => v.IdVendedor, (lrv, v) => new { tlrv = lrv, tv = v })
+                    .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id, (conjunto, asp) => new { varConjunto = conjunto, tAsp = asp })
+                .Where(y => y.tAsp.IdEmpresa == vendedorRequest.idEmpresa && y.tAsp.Estado == 1 && y.varConjunto.tv.IdVendedor == vendedorRequest.IdVendedor)
+                .Select(x => new RutaRequest
+                {
+                    IdLogRutaVendedor = 0,
+                    IdVendedor = x.varConjunto.tlrv.IdVendedor,
+                    Fecha = x.varConjunto.tlrv.Fecha,
+                    Latitud = x.varConjunto.tlrv.Latitud,
+                    Longitud = x.varConjunto.tlrv.Longitud
+
+                }
+
+                ).OrderBy(or => or.Fecha).ToListAsync();
+
+                for (int i = 0; i<lista2.Count; i++)
+                {
+                    lista.Add(lista2.ElementAt(i));
+                }
 
 
 
