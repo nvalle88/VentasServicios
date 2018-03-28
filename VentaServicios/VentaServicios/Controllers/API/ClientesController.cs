@@ -271,7 +271,8 @@ namespace VentaServicios.Controllers.API
                                            Identificacion = x.Identificacion,
                                            Direccion = x.Direccion,
                                            IdEmpresa=x.TipoCliente.IdEmpresa,
-                                           TelefonoMovil=x.TelefonoMovil
+                                           TelefonoMovil=x.TelefonoMovil,
+                                           RazonSocial=x.RazonSocial,
 
                                        } ).FirstOrDefaultAsync();
 
