@@ -20,7 +20,7 @@ namespace VentaServicios.Controllers.API
         private readonly ModelVentas db = new ModelVentas();
         [HttpPost]
         [Route("ListarVisitas")]
-        public async Task<List<VisitaRequest>> ListarVisitas(SupervisorRequest supervisorRequest)
+        public async Task<List<VisitaRequest>> ListarVisitas(VendedorRequest supervisorRequest)
         {
 
             //Solo necesita el IdEmpresa
@@ -33,17 +33,15 @@ namespace VentaServicios.Controllers.API
                 listavisita =  db.Visita.Select(x => new VisitaRequest
                 {
                     IdVendedor = x.IdVendedor,
-                    Calificacion =x.Calificacion,
                     Nombre = x.Cliente.Nombre,
                     Apellido = x.Cliente.Apellido,
-                    identificacion = x.Cliente.Identificacion
+                    identificacion = x.Cliente.Identificacion,
+                    idCliente= x.idCliente,
+                    Fecha = x.Fecha
 
                 }
 
-                ).Where(x => x.IdVendedor == supervisorRequest.IdVendedor && x.idCliente == Convert.ToInt32(supervisorRequest.IdCliente) &&  x.Fecha == Convert.ToDateTime(supervisorRequest.FechaInicio)).ToList();
-
-
-
+                ).Where(x => x.IdVendedor == supervisorRequest.IdVendedor).ToList();
                 return listavisita;
             }
             catch (Exception ex)
