@@ -237,6 +237,7 @@
     <Compile Include="ObjectRequest\TipoClienteRequest.cs" />
     <Compile Include="ObjectRequest\UserRequest.cs" />
     <Compile Include="ObjectRequest\UbicacionPersonaRequest.cs" />
+    <Compile Include="ObjectRequest\RutaRequest.cs" />
     <Compile Include="ObjectRequest\VendedorRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Constantes.cs" />

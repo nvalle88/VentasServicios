@@ -60,7 +60,11 @@ namespace VentaServicios.Controllers.API
 
             //supervisor.ListaCliente = db.Cliente.Where(x => x.IdVendedor == vendedor.IdVendedor).ToList();
 
-            return supervisor;
+
+            
+            var a =new List<SupervisorRequest>();// esta linea y el return le modifique porque daba error
+
+            return a; // estaba supervisor
         }
         #endregion
 

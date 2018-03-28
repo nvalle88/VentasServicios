@@ -465,7 +465,7 @@ namespace VentaServicios.Controllers.API
                             (ind_1, valor) => new { ca = ind_1, rt = valor })
                  .Where(ds =>
                     ds.rt.IdSupervisor == vendedorRequest.IdSupervisor
-                    //&& ds.ca.hm.e
+                    && ds.ca.gh.Estado == 1
                   )
                   .Select(t => new ClienteRequest
                   {
@@ -489,7 +489,45 @@ namespace VentaServicios.Controllers.API
             }
         }
 
-        
+
+        // POST: api/Vendedores
+        [HttpPost]
+        [Route("ListarRutaVendedores")]
+        public async Task<List<RutaRequest>> ListarRutaVendedores(VendedorRequest vendedorRequest)
+        {
+
+            // Necesarios: IdEmpresa e IdVendedor
+            // solo muestra vendedores con estado 1("Activado")
+
+            var lista = new List<RutaRequest>();
+
+            try
+            {
+                lista = await db.LogRutaVendedor
+                    .Join(db.Vendedor, lrv => lrv.IdVendedor, v => v.IdVendedor,(lrv, v) => new { tlrv = lrv, tv = v })
+                    .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id,(conjunto, asp) => new { varConjunto = conjunto, tAsp = asp })
+                .Where(y => y.tAsp.IdEmpresa == vendedorRequest.idEmpresa && y.tAsp.Estado == 1 && y.varConjunto.tv.IdVendedor == vendedorRequest.IdVendedor)
+                .Select(x => new RutaRequest
+                {
+                    IdLogRutaVendedor = x.varConjunto.tlrv.IdLogRutaVendedor,
+                    IdVendedor = x.varConjunto.tlrv.IdVendedor,
+                    Fecha = x.varConjunto.tlrv.Fecha,
+                    Latitud = x.varConjunto.tlrv.Latitud,
+                    Longitud = x.varConjunto.tlrv.Longitud
+
+                }
+
+                ).ToListAsync();
+
+
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                return lista;
+            }
+        }
 
 
     }
