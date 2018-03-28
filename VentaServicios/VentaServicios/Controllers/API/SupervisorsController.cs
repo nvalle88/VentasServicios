@@ -31,18 +31,13 @@ namespace VentaServicios.Controllers.API
         [Route("ListarVendedores")]
         public async Task<List<SupervisorRequest>> ListarVendedores(SupervisorRequest supervisorRequest)
         {
-            var supervisor = new SupervisorRequest();
-            var vendedor = new VendedorRequest();
-            var listaVendedores = new List<VendedorRequest>();
-            var listackiente = new List<ClienteRequest>();
-            VendedoresController ctl = new VendedoresController();
-            ClientesController cli = new ClientesController();
+            
 
             var super = db.Supervisor.Where(x => x.IdUsuario == supervisorRequest.IdUsuario).FirstOrDefault();
-            supervisor = await db.Supervisor.Where(m => m.IdSupervisor == supervisorRequest.IdSupervisor).Select(x => new SupervisorRequest
+            var lista = await db.Vendedor.Where(m => m.IdSupervisor == super.IdSupervisor && m.AspNetUsers.Estado ==1 && m.AspNetUsers.IdEmpresa==supervisorRequest.IdEmpresa ).Select(x => new SupervisorRequest
             {
+                IdVendedor = x.IdVendedor,
                 IdUsuario = x.AspNetUsers.Id,
-                IdSupervisor = x.IdSupervisor,
                 Identificacion = x.AspNetUsers.Identificacion,
                 Nombres = x.AspNetUsers.Nombres,
                 Apellidos = x.AspNetUsers.Apellidos,
@@ -50,21 +45,11 @@ namespace VentaServicios.Controllers.API
                 Telefono = x.AspNetUsers.Telefono,
                 Correo = x.AspNetUsers.Email,
                 IdEmpresa = x.AspNetUsers.IdEmpresa,
-                IdGerente = x.IdGerente
-            }).SingleOrDefaultAsync();
-
-            supervisor.ListaVendedores = await ctl.ListarVendedores(vendedor);
-           // supervisor.ListaCliente = await cli.
-            //.ListaVendedoresAsignados = supervisor.ListaVendedores.Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor).ToList();
-            supervisor.ListaVendedoresSinAsignar = supervisor.ListaVendedores.Where(x => x.IdSupervisor != supervisorRequest.IdSupervisor).ToList();
-
-            //supervisor.ListaCliente = db.Cliente.Where(x => x.IdVendedor == vendedor.IdVendedor).ToList();
+                NombresApellido = x.AspNetUsers.Nombres +" "+x.AspNetUsers.Apellidos
+            }).ToListAsync();
 
 
-            
-            var a =new List<SupervisorRequest>();// esta linea y el return le modifique porque daba error
-
-            return a; // estaba supervisor
+            return lista;
         }
         #endregion
 

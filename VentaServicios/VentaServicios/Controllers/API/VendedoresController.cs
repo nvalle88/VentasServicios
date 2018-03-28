@@ -512,7 +512,7 @@ namespace VentaServicios.Controllers.API
 
                 }
 
-                ).ToListAsync();
+                ).OrderBy(or =>or.Fecha).ToListAsync();
 
 
 
