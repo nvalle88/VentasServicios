@@ -191,6 +191,7 @@
     <Compile Include="Controllers\API\GerentesController.cs" />
     <Compile Include="Controllers\API\SupervisorsController.cs" />
     <Compile Include="Controllers\API\TiposClientesController.cs" />
+    <Compile Include="Controllers\API\AgendasController.cs" />
     <Compile Include="Controllers\API\VendedoresController.cs" />
     <Compile Include="Controllers\API\VisitaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="ModeloDato\TipoDato.cs" />
     <Compile Include="ModeloDato\TipoSuscripcion.cs" />
     <Compile Include="ModeloDato\TipoVisita.cs" />
+    <Compile Include="ObjectRequest\EventoRequest.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
     <Compile Include="ModeloDato\Visita.cs" />
     <Compile Include="ObjectRequest\ArchivoRequest.cs" />
