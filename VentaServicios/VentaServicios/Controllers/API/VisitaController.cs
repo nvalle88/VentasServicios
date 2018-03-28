@@ -20,33 +20,33 @@ namespace VentaServicios.Controllers.API
         private readonly ModelVentas db = new ModelVentas();
         [HttpPost]
         [Route("ListarVisitas")]
-        public async Task<List<VisitaRequest>> ListarVisitas(VendedorRequest supervisorRequest)
+        public async Task<SupervisorRequest> ListarVisitas(SupervisorRequest supervisorRequest)
         {
 
-            //Solo necesita el IdEmpresa
-            // solo muestra vendedores con estado 1("Activado")
-
             var listavisita = new List<VisitaRequest>();
-
+             
             try
             {
-                listavisita =  db.Visita.Select(x => new VisitaRequest
-                {
-                    IdVendedor = x.IdVendedor,
-                    Nombre = x.Cliente.Nombre,
-                    Apellido = x.Cliente.Apellido,
-                    identificacion = x.Cliente.Identificacion,
-                    idCliente= x.idCliente,
-                    Fecha = x.Fecha
+                db.Configuration.ProxyCreationEnabled = false;
 
+                var listacompleta =  db.Visita.Where(x=> x.idCliente == supervisorRequest.IdCliente && 
+                    x.IdVendedor == supervisorRequest.IdVendedor
+                 && x.Fecha >= supervisorRequest.FechaInicio || x.Fecha <= supervisorRequest.FechaFin).ToList();
+                foreach (var item in listacompleta)
+                {
+                    var a = new VisitaRequest
+                    {
+                        idVisita = item.idVisita
+                    };
+                    listavisita.Add(a);
                 }
 
-                ).Where(x => x.IdVendedor == supervisorRequest.IdVendedor).ToList();
-                return listavisita;
+                supervisorRequest.Listarvisita = listavisita;
+                return supervisorRequest;
             }
             catch (Exception ex)
             {
-                return listavisita;
+                return supervisorRequest;
             }
         }
     }

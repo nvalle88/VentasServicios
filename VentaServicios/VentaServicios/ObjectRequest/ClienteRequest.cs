@@ -11,6 +11,8 @@ namespace VentaServicios.ObjectRequest
 
         public int? IdEmpresa { get; set; }
 
+        public string RazonSocial { get; set; }
+
         public string Identificacion { get; set; }
 
         public string Foto { get; set; }

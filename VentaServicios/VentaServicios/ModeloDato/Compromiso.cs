@@ -12,9 +12,9 @@ namespace VentaServicios.ModeloDato
         [Key]
         public int IdCompromiso { get; set; }
 
-        public int? IdTipoCompromiso { get; set; }
+        public int IdTipoCompromiso { get; set; }
 
-        public int? idVisita { get; set; }
+        public int idVisita { get; set; }
 
         [Required]
         [StringLength(80)]

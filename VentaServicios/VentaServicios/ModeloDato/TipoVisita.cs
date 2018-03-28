@@ -27,7 +27,7 @@ namespace VentaServicios.ModeloDato
         [StringLength(200)]
         public string Detalle { get; set; }
 
-        public int? id { get; set; }
+        public int? idEmpresa { get; set; }
 
         public virtual Empresa Empresa { get; set; }
 

@@ -9,20 +9,17 @@ namespace VentaServicios.ObjectRequest
     {
         public int idVisita { get; set; }
 
-        public int? Calificacion { get; set; }
+        public int Calificacion { get; set; }
 
         public string Firma { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string identificacion  { get; set; }
 
-        public double? Venta { get; set; }
+        public double Venta { get; set; }
 
         public DateTime Fecha { get; set; }
 
-        public double? Latitud { get; set; }
+        public double Latitud { get; set; }
 
-        public double? Longitud { get; set; }
+        public double Longitud { get; set; }
 
         public string Foto { get; set; }
 
@@ -30,6 +27,6 @@ namespace VentaServicios.ObjectRequest
 
         public int idTipoVisita { get; set; }
 
-        public int? idCliente { get; set; }
+        public int idCliente { get; set; }
     }
 }
