@@ -45,6 +45,8 @@ namespace VentaServicios.ObjectRequest
 
         public string Direccion { get; set; }
 
+        public int Estado { get; set; }
+
 
     }
 }
