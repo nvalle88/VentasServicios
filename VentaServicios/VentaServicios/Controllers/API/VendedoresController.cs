@@ -221,8 +221,8 @@ namespace VentaServicios.Controllers.API
         }
 
         [HttpPost]
-        [Route("ListarVendedoresPorSupervisor2")]
-        public async Task<SupervisorRequest> ListarVendedoresPorSupervisor2(SupervisorRequest supervisorRequest)
+        [Route("ListarVendedoresGerente")]
+        public async Task<SupervisorRequest> ListarVendedoresGerente(SupervisorRequest supervisorRequest)
         {
            
             var listaVendedores = new List<VendedorRequest>();
@@ -249,7 +249,7 @@ namespace VentaServicios.Controllers.API
 
                 }
 
-                ).Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor
+                ).Where(x =>  x.idEmpresa == supervisorRequest.IdEmpresa
                     && x.Estado == 1
                 ).ToListAsync();
 

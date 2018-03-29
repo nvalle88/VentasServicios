@@ -150,19 +150,9 @@ namespace VentaServicios.Controllers.API
             vendedor.idEmpresa = idEmpresa;
 
             VendedoresController ctl = new VendedoresController();
-            
-            //supervisor.ListaVendedoresAsignados = supervisor.ListaVendedores.Where(x => x.IdSupervisor == id.IdSupervisor).ToList();
-            //supervisor.ListaVendedoresSinAsignar = supervisor.ListaVendedores.Where(x => x.IdSupervisor != id.IdSupervisor).ToList();
             try
             {
-                //if (!ModelState.IsValid)
-                //{
-                  //  return new Response
-                    //{
-                      //  IsSuccess = false,
-                       // Message = Mensaje.ModeloInvalido,
-                    //};
-                //}
+                
 
                 supervisor = await db.Supervisor.Where(m => m.IdSupervisor == id.IdSupervisor).Select(x => new SupervisorRequest
                 {
