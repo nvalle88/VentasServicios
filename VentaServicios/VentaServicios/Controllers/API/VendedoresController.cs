@@ -170,6 +170,7 @@ namespace VentaServicios.Controllers.API
                 return null;
             }
         }
+
         // POST: api/Vendedores
         [HttpPost]
         [Route("ListarVendedoresPorSupervisor")]
