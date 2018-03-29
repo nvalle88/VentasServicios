@@ -59,7 +59,7 @@ namespace VentaServicios.ModeloDato
         public int Estado { get; set; }
 
         [StringLength(100)]
-        public string RazonSocial { get; set; }
+        //public string RazonSocial { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Agenda> Agenda { get; set; }

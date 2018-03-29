@@ -22,26 +22,32 @@ namespace VentaServicios.Controllers.API
         [Route("ListarVisitas")]
         public async Task<SupervisorRequest> ListarVisitas(SupervisorRequest supervisorRequest)
         {
-
-            var listavisita = new List<VisitaRequest>();
-             
             try
             {
-                db.Configuration.ProxyCreationEnabled = false;
+                var listacompromiso = new List<CompromisoRequest>();
+            listacompromiso = db.Compromiso
+                                .Join(db.Visita
+                                    , rta => rta.idVisita, ind => ind.idVisita,
+                                    (rta, ind) => new { hm = rta, gh = ind })
 
-                var listacompleta =  db.Visita.Where(x=> x.idCliente == supervisorRequest.IdCliente && 
-                    x.IdVendedor == supervisorRequest.IdVendedor
-                 && x.Fecha >= supervisorRequest.FechaInicio || x.Fecha <= supervisorRequest.FechaFin).ToList();
-                foreach (var item in listacompleta)
-                {
-                    var a = new VisitaRequest
-                    {
-                        idVisita = item.idVisita
-                    };
-                    listavisita.Add(a);
-                }
+                             .Where(ds =>
+                                ds.gh.idCliente == supervisorRequest.IdCliente
+                                && ds.gh.IdVendedor == supervisorRequest.IdVendedor
+                                && ds.gh.Fecha >= supervisorRequest.FechaInicio
+                                && ds.gh.Fecha <= supervisorRequest.FechaFin
+                              )
+                              .Select(t => new CompromisoRequest
+                              {
+                                  IdCompromiso = t.hm.IdCompromiso,
+                                  idVisita = t.hm.idVisita,
+                                  Descripcion = t.hm.Descripcion,
+                                  Solucion = t.hm.Solucion,
+                                  Fecha = t.gh.Fecha
+                              })
+                              .ToList();
 
-                supervisorRequest.Listarvisita = listavisita;
+
+                supervisorRequest.Listarcompromiso = listacompromiso;
                 return supervisorRequest;
             }
             catch (Exception ex)

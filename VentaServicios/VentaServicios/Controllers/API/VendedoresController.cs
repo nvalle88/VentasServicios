@@ -235,7 +235,7 @@ namespace VentaServicios.Controllers.API
                     TiempoSeguimiento = x.TiempoSeguimiento,
                     IdSupervisor = x.IdSupervisor,
                     IdUsuario = x.AspNetUsers.Id,
-
+                    NombreApellido = x.AspNetUsers.Nombres + " " + x.AspNetUsers.Apellidos,
                     TokenContrasena = x.AspNetUsers.TokenContrasena,
                     Foto = x.AspNetUsers.Foto,
                     Estado = x.AspNetUsers.Estado,
@@ -289,7 +289,7 @@ namespace VentaServicios.Controllers.API
                         TiempoSeguimiento = x.TiempoSeguimiento,
                         IdSupervisor = x.IdSupervisor,
                         IdUsuario = x.AspNetUsers.Id,
-
+                        NombreApellido = x.AspNetUsers.Nombres+" "+x.AspNetUsers.Apellidos,
                         TokenContrasena = x.AspNetUsers.TokenContrasena,
                         Foto = x.AspNetUsers.Foto,
                         Estado = x.AspNetUsers.Estado,

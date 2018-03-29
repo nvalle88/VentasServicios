@@ -12,6 +12,7 @@ namespace VentaServicios.ObjectRequest
         public int IdTipoCompromiso { get; set; }
 
         public int  idVisita { get; set; }
+        public DateTime Fecha { get; set; }
         public string tipocompromiso { get; set; }
 
         public string Descripcion { get; set; }
