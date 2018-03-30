@@ -23,7 +23,7 @@ namespace VentaServicios.Controllers.API
     {
         private readonly ModelVentas db = new ModelVentas();
 
-
+        
         [HttpPost]
         [Route("ObtenerTipoClientePorEmpresa")]
         public async Task<List<TipoClienteRequest>> ObtenerTipoClientePorEmpresa(EmpresaActual empresaActual)

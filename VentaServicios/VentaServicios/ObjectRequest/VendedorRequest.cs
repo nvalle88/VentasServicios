@@ -17,9 +17,10 @@ namespace VentaServicios.ObjectRequest
         public int? IdSupervisor { get; set; }
         
 
-
+        public string NombreApellido { get; set; }
 
         //Campos de tabla usuario
+
         public string IdUsuario { get; set; }
 
         [StringLength(250)]

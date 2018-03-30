@@ -34,6 +34,8 @@ namespace VentaServicios.Controllers.API
 
             //Solo necesita el IdVendedor
 
+            //Prioridad: 0 = baja (verde), 1 = media (naranja), 2 = alta (rojo) 
+
             var lista = new List<EventoRequest>();
 
             try
@@ -59,12 +61,17 @@ namespace VentaServicios.Controllers.API
                 .Where(y => y.tven.IdVendedor == vendedorRequest.IdVendedor)
                 .Select(x => new EventoRequest
                 {
-                    
+                    idAgenda = 0,
+
                     IdCompromiso = x.varConjunto.tcom.IdCompromiso,
                     IdTipoCompromiso = x.varConjunto.tcom.IdTipoCompromiso,
                     idVisita = x.varConjunto.tcom.idVisita,
                     Descripcion = x.varConjunto.tcom.Descripcion,
-                    Solucion = x.varConjunto.tcom.Solucion
+                    Solucion = x.varConjunto.tcom.Solucion,
+
+                    FechaVista = x.varConjunto.tv.Fecha,
+
+                    IdVendedor = x.tven.IdVendedor
 
                 }
 

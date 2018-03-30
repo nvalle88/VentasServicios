@@ -170,6 +170,7 @@ namespace VentaServicios.Controllers.API
                 return null;
             }
         }
+
         // POST: api/Vendedores
         [HttpPost]
         [Route("ListarVendedoresPorSupervisor")]
@@ -221,8 +222,8 @@ namespace VentaServicios.Controllers.API
         }
 
         [HttpPost]
-        [Route("ListarVendedoresPorSupervisor2")]
-        public async Task<SupervisorRequest> ListarVendedoresPorSupervisor2(SupervisorRequest supervisorRequest)
+        [Route("ListarVendedoresGerente")]
+        public async Task<SupervisorRequest> ListarVendedoresGerente(SupervisorRequest supervisorRequest)
         {
            
             var listaVendedores = new List<VendedorRequest>();
@@ -235,7 +236,7 @@ namespace VentaServicios.Controllers.API
                     TiempoSeguimiento = x.TiempoSeguimiento,
                     IdSupervisor = x.IdSupervisor,
                     IdUsuario = x.AspNetUsers.Id,
-
+                    NombreApellido = x.AspNetUsers.Nombres + " " + x.AspNetUsers.Apellidos,
                     TokenContrasena = x.AspNetUsers.TokenContrasena,
                     Foto = x.AspNetUsers.Foto,
                     Estado = x.AspNetUsers.Estado,
@@ -249,7 +250,7 @@ namespace VentaServicios.Controllers.API
 
                 }
 
-                ).Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor
+                ).Where(x =>  x.idEmpresa == supervisorRequest.IdEmpresa
                     && x.Estado == 1
                 ).ToListAsync();
 
@@ -289,7 +290,7 @@ namespace VentaServicios.Controllers.API
                         TiempoSeguimiento = x.TiempoSeguimiento,
                         IdSupervisor = x.IdSupervisor,
                         IdUsuario = x.AspNetUsers.Id,
-
+                        NombreApellido = x.AspNetUsers.Nombres+" "+x.AspNetUsers.Apellidos,
                         TokenContrasena = x.AspNetUsers.TokenContrasena,
                         Foto = x.AspNetUsers.Foto,
                         Estado = x.AspNetUsers.Estado,

@@ -190,6 +190,7 @@
     <Compile Include="Controllers\API\CompromisoController.cs" />
     <Compile Include="Controllers\API\EmpresasController.cs" />
     <Compile Include="Controllers\API\GerentesController.cs" />
+    <Compile Include="Controllers\API\MapaCalorController.cs" />
     <Compile Include="Controllers\API\SupervisorsController.cs" />
     <Compile Include="Controllers\API\TiposClientesController.cs" />
     <Compile Include="Controllers\API\AgendasController.cs" />
@@ -239,9 +240,11 @@
     <Compile Include="ObjectRequest\CompromisoRequest.cs" />
     <Compile Include="ObjectRequest\EmpresaActual.cs" />
     <Compile Include="ObjectRequest\GerenteRequest.cs" />
+    <Compile Include="ObjectRequest\MapaCalorRequest.cs" />
     <Compile Include="ObjectRequest\RecuperarContrasenaRequest.cs" />
     <Compile Include="ObjectRequest\SupervisorRequest.cs" />
     <Compile Include="ObjectRequest\TipoClienteRequest.cs" />
+    <Compile Include="ObjectRequest\TipoCompromisoRequest.cs" />
     <Compile Include="ObjectRequest\UserRequest.cs" />
     <Compile Include="ObjectRequest\UbicacionPersonaRequest.cs" />
     <Compile Include="ObjectRequest\RutaRequest.cs" />
