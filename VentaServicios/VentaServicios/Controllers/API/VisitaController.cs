@@ -20,33 +20,39 @@ namespace VentaServicios.Controllers.API
         private readonly ModelVentas db = new ModelVentas();
         [HttpPost]
         [Route("ListarVisitas")]
-        public async Task<List<VisitaRequest>> ListarVisitas(VendedorRequest supervisorRequest)
+        public async Task<SupervisorRequest> ListarVisitas(SupervisorRequest supervisorRequest)
         {
-
-            //Solo necesita el IdEmpresa
-            // solo muestra vendedores con estado 1("Activado")
-
-            var listavisita = new List<VisitaRequest>();
-
             try
             {
-                listavisita =  db.Visita.Select(x => new VisitaRequest
-                {
-                    IdVendedor = x.IdVendedor,
-                    Nombre = x.Cliente.Nombre,
-                    Apellido = x.Cliente.Apellido,
-                    identificacion = x.Cliente.Identificacion,
-                    idCliente= x.idCliente,
-                    Fecha = x.Fecha
+                var listacompromiso = new List<CompromisoRequest>();
+            listacompromiso = db.Compromiso
+                                .Join(db.Visita
+                                    , rta => rta.idVisita, ind => ind.idVisita,
+                                    (rta, ind) => new { hm = rta, gh = ind })
 
-                }
+                             .Where(ds =>
+                                ds.gh.idCliente == supervisorRequest.IdCliente
+                                && ds.gh.IdVendedor == supervisorRequest.IdVendedor
+                                && ds.gh.Fecha >= supervisorRequest.FechaInicio
+                                && ds.gh.Fecha <= supervisorRequest.FechaFin
+                              )
+                              .Select(t => new CompromisoRequest
+                              {
+                                  IdCompromiso = t.hm.IdCompromiso,
+                                  idVisita = t.hm.idVisita,
+                                  Descripcion = t.hm.Descripcion,
+                                  Solucion = t.hm.Solucion,
+                                  Fecha = t.gh.Fecha
+                              })
+                              .ToList();
 
-                ).Where(x => x.IdVendedor == supervisorRequest.IdVendedor).ToList();
-                return listavisita;
+
+                supervisorRequest.Listarcompromiso = listacompromiso;
+                return supervisorRequest;
             }
             catch (Exception ex)
             {
-                return listavisita;
+                return supervisorRequest;
             }
         }
     }

@@ -5,9 +5,10 @@ using System.Web;
 
 namespace VentaServicios.ObjectRequest
 {
-    public class EmpresaActual
+    public class TipoCompromisoRequest
     {
-        public int IdEmpresa { get; set; }
-        public int IdEstado { get; set; }
+        public int IdTipoCompromiso { get; set; }
+
+        public string Descripcion { get; set; }
     }
 }

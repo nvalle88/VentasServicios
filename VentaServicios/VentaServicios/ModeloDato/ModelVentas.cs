@@ -8,7 +8,7 @@ namespace VentaServicios.ModeloDato
     public partial class ModelVentas : DbContext
     {
         public ModelVentas()
-            : base("name=ModelVentas")
+            : base("name=ModelVentas1")
         {
         }
 
@@ -133,6 +133,10 @@ namespace VentaServicios.ModeloDato
                 .IsUnicode(false);
 
             modelBuilder.Entity<Cliente>()
+                .Property(e => e.RazonSocial)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Cliente>()
                 .HasMany(e => e.Agenda)
                 .WithRequired(e => e.Cliente)
                 .WillCascadeOnDelete(false);
@@ -168,11 +172,6 @@ namespace VentaServicios.ModeloDato
 
             modelBuilder.Entity<Empresa>()
                 .HasMany(e => e.Producto)
-                .WithOptional(e => e.Empresa)
-                .HasForeignKey(e => e.id);
-
-            modelBuilder.Entity<Empresa>()
-                .HasMany(e => e.TipoVisita)
                 .WithOptional(e => e.Empresa)
                 .HasForeignKey(e => e.id);
 
@@ -278,11 +277,11 @@ namespace VentaServicios.ModeloDato
 
             modelBuilder.Entity<TipoVisita>()
                 .Property(e => e.Nombre)
-                .IsFixedLength();
+                .IsUnicode(false);
 
             modelBuilder.Entity<TipoVisita>()
                 .Property(e => e.Detalle)
-                .IsFixedLength();
+                .IsUnicode(false);
 
             modelBuilder.Entity<TipoVisita>()
                 .HasMany(e => e.Visita)

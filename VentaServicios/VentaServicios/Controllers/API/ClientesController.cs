@@ -23,7 +23,7 @@ namespace VentaServicios.Controllers.API
     {
         private readonly ModelVentas db = new ModelVentas();
 
-
+        
         [HttpPost]
         [Route("ObtenerTipoClientePorEmpresa")]
         public async Task<List<TipoClienteRequest>> ObtenerTipoClientePorEmpresa(EmpresaActual empresaActual)
@@ -53,26 +53,57 @@ namespace VentaServicios.Controllers.API
         {
             try
             {
-                var lista= await db.Cliente.Where(x=>x.Vendedor.AspNetUsers.IdEmpresa==empresaActual.IdEmpresa).Select(x=>new ClienteRequest
+                if (empresaActual.IdEstado == EstadoCliente.Todos)
                 {
-                    Apellido=x.Apellido,
-                    ApellidosVendedor=x.Vendedor.AspNetUsers.Apellidos,
-                    Email=x.Email,
-                    Firma=x.Firma,
-                    Foto=x.Foto,
-                    IdCliente=x.idCliente,
-                    IdTipoCliente=x.idTipoCliente,
-                    IdVendedor=x.IdVendedor,
-                    Latitud=x.Latitud,
-                    Longitud=x.Longitud,
-                    Nombre=x.Nombre,
-                    NombresVendedor=x.Vendedor.AspNetUsers.Nombres,
-                    Telefono=x.Telefono,
-                    TipoCliente=x.TipoCliente.Tipo,
-                    Identificacion=x.Identificacion,
-                    Direccion=x.Direccion,
+                    var listaTotalClientes = await db.Cliente.Where(x => x.TipoCliente.Empresa.IdEmpresa == empresaActual.IdEmpresa).Select(x => new ClienteRequest
+                    {
+                        Apellido = x.Apellido,
+                        ApellidosVendedor = x.Vendedor.AspNetUsers.Apellidos,
+                        Email = x.Email,
+                        Firma = x.Firma,
+                        Foto = x.Foto,
+                        IdCliente = x.idCliente,
+                        IdTipoCliente = x.idTipoCliente,
+                        IdVendedor = x.IdVendedor,
+                        Latitud = x.Latitud,
+                        Longitud = x.Longitud,
+                        Nombre = x.Nombre,
+                        NombresVendedor = x.Vendedor.AspNetUsers.Nombres,
+                        Telefono = x.Telefono,
+                        TipoCliente = x.TipoCliente.Tipo,
+                        Identificacion = x.Identificacion,
+                        Direccion = x.Direccion,
+                        IdEmpresa = x.TipoCliente.IdEmpresa,
+                        TelefonoMovil = x.TelefonoMovil,
+                        RazonSocial = x.RazonSocial,
+                        Estado = x.Estado,
+
+                    }).ToListAsync();
+                    return listaTotalClientes;
+                }
+
+                var lista = await db.Cliente.Where(x => x.TipoCliente.Empresa.IdEmpresa == empresaActual.IdEmpresa && x.Estado == empresaActual.IdEstado).Select(x => new ClienteRequest
+                {
+                    Apellido = x.Apellido,
+                    ApellidosVendedor = x.Vendedor.AspNetUsers.Apellidos,
+                    Email = x.Email,
+                    Firma = x.Firma,
+                    Foto = x.Foto,
+                    IdCliente = x.idCliente,
+                    IdTipoCliente = x.idTipoCliente,
+                    IdVendedor = x.IdVendedor,
+                    Latitud = x.Latitud,
+                    Longitud = x.Longitud,
+                    Nombre = x.Nombre,
+                    NombresVendedor = x.Vendedor.AspNetUsers.Nombres,
+                    Telefono = x.Telefono,
+                    TipoCliente = x.TipoCliente.Tipo,
+                    Identificacion = x.Identificacion,
+                    Direccion = x.Direccion,
                     IdEmpresa = x.TipoCliente.IdEmpresa,
-                    TelefonoMovil = x.TelefonoMovil
+                    TelefonoMovil = x.TelefonoMovil,
+                    RazonSocial = x.RazonSocial,
+                    Estado = x.Estado,
 
                 }).ToListAsync();
                 return lista;
@@ -107,7 +138,8 @@ namespace VentaServicios.Controllers.API
                     Identificacion = x.Identificacion,
                     Direccion = x.Direccion,
                     IdEmpresa = x.TipoCliente.IdEmpresa,
-                    TelefonoMovil = x.TelefonoMovil
+                    TelefonoMovil = x.TelefonoMovil,
+                    RazonSocial=x.RazonSocial,
                 }).ToListAsync();
                 return lista;
             }
@@ -152,10 +184,17 @@ namespace VentaServicios.Controllers.API
                                                      && x.Identificacion == clienteRequest.Identificacion)
                                              .FirstOrDefaultAsync();
 
+
                 if (cliente == null)
                 {
                     return new Response { IsSuccess = false };
+                };
+
+                if (cliente.idCliente==cliente.idCliente)
+                {
+                    return new Response { IsSuccess = false };
                 }
+
                 return new Response { IsSuccess = true };
             }
             catch (Exception ex)
@@ -227,6 +266,8 @@ namespace VentaServicios.Controllers.API
             clienteEditar.Telefono = clienteRequest.Telefono;
             clienteEditar.TelefonoMovil = clienteRequest.TelefonoMovil;
             clienteEditar.Direccion = clienteRequest.Direccion;
+            clienteEditar.RazonSocial = clienteRequest.RazonSocial;
+            
            
 
             try
@@ -272,13 +313,58 @@ namespace VentaServicios.Controllers.API
                                            Identificacion = x.Identificacion,
                                            Direccion = x.Direccion,
                                            IdEmpresa=x.TipoCliente.IdEmpresa,
-                                           TelefonoMovil=x.TelefonoMovil
+                                           TelefonoMovil=x.TelefonoMovil,
+                                           RazonSocial=x.RazonSocial,
 
                                        } ).FirstOrDefaultAsync();
 
                 return new Response { IsSuccess = true, Resultado=cliente};
 
             }
+            catch (Exception)
+            {
+                return new Response { IsSuccess = false };
+
+            }
+
+
+        }
+
+        [HttpPost]
+        [Route("DesactivarCliente")]
+        public async Task<Response> DesactivarCliente(ClienteRequest clienteRequest)
+        {
+            try
+            {
+                var cliente = await db.Cliente.Where(x => x.idCliente == clienteRequest.IdCliente).FirstOrDefaultAsync();
+                cliente.Estado = 0;
+                db.Entry(cliente).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return new Response { IsSuccess = true};
+            }
+
+            catch (Exception)
+            {
+                return new Response { IsSuccess = false };
+
+            }
+
+
+        }
+
+        [HttpPost]
+        [Route("ActivarCliente")]
+        public async Task<Response> ActivarCliente(ClienteRequest clienteRequest)
+        {
+            try
+            {
+                var cliente = await db.Cliente.Where(x => x.idCliente == clienteRequest.IdCliente).FirstOrDefaultAsync();
+                cliente.Estado = 1;
+                db.Entry(cliente).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return new Response { IsSuccess = true};
+            }
+
             catch (Exception)
             {
                 return new Response { IsSuccess = false };
