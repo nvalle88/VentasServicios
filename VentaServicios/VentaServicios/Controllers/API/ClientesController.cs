@@ -186,6 +186,7 @@ namespace VentaServicios.Controllers.API
                 TelefonoMovil=clienteRequest.TelefonoMovil,
                 Direccion=clienteRequest.Direccion,
                 Firma=clienteRequest.Firma,
+                Estado=0,
             };
 
             try
@@ -195,7 +196,7 @@ namespace VentaServicios.Controllers.API
                 return new Response {IsSuccess=true, };
 
             }
-            catch (Exception )
+            catch (Exception ex)
             {
                 return new Response {IsSuccess=false};
 
