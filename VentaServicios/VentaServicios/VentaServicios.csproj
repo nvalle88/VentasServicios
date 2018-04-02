@@ -192,6 +192,7 @@
     <Compile Include="Controllers\API\GerentesController.cs" />
     <Compile Include="Controllers\API\MapaCalorController.cs" />
     <Compile Include="Controllers\API\SupervisorsController.cs" />
+    <Compile Include="Controllers\API\TipoCompromisoesController.cs" />
     <Compile Include="Controllers\API\TiposClientesController.cs" />
     <Compile Include="Controllers\API\AgendasController.cs" />
     <Compile Include="Controllers\API\VendedoresController.cs" />
@@ -255,6 +256,8 @@
     <Compile Include="Utils\CorreoUtil.cs" />
     <Compile Include="Utils\EstadoCliente.cs" />
     <Compile Include="Utils\FileHelper.cs" />
+    <Compile Include="Utils\GeoUtils\GeoUtils.cs" />
+    <Compile Include="Utils\GeoUtils\Position.cs" />
     <Compile Include="Utils\Mensaje.cs" />
     <Compile Include="Utils\Response.cs" />
   </ItemGroup>

@@ -92,7 +92,28 @@ namespace VentaServicios.Controllers.API
                 return lista;
             }
         }
-        
+
+        // POST: api/Agendas
+        [HttpPost]
+        [Route("Insertar")]
+        public async Task<Response> InsertarAgenda(Agenda agenda)
+        {
+            try
+            {
+                db.Agenda.Add(agenda);
+                await db.SaveChangesAsync();
+                return new Response { IsSuccess = true, };
+
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
 
 
     }
