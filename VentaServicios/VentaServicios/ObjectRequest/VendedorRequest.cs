@@ -56,5 +56,7 @@ namespace VentaServicios.ObjectRequest
 
         public List<ClienteRequest> ListaClientes { get; set; }
 
+        public EstadisticoVendedorRequest estadisticoVendedorRequest { get; set; }
+
     }
 }
