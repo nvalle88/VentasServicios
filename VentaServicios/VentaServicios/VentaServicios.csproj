@@ -249,6 +249,8 @@
     <Compile Include="ObjectRequest\UserRequest.cs" />
     <Compile Include="ObjectRequest\UbicacionPersonaRequest.cs" />
     <Compile Include="ObjectRequest\RutaRequest.cs" />
+    <Compile Include="ObjectRequest\TipoCompromisoRequest.cs" />
+    <Compile Include="ObjectRequest\EstadisticoVendedorRequest.cs" />
     <Compile Include="ObjectRequest\VendedorRequest.cs" />
     <Compile Include="ObjectRequest\VisitaRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

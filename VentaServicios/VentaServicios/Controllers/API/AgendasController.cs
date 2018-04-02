@@ -95,26 +95,95 @@ namespace VentaServicios.Controllers.API
 
         // POST: api/Agendas
         [HttpPost]
-        [Route("Insertar")]
-        public async Task<Response> InsertarAgenda(Agenda agenda)
+        [Route("VerEstadisticosVendedor")]
+        public async Task<EstadisticoVendedorRequest> VerEstadisticosVendedor(VendedorRequest vendedorRequest)
         {
+
+            EstadisticoVendedorRequest estadisticoVendedorRequest = new EstadisticoVendedorRequest();
+
+
+            //Solo necesita el IdVendedor
+
+            var promedio = 0;
+            var listaVisitas = new List<Visita>();
+
             try
             {
-                db.Agenda.Add(agenda);
-                await db.SaveChangesAsync();
-                return new Response { IsSuccess = true, };
 
+                // Lógica sacar promedio de calificaciones
+                listaVisitas = await db.Visita.Where(y => y.IdVendedor == vendedorRequest.IdVendedor).ToListAsync();
+
+                
+                for (int i = 0; i<listaVisitas.Count; i++) {
+                    promedio = promedio + Convert.ToInt32(listaVisitas.ElementAt(i).Calificacion);
+                }
+
+                promedio = promedio / listaVisitas.Count;
+
+
+
+                // Lógica para estadísticos pasteles (tipo de compromiso)
+                var listaCompromiso = await db.Compromiso
+                    .Join(db.TipoCompromiso, com => com.IdTipoCompromiso, tc => tc.IdTipoCompromiso, (com, tc) => new { tcom = com, ttc = tc })
+                    .Join(db.Visita, conjunto1 => conjunto1.tcom.idVisita, visita => visita.idVisita, (conjunto1, visita) => new {  Aconjunto1 = conjunto1, Avis = visita })
+                    .Join(db.Vendedor, conjunto2 => conjunto2.Avis.IdVendedor, ven => ven.IdVendedor, (conjunto2, ven) => new { AConjunto2 = conjunto2, Aven = ven })
+
+                .Where(y => y.Aven.IdVendedor == vendedorRequest.IdVendedor)
+                .Select(x => new TipoCompromisoRequest
+                {
+                    IdTipoCompromiso = x.AConjunto2.Aconjunto1.ttc.IdTipoCompromiso,
+                    Descripcion = x.AConjunto2.Aconjunto1.ttc.Descripcion
+
+                }
+
+                ).GroupBy(z => z.Descripcion).ToListAsync();
+
+
+                var listaTipoCompromisos = new List<TipoCompromisoRequest>();
+                
+                for (int i = 0; i < listaCompromiso.Count; i++)
+                {
+                    var num = listaCompromiso.ElementAt(i).Count();
+
+                    listaTipoCompromisos.Add(
+                        new TipoCompromisoRequest {
+                            Descripcion = listaCompromiso.ElementAt(i).ElementAt(0).Descripcion,
+                            CantidadCompromiso = num
+                        }
+                    );
+
+                    
+                }
+
+
+                // Lógica para compromisos cumplidos - incumplidos
+
+                var cumplidos = await db.Compromiso
+                    .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
+                    .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
+                    .Where(y => y.tven.IdVendedor == vendedorRequest.IdVendedor && !String.IsNullOrEmpty(y.varConjunto.tcom.Solucion) )
+                    .ToListAsync();
+
+                var incumplidos = await db.Compromiso
+                    .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
+                    .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
+                    .Where(y => y.tven.IdVendedor == vendedorRequest.IdVendedor && String.IsNullOrEmpty(y.varConjunto.tcom.Solucion) )
+                    .ToListAsync();
+
+
+                estadisticoVendedorRequest.IdVendedor = vendedorRequest.IdVendedor;
+                estadisticoVendedorRequest.CalificacionPromedio = promedio;
+                estadisticoVendedorRequest.ListaTipoCompromiso = listaTipoCompromisos;
+                estadisticoVendedorRequest.CompromisosCumplidos = cumplidos.Count();
+                estadisticoVendedorRequest.CompromisosIncumplidos = incumplidos.Count();
+
+                return estadisticoVendedorRequest;
             }
             catch (Exception ex)
             {
-                return new Response
-                {
-                    IsSuccess = false,
-                    Message = ex.Message
-                };
+                return estadisticoVendedorRequest;
             }
         }
-
 
     }
 }
