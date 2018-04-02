@@ -75,17 +75,68 @@ namespace VentaServicios.Controllers.API
                       })
                       .ToList();
 
-                //db.Configuration.ProxyCreationEnabled = false;
-                //listaClientes = db.Cliente.Select(x => new ClienteRequest
-                //{
-                //    IdCliente = x.idCliente,
-                //    Longitud =x.Longitud,
-                //    Latitud = x.Latitud
-                //}
-
-                //).Where(x => x.IdTipoCliente == mapaCalorRequest.IdTipoCLiente).ToList();
-
                 mapa.ListaClientes = listaClientes;
+
+                return mapa;
+            }
+            catch (Exception ex)
+            {
+                return mapa;
+            }
+        }
+
+        [HttpPost]
+        [Route("ListarVisitasPorTipoCompromiso")]
+        public async Task<MapaCalorRequest> ListarVisitasPorTipoCompromiso(MapaCalorRequest mapaCalorRequest)
+        {
+            var mapa = new MapaCalorRequest();
+            var listavistaporCompromiso = new List<VisitaRequest>();
+            try
+            {
+                listavistaporCompromiso = db.Compromiso
+                        .Join(db.Visita
+                            , tc => tc.idVisita, cli => cli.idVisita,
+                            (tc, cli) => new { hm = tc, gh = cli })
+                     .Where(ds =>
+                        ds.hm.IdTipoCompromiso == mapaCalorRequest.IdTipoCompromiso
+                      )
+                      
+                      .Select(t => new VisitaRequest
+                      {
+                          //idCliente = t.Count(),
+                          idVisita = t.gh.idVisita,
+                          Latitud = t.gh.Latitud,
+                          Longitud = t.gh.Longitud
+                      })
+                      .ToList();
+
+                mapa.ListaVisitaCompromiso = listavistaporCompromiso;
+
+                return mapa;
+            }
+            catch (Exception ex)
+            {
+                return mapa;
+            }
+        }
+        [HttpPost]
+        [Route("ListarVisitas")]
+        public async Task<MapaCalorRequest> ListarVisitas(MapaCalorRequest mapaCalorRequest)
+        {
+            var mapa = new MapaCalorRequest();
+            var listavista = new List<VisitaRequest>();
+            try
+            {
+                listavista = db.Visita
+                      .Select(t => new VisitaRequest
+                      {
+                          idVisita =t.idVisita,
+                          Latitud = t.Latitud,
+                          Longitud = t.Longitud
+                      })
+                      .ToList();
+
+                mapa.ListaVisita = listavista;
 
                 return mapa;
             }

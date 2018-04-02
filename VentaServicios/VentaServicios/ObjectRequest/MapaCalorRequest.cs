@@ -20,5 +20,8 @@ namespace VentaServicios.ObjectRequest
         public List<ClienteRequest> ListaClientes { get; set; }
         public List<TipoClienteRequest> ListaTipoCliente { get; set; }
         public List<TipoCompromisoRequest> ListaTipoCompromiso { get; set; }
+        public List<VisitaRequest> ListaVisita { get; set; }
+        public List<VisitaRequest> ListaVisitaCompromiso { get; set; }
+        
     }
 }
