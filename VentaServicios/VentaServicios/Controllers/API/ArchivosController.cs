@@ -37,6 +37,10 @@ namespace VentaServicios.Controllers.API
                     folder = "~/Content/Usuario/Firma";
                     file = string.Format("{0}.png", archivoRequest.Id);
                     break;
+                case 3:
+                    folder = "~/Content/Usuario/Vendedor/Foto";
+                    file = string.Format("{0}.png", archivoRequest.Id);
+                    break;
             }
 
 

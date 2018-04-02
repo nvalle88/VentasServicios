@@ -345,7 +345,8 @@ namespace VentaServicios.Controllers.API
                     return new Response
                     {
                         IsSuccess = true,
-                        Message = Mensaje.GuardadoSatisfactorio
+                        Message = Mensaje.GuardadoSatisfactorio,
+                        Resultado = vendedor.IdVendedor
                     };
 
                 }
