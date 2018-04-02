@@ -104,21 +104,17 @@ namespace VentaServicios.ModeloDato
                 .IsUnicode(false);
 
             modelBuilder.Entity<Cliente>()
-                .Property(e => e.Nombre)
-                .IsFixedLength();
+                .Property(e => e.Nombre);
 
             modelBuilder.Entity<Cliente>()
-                .Property(e => e.Apellido)
-                .IsFixedLength();
+                .Property(e => e.Apellido);
 
             modelBuilder.Entity<Cliente>()
                 .Property(e => e.Telefono)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<Cliente>()
-                .Property(e => e.Email)
-                .IsFixedLength();
+                .Property(e => e.Email);
 
             modelBuilder.Entity<Cliente>()
                 .Property(e => e.TelefonoMovil)

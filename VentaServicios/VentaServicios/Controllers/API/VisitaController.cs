@@ -55,5 +55,28 @@ namespace VentaServicios.Controllers.API
                 return supervisorRequest;
             }
         }
+
+        // POST: api/Visitas
+        [HttpPost]
+        [Route("Insertar")]
+        public async Task<Response> Insertar(CheckinRequest visita)
+        {
+            try
+            {
+                db.Visita.Add(visita.visita);
+                
+                await db.SaveChangesAsync();
+                return new Response { IsSuccess = true, };
+
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
     }
 }
