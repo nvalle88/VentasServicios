@@ -38,6 +38,10 @@ namespace VentaServicios
             CorreoUtil.Password = System.Configuration.ConfigurationManager.AppSettings["Contrasena"];
 
 
+            EstadoCliente.Activo = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ClienteActivado"]);
+            EstadoCliente.Inactivo = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ClienteDesactivado"]);
+            EstadoCliente.Todos = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ClienteTodos"]);
+
             Constantes.CuotaInferiorCodigo = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["CuotaInferiorCodigo"]);
             Constantes.CuotaSuperiorCodigo = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["CuotaSuperiorCodigo"]);
         }
