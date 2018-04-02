@@ -201,7 +201,7 @@ namespace VentaServicios.Controllers.API
             try
             {
                 var cliente = await db.Cliente.
-                                             Where(x => x.Vendedor.AspNetUsers.IdEmpresa == clienteRequest.IdEmpresa
+                                             Where(x => x.TipoCliente.IdEmpresa == clienteRequest.IdEmpresa
                                                      && x.Identificacion == clienteRequest.Identificacion)
                                              .FirstOrDefaultAsync();
 
@@ -211,7 +211,7 @@ namespace VentaServicios.Controllers.API
                     return new Response { IsSuccess = false };
                 };
 
-                if (cliente.idCliente==cliente.idCliente)
+                if (cliente.idCliente==clienteRequest.IdCliente)
                 {
                     return new Response { IsSuccess = false };
                 }
@@ -232,7 +232,6 @@ namespace VentaServicios.Controllers.API
             {
                 Apellido=clienteRequest.Apellido,
                 Email=clienteRequest.Email,
-                Foto=clienteRequest.Foto,
                 RazonSocial=clienteRequest.RazonSocial,
                 Identificacion=clienteRequest.Identificacion,
                 idTipoCliente=clienteRequest.IdTipoCliente,
@@ -244,27 +243,55 @@ namespace VentaServicios.Controllers.API
                 TelefonoMovil=clienteRequest.TelefonoMovil,
                 Direccion=clienteRequest.Direccion,
                 Firma=clienteRequest.Firma,
-                Estado=0,
+                Estado=clienteRequest.Estado,
             };
             try
             {
                 db.Cliente.Add(cliente);
                 await db.SaveChangesAsync();
-                return new Response {IsSuccess=true, };
+
+                var clienteRespuesta = new ClienteRequest { IdCliente = cliente.idCliente };
+                return new Response {IsSuccess=true, Resultado=clienteRespuesta};
+
             }
-            catch (Exception ex)
+            catch (Exception ex )
             {
                 return new Response {IsSuccess=false};
-            }            
-        }      
+
+            }
+            
+
+        }
+
+
+        [HttpPost]
+        [Route("EditarFotoCliente")]
+        public async Task<Response> EditarFotoCliente(ClienteRequest clienteRequest)
+        {
+            var clienteEditar = await db.Cliente.Where(x => x.idCliente == clienteRequest.IdCliente).FirstOrDefaultAsync();
+            clienteEditar.Foto = clienteRequest.Foto;
+            try
+            {
+                db.Entry(clienteEditar).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return new Response { IsSuccess = true, };
+
+            }
+            catch (Exception)
+            {
+                return new Response { IsSuccess = false };
+
+            }
+        }
+
         [HttpPost]
         [Route("EditarCliente")]
         public async Task<Response> EditarCliente(ClienteRequest clienteRequest)
         {
             var clienteEditar =await db.Cliente.Where(x => x.idCliente == clienteRequest.IdCliente).FirstOrDefaultAsync();
             clienteEditar.Apellido = clienteRequest.Apellido;
+            clienteEditar.Direccion = clienteRequest.Direccion;
             clienteEditar.Email = clienteRequest.Email;
-            clienteEditar.Foto = clienteRequest.Foto;
             clienteEditar.Identificacion = clienteRequest.Identificacion;
             clienteEditar.idTipoCliente = clienteRequest.IdTipoCliente;
             clienteEditar.IdVendedor = clienteRequest.IdVendedor;
@@ -273,8 +300,10 @@ namespace VentaServicios.Controllers.API
             clienteEditar.Nombre = clienteRequest.Nombre;
             clienteEditar.Telefono = clienteRequest.Telefono;
             clienteEditar.TelefonoMovil = clienteRequest.TelefonoMovil;
-            clienteEditar.Direccion = clienteRequest.Direccion;
-            clienteEditar.RazonSocial = clienteRequest.RazonSocial;                      
+            clienteEditar.RazonSocial = clienteRequest.RazonSocial;
+            
+           
+
             try
             {
                 db.Entry(clienteEditar).State = EntityState.Modified;
