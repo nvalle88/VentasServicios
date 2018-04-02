@@ -59,11 +59,12 @@ namespace VentaServicios.Controllers.API
         // POST: api/Visitas
         [HttpPost]
         [Route("Insertar")]
-        public async Task<Response> InsertarAgenda(Visita visita)
+        public async Task<Response> Insertar(CheckinRequest visita)
         {
             try
             {
-                db.Visita.Add(visita);
+                db.Visita.Add(visita.visita);
+                
                 await db.SaveChangesAsync();
                 return new Response { IsSuccess = true, };
 
