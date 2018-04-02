@@ -39,7 +39,6 @@ namespace VentaServicios.Controllers.API
                     break;
             }
 
-
             var stream = new MemoryStream(archivoRequest.Array);            
             var fullPath = string.Format("{0}/{1}", folder, file);
             var response = FileHelper.UploadFoto(stream, folder, file);
