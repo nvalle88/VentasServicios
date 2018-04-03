@@ -234,6 +234,7 @@
     <Compile Include="ModeloDato\TipoSuscripcion.cs" />
     <Compile Include="ModeloDato\TipoVisita.cs" />
     <Compile Include="ObjectRequest\CheckinRequest.cs" />
+    <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EventoRequest.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
     <Compile Include="ModeloDato\Visita.cs" />
@@ -339,7 +340,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Cliente\Firma\" />
+    <Folder Include="Content\Cliente\Foto\" />
     <Folder Include="Content\Usuario\Vendedor\Foto\" />
+    <Folder Include="Content\Visita\Firma\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
