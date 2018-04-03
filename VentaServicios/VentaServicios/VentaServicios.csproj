@@ -220,6 +220,7 @@
     <Compile Include="ModeloDato\Gerente.cs" />
     <Compile Include="ModeloDato\LogRutaVendedor.cs" />
     <Compile Include="ModeloDato\ModelVentas.cs" />
+    <Compile Include="ModeloDato\NearClientRequest.cs" />
     <Compile Include="ModeloDato\Noticia.cs" />
     <Compile Include="ModeloDato\Producto.cs" />
     <Compile Include="ModeloDato\ProductoVisita.cs" />

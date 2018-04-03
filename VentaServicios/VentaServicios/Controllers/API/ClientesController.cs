@@ -118,10 +118,10 @@ namespace VentaServicios.Controllers.API
         [ResponseType(typeof(Cliente))]
         [HttpPost]
         [Route("GetNearClients")]
-        public async Task<List<Cliente>> GetClientForPosition(Position posicion)
+        public async Task<List<Cliente>> GetClientForPosition(NearClientRequest posicion)
         {
             db.Configuration.ProxyCreationEnabled = false;
-            var clientes = await db.Cliente.ToListAsync();
+            var clientes = await db.Cliente.Where(x => x.IdVendedor==posicion.myId).ToListAsync();
             List<Cliente> Clientes = new List<Cliente>();
 
             foreach (var cliente in clientes)
@@ -131,7 +131,7 @@ namespace VentaServicios.Controllers.API
                     latitude = cliente.Latitud,
                     longitude = cliente.Longitud
                 };
-                if (GeoUtils.EstaCercaDeMi(posicion, cposition, 0.1))
+                if (GeoUtils.EstaCercaDeMi(posicion.Position, cposition, 0.1))
                 {
                     Clientes.Add(cliente);
                 }
@@ -483,9 +483,38 @@ namespace VentaServicios.Controllers.API
         {
             try
             {
+                List<CompromisoRequest> compromisos= new List<CompromisoRequest>();
+
                 db.Configuration.ProxyCreationEnabled = false;
+
                 var cliente = await db.Cliente.Where(x => x.idCliente == clienteRequest.IdCliente).FirstOrDefaultAsync();
-                var compromisos = await db.Compromiso.Where(x => x.Visita.idCliente == clienteRequest.IdCliente).ToListAsync();
+                var compromisosaux = await db.Compromiso.Where(x => x.Visita.idCliente == clienteRequest.IdCliente).ToListAsync();
+                if (compromisosaux!=null)
+                {
+                    foreach (var item in compromisosaux)
+                    {
+                        bool sol = true;
+                        if (item.Solucion==null|| item.Solucion=="")
+                        {
+                            sol = false;
+                        }
+                        compromisos.Add(
+                            new CompromisoRequest
+                            {
+                                idVisita=item.idVisita,
+                                IdCompromiso=item.IdCompromiso,
+                                IdTipoCompromiso=item.IdTipoCompromiso,
+                                Solucion=item.Solucion,
+                                isSolucion=sol,
+                                isEnable=!sol,
+                                Descripcion=item.Descripcion,
+                            }
+                            );
+                    }
+                }
+
+
+
                 DatosClienteRequest dcr = new DatosClienteRequest
                 {
                     cliente = cliente,
@@ -493,9 +522,9 @@ namespace VentaServicios.Controllers.API
                 };
                 return new Response { IsSuccess = true, Resultado = dcr };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new Response { IsSuccess = false };
+                return new Response { IsSuccess = false, Message= ex.Message};
             }
         }
     }
