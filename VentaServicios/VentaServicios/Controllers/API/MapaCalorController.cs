@@ -75,17 +75,127 @@ namespace VentaServicios.Controllers.API
                       })
                       .ToList();
 
-                //db.Configuration.ProxyCreationEnabled = false;
-                //listaClientes = db.Cliente.Select(x => new ClienteRequest
-                //{
-                //    IdCliente = x.idCliente,
-                //    Longitud =x.Longitud,
-                //    Latitud = x.Latitud
-                //}
+                mapa.ListaClientes = listaClientes;
 
-                //).Where(x => x.IdTipoCliente == mapaCalorRequest.IdTipoCLiente).ToList();
+                return mapa;
+            }
+            catch (Exception ex)
+            {
+                return mapa;
+            }
+        }
+
+        [HttpPost]
+        [Route("ListarTipoCliente")]
+        public async Task<MapaCalorRequest> ListarTipoCliente(MapaCalorRequest mapaCalorRequest)
+        {
+            var mapa = new MapaCalorRequest();
+            var listaClientes = new List<ClienteRequest>();
+            try
+            {
+                listaClientes = db.TipoCliente
+                        .Join(db.Cliente
+                            , tc => tc.idTipoCliente, cli => cli.idTipoCliente,
+                            (tc, cli) => new { hm = tc, gh = cli })
+                      .Select(t => new ClienteRequest
+                      {
+                          IdTipoCliente = t.gh.idTipoCliente,
+                          Latitud = t.gh.Latitud,
+                          Longitud = t.gh.Longitud
+                      })
+                      .ToList();
 
                 mapa.ListaClientes = listaClientes;
+
+                return mapa;
+            }
+            catch (Exception ex)
+            {
+                return mapa;
+            }
+        }
+
+
+        [HttpPost]
+        [Route("ListarVisitasPorTipoCompromiso")]
+        public async Task<MapaCalorRequest> ListarVisitasPorTipoCompromiso(MapaCalorRequest mapaCalorRequest)
+        {
+            var mapa = new MapaCalorRequest();
+            var listavistaporCompromiso = new List<VisitaRequest>();
+            try
+            {
+                var listavistacompromiso= db.Compromiso
+                        .Join(db.Visita
+                            , tc => tc.idVisita, cli => cli.idVisita,
+                            (tc, cli) => new { hm = tc, gh = cli })
+                     .Where(ds =>
+                        ds.hm.IdTipoCompromiso == mapaCalorRequest.IdTipoCompromiso
+                      ).GroupBy(z => z.gh.idCliente)
+                      .Select(t => new VisitaRequest
+                      {
+                          idVisita = t.FirstOrDefault().gh.idVisita,
+                          Latitud = t.FirstOrDefault().gh.Latitud,
+                          Longitud = t.FirstOrDefault().gh.Longitud,
+                          CantidadClienteTipoCompromiso =t.Count()
+                      })
+                      .ToList();
+
+                mapa.ListaVisitaCompromiso = listavistacompromiso;
+
+                return mapa;
+            }
+            catch (Exception ex)
+            {
+                return mapa;
+            }
+        }
+        [HttpPost]
+        [Route("ListarVisitas")]
+        public async Task<MapaCalorRequest> ListarVisitas(MapaCalorRequest mapaCalorRequest)
+        {
+            var mapa = new MapaCalorRequest();
+            var listavista = new List<VisitaRequest>();
+            try
+            {
+                listavista = db.Visita
+                      .Select(t => new VisitaRequest
+                      {
+                          idVisita =t.idVisita,
+                          Latitud = t.Latitud,
+                          Longitud = t.Longitud
+                      })
+                      .ToList();
+
+                mapa.ListaVisita = listavista;
+
+                return mapa;
+            }
+            catch (Exception ex)
+            {
+                return mapa;
+            }
+        }
+        [HttpPost]
+        [Route("ListarCompromisos")]
+        public async Task<MapaCalorRequest> ListarCompromisos(MapaCalorRequest mapaCalorRequest)
+        {
+            var mapa = new MapaCalorRequest();
+            var listavistaporCompromiso = new List<VisitaRequest>();
+            try
+            {
+                var listavistacompromiso = db.Compromiso
+                        .Join(db.Visita
+                            , tc => tc.idVisita, cli => cli.idVisita,
+                            (tc, cli) => new { hm = tc, gh = cli })
+                      .Select(t => new VisitaRequest
+                      {
+                          idVisita = t.gh.idVisita,
+                          Latitud = t.gh.Latitud,
+                          Longitud = t.gh.Longitud
+                      })
+                      .ToList();
+
+                mapa.ListaVisitaCompromiso = listavistacompromiso;
 
                 return mapa;
             }

@@ -172,6 +172,82 @@ namespace VentaServicios.Controllers.API
                 return new List<ClienteRequest>();
             }
         }
+
+
+        [HttpPost]
+        [Route("VerEstadisticosCliente")]
+        public async Task<EstadisticosClienteRequest> VerEstadisticosVendedor(ClienteRequest clienteRequest)
+        {
+
+            var estadisticoVendedorRequest = new EstadisticosClienteRequest();
+
+            var listaVisitas = new List<Visita>();
+
+            try
+            {
+
+                // Lógica para estadísticos pasteles (tipo de compromiso)
+                var listaCompromiso = await db.Compromiso
+                    .Join(db.TipoCompromiso, com => com.IdTipoCompromiso, tc => tc.IdTipoCompromiso, (com, tc) => new { tcom = com, ttc = tc })
+                    .Join(db.Visita, conjunto1 => conjunto1.tcom.idVisita, visita => visita.idVisita, (conjunto1, visita) => new { Aconjunto1 = conjunto1, Avis = visita })
+                    .Join(db.Cliente, conjunto2 => conjunto2.Avis.idCliente, ven => ven.idCliente, (conjunto2, ven) => new { AConjunto2 = conjunto2, Aven = ven })
+
+                .Where(y => y.Aven.idCliente == clienteRequest.IdCliente)
+                .Select(x => new TipoCompromisoRequest
+                {
+                    IdTipoCompromiso = x.AConjunto2.Aconjunto1.ttc.IdTipoCompromiso,
+                    Descripcion = x.AConjunto2.Aconjunto1.ttc.Descripcion
+
+                }
+
+                ).GroupBy(z => z.Descripcion).ToListAsync();
+
+
+                var listaTipoCompromisos = new List<TipoCompromisoRequest>();
+
+                for (int i = 0; i < listaCompromiso.Count; i++)
+                {
+                    var num = listaCompromiso.ElementAt(i).Count();
+
+                    listaTipoCompromisos.Add(
+                        new TipoCompromisoRequest
+                        {
+                            Descripcion = listaCompromiso.ElementAt(i).ElementAt(0).Descripcion,
+                            CantidadCompromiso = num
+                        }
+                    );
+
+                }
+
+
+                // Lógica para compromisos cumplidos - incumplidos
+
+                var cumplidos = await db.Compromiso
+                    .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
+                    .Join(db.Cliente, conjunto => conjunto.tv.idCliente, ven => ven.idCliente, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
+                    .Where(y => y.tven.idCliente == clienteRequest.IdCliente && !String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .ToListAsync();
+
+                var incumplidos = await db.Compromiso
+                    .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
+                    .Join(db.Cliente, conjunto => conjunto.tv.idCliente, ven => ven.idCliente, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
+                    .Where(y => y.tven.idCliente == clienteRequest.IdCliente && String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .ToListAsync();
+
+
+                estadisticoVendedorRequest.IdCliente = clienteRequest.IdCliente;
+                estadisticoVendedorRequest.ListaTipoCompromiso = listaTipoCompromisos;
+                estadisticoVendedorRequest.CompromisosCumplidos = cumplidos.Count();
+                estadisticoVendedorRequest.CompromisosIncumplidos = incumplidos.Count();
+
+                return estadisticoVendedorRequest;
+            }
+            catch (Exception ex)
+            {
+                return estadisticoVendedorRequest;
+            }
+        }
+
         [HttpPost]
         [Route("ExisteClientePorEmpresa")]
         public async Task<Response> ExisteClientePorEmpresa(ClienteRequest clienteRequest)
@@ -396,5 +472,31 @@ namespace VentaServicios.Controllers.API
 
         }
 
+        /// <summary>
+        /// Recuperamos todos los datos necesarios del cliente para la aplicación 
+        /// </summary>
+        /// <param name="clienteRequest"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("DatosCliente")]
+        public async Task<Response> DatosCliente(ClienteRequest clienteRequest)
+        {
+            try
+            {
+                db.Configuration.ProxyCreationEnabled = false;
+                var cliente = await db.Cliente.Where(x => x.idCliente == clienteRequest.IdCliente).FirstOrDefaultAsync();
+                var compromisos = await db.Compromiso.Where(x => x.Visita.idCliente == clienteRequest.IdCliente).ToListAsync();
+                DatosClienteRequest dcr = new DatosClienteRequest
+                {
+                    cliente = cliente,
+                    comprimisos = compromisos
+                };
+                return new Response { IsSuccess = true, Resultado = dcr };
+            }
+            catch (Exception)
+            {
+                return new Response { IsSuccess = false };
+            }
+        }
     }
 }
