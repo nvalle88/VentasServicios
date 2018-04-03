@@ -10,6 +10,7 @@ using System.Data.Entity;
 using VentaServicios.ModeloDato;
 using VentaServicios.ObjectRequest;
 using VentaServicios.Utils;
+using System.Data.Entity.Infrastructure;
 
 namespace VentaServicios.Controllers.API
 {
@@ -115,7 +116,7 @@ namespace VentaServicios.Controllers.API
             }
 
         }
-        // POST: api/Agendas
+        // POST: api/Compromiso
         [HttpPost]
         [Route("VerEstadisticos")]
         public async Task<EstadisticoSupervisorRequest> VerEstadisticos(SupervisorRequest supervisorRequest)
@@ -191,6 +192,28 @@ namespace VentaServicios.Controllers.API
             {
                 return estadisticoSupervisorRequest;
             }
+        }
+
+        //PUT: api/Compromiso
+        [HttpPost]
+        [Route("ActualizarCompromiso")]
+        public async Task<IHttpActionResult> PutCompromiso( Compromiso compromiso)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            db.Entry(compromiso).State = EntityState.Modified;
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {                
+                 throw;                
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
     }
