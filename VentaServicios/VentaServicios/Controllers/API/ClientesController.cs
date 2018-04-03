@@ -472,5 +472,31 @@ namespace VentaServicios.Controllers.API
 
         }
 
+        /// <summary>
+        /// Recuperamos todos los datos necesarios del cliente para la aplicación 
+        /// </summary>
+        /// <param name="clienteRequest"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("DatosCliente")]
+        public async Task<Response> DatosCliente(ClienteRequest clienteRequest)
+        {
+            try
+            {
+                db.Configuration.ProxyCreationEnabled = false;
+                var cliente = await db.Cliente.Where(x => x.idCliente == clienteRequest.IdCliente).FirstOrDefaultAsync();
+                var compromisos = await db.Compromiso.Where(x => x.Visita.idCliente == clienteRequest.IdCliente).ToListAsync();
+                DatosClienteRequest dcr = new DatosClienteRequest
+                {
+                    cliente = cliente,
+                    comprimisos = compromisos
+                };
+                return new Response { IsSuccess = true, Resultado = dcr };
+            }
+            catch (Exception)
+            {
+                return new Response { IsSuccess = false };
+            }
+        }
     }
 }
