@@ -489,7 +489,7 @@ namespace VentaServicios.Controllers.API
                 DatosClienteRequest dcr = new DatosClienteRequest
                 {
                     cliente = cliente,
-                    comprimisos = compromisos
+                    compromisos = compromisos
                 };
                 return new Response { IsSuccess = true, Resultado = dcr };
             }
