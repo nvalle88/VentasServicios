@@ -66,8 +66,18 @@ namespace VentaServicios.Controllers.API
                 db.Visita.Add(visita.visita);
                 
                 await db.SaveChangesAsync();
-                return new Response { IsSuccess = true, };
 
+                if (visita.compromisos!=null)
+                {
+                    var visitaid = visita.visita.idVisita;
+                    foreach (var item in visita.compromisos)
+                    {
+                        item.idVisita = visitaid;
+                        db.Compromiso.Add(item);
+                    }
+                    await db.SaveChangesAsync(); 
+                }
+                return new Response { IsSuccess = true, };
             }
             catch (Exception ex)
             {

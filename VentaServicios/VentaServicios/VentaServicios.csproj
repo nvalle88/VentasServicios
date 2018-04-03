@@ -234,6 +234,7 @@
     <Compile Include="ModeloDato\TipoSuscripcion.cs" />
     <Compile Include="ModeloDato\TipoVisita.cs" />
     <Compile Include="ObjectRequest\CheckinRequest.cs" />
+    <Compile Include="ObjectRequest\DatosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EventoRequest.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
     <Compile Include="ModeloDato\Visita.cs" />
