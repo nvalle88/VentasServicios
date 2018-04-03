@@ -327,11 +327,10 @@ namespace VentaServicios.Controllers.API
         [Route("InsertarVendedor")]
         public async Task<Response> InsertarVendedor( VendedorRequest vendedorRequest )
         {
-            using (var transaction = db.Database.BeginTransaction())
-            {
+            
                 try
                 {
-
+                
                     Vendedor vendedor = new Vendedor();
                     vendedor.IdUsuario = vendedorRequest.IdUsuario;
                     vendedor.TiempoSeguimiento = vendedorRequest.TiempoSeguimiento;
@@ -340,7 +339,6 @@ namespace VentaServicios.Controllers.API
                     db.Vendedor.Add(vendedor);
 
                     await db.SaveChangesAsync();
-                    transaction.Commit();
 
                     return new Response
                     {
@@ -352,11 +350,8 @@ namespace VentaServicios.Controllers.API
                 }
 
                 catch (Exception ex)
-
                 {
-
-                    transaction.Rollback();
-
+                    
                     return new Response
 
                     {
@@ -368,8 +363,7 @@ namespace VentaServicios.Controllers.API
                     };
 
                 }
-
-            }
+            
 
         }
 
@@ -596,6 +590,49 @@ namespace VentaServicios.Controllers.API
             }
         }
 
+
+
+
+        [HttpPost]
+        [Route("BuscarUsuariosVendedoresPorEmpresaEIdentificacion")]
+        public async Task<List<VendedorRequest>> BuscarUsuariosVendedoresPorEmpresaEIdentificacion(VendedorRequest vendedorRequest)
+        {
+
+            //Necesarios el IdEmpresa e Identificacion
+
+            var listaVendedores = new List<VendedorRequest>();
+
+            try
+            {
+                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = vendedorRequest.idEmpresa
+
+                }
+
+                ).Where(x => x.idEmpresa == vendedorRequest.idEmpresa && x.Identificacion == vendedorRequest.Identificacion).ToListAsync();
+
+                return listaVendedores;
+            }
+            catch (Exception ex)
+            {
+                return listaVendedores;
+            }
+        }
 
     }
 }
