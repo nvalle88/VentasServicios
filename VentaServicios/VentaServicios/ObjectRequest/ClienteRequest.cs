@@ -47,6 +47,8 @@ namespace VentaServicios.ObjectRequest
 
         public int Estado { get; set; }
 
+        public EstadisticosClienteRequest EstadisticosClienteRequest { get; set; }
+
 
     }
 }

@@ -12,7 +12,6 @@ namespace VentaServicios.ObjectRequest
         
         public string Descripcion { get; set; }
 
-
         // Este campo se usa para realizar el estadístico (No es parte de la tabla)
         public int? CantidadCompromiso { get; set; }
     }
