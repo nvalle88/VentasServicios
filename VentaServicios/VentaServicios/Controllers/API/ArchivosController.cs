@@ -39,7 +39,7 @@ namespace VentaServicios.Controllers.API
                     break;
                 case 3:
                     folder = "~/Content/Usuario/Vendedor/Foto";
-                    file = string.Format("{0}.png", archivoRequest.Id);
+                    file = string.Format("{0}.jpg", archivoRequest.Id);
                     break;
                 case 4:
                     folder = "~/Content/Visita/Firma";

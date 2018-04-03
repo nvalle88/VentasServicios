@@ -236,6 +236,7 @@
     <Compile Include="ObjectRequest\CheckinRequest.cs" />
     <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EstadisticoSupervisorRequest.cs" />
+    <Compile Include="ObjectRequest\DatosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EventoRequest.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
     <Compile Include="ModeloDato\Visita.cs" />
@@ -301,6 +302,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\ventasDemoWS - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ventasDemoWS - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
