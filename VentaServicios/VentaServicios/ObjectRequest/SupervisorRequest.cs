@@ -40,5 +40,6 @@ namespace VentaServicios.ObjectRequest
         public List<VendedorRequest> ListaVendedoresSinAsignar { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
+        public EstadisticoSupervisorRequest estadisticoSupervisorRequest { get; set; }
     }
 }

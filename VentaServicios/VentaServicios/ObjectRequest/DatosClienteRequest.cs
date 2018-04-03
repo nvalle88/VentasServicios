@@ -9,6 +9,6 @@ namespace VentaServicios.ObjectRequest
     public class DatosClienteRequest
     {
         public Cliente cliente { get; set; }
-        public List<Compromiso> comprimisos { get; set; }
+        public List<CompromisoRequest> compromisos { get; set; }
     }
 }

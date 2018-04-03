@@ -220,6 +220,7 @@
     <Compile Include="ModeloDato\Gerente.cs" />
     <Compile Include="ModeloDato\LogRutaVendedor.cs" />
     <Compile Include="ModeloDato\ModelVentas.cs" />
+    <Compile Include="ModeloDato\NearClientRequest.cs" />
     <Compile Include="ModeloDato\Noticia.cs" />
     <Compile Include="ModeloDato\Producto.cs" />
     <Compile Include="ModeloDato\ProductoVisita.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="ModeloDato\TipoVisita.cs" />
     <Compile Include="ObjectRequest\CheckinRequest.cs" />
     <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />
+    <Compile Include="ObjectRequest\EstadisticoSupervisorRequest.cs" />
     <Compile Include="ObjectRequest\DatosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EventoRequest.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
@@ -301,6 +303,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\ventasDemoWS - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ventasDemoWS - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -341,10 +344,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Cliente\Firma\" />
-    <Folder Include="Content\Cliente\Foto\" />
     <Folder Include="Content\Usuario\Vendedor\Foto\" />
-    <Folder Include="Content\Visita\Firma\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
