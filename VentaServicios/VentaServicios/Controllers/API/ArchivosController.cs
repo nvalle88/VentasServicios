@@ -30,15 +30,19 @@ namespace VentaServicios.Controllers.API
             switch (archivoRequest.Tipo)
             {
                 case 1:
-                    folder = "~/Content/Usuario/Foto";
+                    folder = "~/Content/Cliente/Foto";
                     file = string.Format("{0}.jpg", archivoRequest.Id);
                     break;
                 case 2:
-                    folder = "~/Content/Usuario/Firma";
+                    folder = "~/Content/Cliente/Firma";
                     file = string.Format("{0}.png", archivoRequest.Id);
                     break;
                 case 3:
                     folder = "~/Content/Usuario/Vendedor/Foto";
+                    file = string.Format("{0}.png", archivoRequest.Id);
+                    break;
+                case 4:
+                    folder = "~/Content/Visita/Firma";
                     file = string.Format("{0}.png", archivoRequest.Id);
                     break;
             }

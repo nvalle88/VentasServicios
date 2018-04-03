@@ -233,6 +233,7 @@
     <Compile Include="ModeloDato\TipoDato.cs" />
     <Compile Include="ModeloDato\TipoSuscripcion.cs" />
     <Compile Include="ModeloDato\TipoVisita.cs" />
+    <Compile Include="ObjectRequest\CheckinRequest.cs" />
     <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EventoRequest.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
@@ -267,8 +268,11 @@
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Cliente\Firma\cover.png" />
+    <Content Include="Content\Cliente\Foto\cover.png" />
     <Content Include="Content\Usuario\Firma\cover.png" />
     <Content Include="Content\Usuario\Foto\logo-o.png" />
+    <Content Include="Content\Visita\Firma\cover.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -341,8 +345,6 @@
     <Folder Include="Content\Usuario\Vendedor\Foto\" />
     <Folder Include="Content\Visita\Firma\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Clientes\" />
-    <Folder Include="Views\Empresas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
