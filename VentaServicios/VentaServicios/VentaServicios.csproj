@@ -233,6 +233,7 @@
     <Compile Include="ModeloDato\TipoDato.cs" />
     <Compile Include="ModeloDato\TipoSuscripcion.cs" />
     <Compile Include="ModeloDato\TipoVisita.cs" />
+    <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EventoRequest.cs" />
     <Compile Include="ModeloDato\Vendedor.cs" />
     <Compile Include="ModeloDato\Visita.cs" />
@@ -337,9 +338,11 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\Cliente\Firma\" />
     <Folder Include="Content\Cliente\Foto\" />
-    <Folder Include="Content\Visita\Firma\" />
     <Folder Include="Content\Usuario\Vendedor\Foto\" />
+    <Folder Include="Content\Visita\Firma\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Clientes\" />
+    <Folder Include="Views\Empresas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
