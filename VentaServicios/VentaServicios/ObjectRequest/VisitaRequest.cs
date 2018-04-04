@@ -12,6 +12,7 @@ namespace VentaServicios.ObjectRequest
         public int Calificacion { get; set; }
 
         public int CantidadClienteTipoCompromiso { get; set; }
+        public int valorCalculado { get; set; }
 
         public string Firma { get; set; }
 
