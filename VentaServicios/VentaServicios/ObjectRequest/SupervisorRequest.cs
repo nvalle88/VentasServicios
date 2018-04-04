@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
@@ -20,9 +21,8 @@ namespace VentaServicios.ObjectRequest
         public string Correo { get; set; }
         public string cliente { get; set; }
 
-
+       
         public string Direccion { get; set; }
-
         public string Identificacion { get; set; }
 
         public string Nombres { get; set; }

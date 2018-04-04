@@ -99,11 +99,11 @@ namespace VentaServicios.Controllers.API
                     //user.PasswordHash = "123";
                     //db.AspNetUsers.Add(user);
                     //await db.SaveChangesAsync();
-
+                    var super = new Supervisor();
                     var gerente = db.Gerente.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa);
                     if (gerente !=null)
                     {
-                        var super = new Supervisor();
+                        
                         super.IdGerente = gerente.FirstOrDefault().IdGerente;
                         super.IdUsuario = supervisorRequest.IdUsuario;
                         db.Supervisor.Add(super);
@@ -115,6 +115,7 @@ namespace VentaServicios.Controllers.API
                     return new Response
                     {
                         IsSuccess = true,
+                        Resultado = new SupervisorRequest { IdSupervisor = super.IdSupervisor },
                         Message = Mensaje.Satisfactorio
                     };
 
@@ -266,6 +267,42 @@ namespace VentaServicios.Controllers.API
             }
         }
 
-        
+
+        [HttpPost]
+        [Route("BuscarSupervisorPorEmpresaEIdentificacion")]
+        public async Task<List<SupervisorRequest>> BuscarSupervisorPorEmpresaEIdentificacion(SupervisorRequest supervisorRequest)
+        {
+
+            //Necesarios el IdEmpresa e Identificacion
+
+            var listaSupervisores = new List<SupervisorRequest>();
+
+            try
+            {
+                listaSupervisores = await db.Supervisor.Select(x => new SupervisorRequest
+                {
+                    
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    IdEmpresa = supervisorRequest.IdEmpresa
+
+                }
+
+                ).Where(x => x.IdEmpresa == supervisorRequest.IdEmpresa && x.Identificacion == supervisorRequest.Identificacion).ToListAsync();
+
+                return listaSupervisores;
+            }
+            catch (Exception ex)
+            {
+                return listaSupervisores;
+            }
+        }
+
     }
 }
