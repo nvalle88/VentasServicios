@@ -595,7 +595,7 @@ namespace VentaServicios.Controllers.API
             var lista = new List<RutaRequest>();
             var lista2 = new List<RutaRequest>();
 
-            DateTime hoy = DateTime.Now;
+            DateTime hoy = vendedorRequest.FechaRuta;
 
             try
             {

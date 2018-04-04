@@ -8,6 +8,8 @@ namespace VentaServicios.ObjectRequest
 {
     public class VendedorRequest
     {
+        // Mapa
+        public DateTime FechaRuta { get; set; }
 
         // Campos de la tabla vendedor
         public int IdVendedor { get; set; }
