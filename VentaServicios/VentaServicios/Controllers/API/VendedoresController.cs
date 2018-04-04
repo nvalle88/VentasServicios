@@ -263,6 +263,48 @@ namespace VentaServicios.Controllers.API
                 return supervisorRequest;
             }
         }
+        [HttpPost]
+        [Route("ListarVendedoresSupervisor")]
+        public async Task<SupervisorRequest> ListarVendedoresSupervisor(SupervisorRequest supervisorRequest)
+        {
+
+            var listaVendedores = new List<VendedorRequest>();
+
+            try
+            {
+                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+                    NombreApellido = x.AspNetUsers.Nombres + " " + x.AspNetUsers.Apellidos,
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = supervisorRequest.IdEmpresa
+
+                }
+
+                ).Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor
+                    && x.Estado == 1
+                ).ToListAsync();
+
+                supervisorRequest.ListaVendedores = listaVendedores;
+
+                return supervisorRequest;
+            }
+            catch (Exception ex)
+            {
+                return supervisorRequest;
+            }
+        }
 
 
         // POST: api/Vendedores
