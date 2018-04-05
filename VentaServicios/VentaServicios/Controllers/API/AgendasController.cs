@@ -22,9 +22,6 @@ namespace VentaServicios.Controllers.API
     public class AgendasController : ApiController
     {
         private readonly ModelVentas db = new ModelVentas();
-
-
-
         
         // POST: api/Agendas
         [HttpPost]
@@ -183,6 +180,23 @@ namespace VentaServicios.Controllers.API
             {
                 return estadisticoVendedorRequest;
             }
+        }
+
+        // POST: api/Agendas
+        [HttpPost]
+        [Route("Agregar")]
+        [ResponseType(typeof(Agenda))]
+        public async Task<IHttpActionResult> PostEmpresa(Agenda agenda)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            db.Agenda.Add(agenda);
+            await db.SaveChangesAsync();
+
+            return CreatedAtRoute("DefaultApi", new { id = agenda.idAgenda }, agenda);
         }
 
     }
