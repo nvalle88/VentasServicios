@@ -123,7 +123,10 @@ namespace VentaServicios.Controllers.API
             var mapa = new MapaCalorRequest();
             var listavistaporCompromiso = new List<VisitaRequest>();
             try
-            {
+            { 
+
+                var totalcompromisos = db.Compromiso.Where(x => x.IdTipoCompromiso == mapaCalorRequest.IdTipoCompromiso).ToList();
+                var total = totalcompromisos.Count();
                 var listavistacompromiso= db.Compromiso
                         .Join(db.Visita
                             , tc => tc.idVisita, cli => cli.idVisita,
@@ -136,10 +139,12 @@ namespace VentaServicios.Controllers.API
                           idVisita = t.FirstOrDefault().gh.idVisita,
                           Latitud = t.FirstOrDefault().gh.Latitud,
                           Longitud = t.FirstOrDefault().gh.Longitud,
-                          CantidadClienteTipoCompromiso =t.Count()
+                          CantidadClienteTipoCompromiso =t.Count(),
+                          valorCalculado = total
                       })
                       .ToList();
-
+                
+                //var aa = totalcompromisos.Count();
                 mapa.ListaVisitaCompromiso = listavistacompromiso;
 
                 return mapa;
@@ -183,15 +188,20 @@ namespace VentaServicios.Controllers.API
             var listavistaporCompromiso = new List<VisitaRequest>();
             try
             {
+                var totalcompromisos = db.Compromiso.ToList();
+                var total = totalcompromisos.Count();
                 var listavistacompromiso = db.Compromiso
                         .Join(db.Visita
                             , tc => tc.idVisita, cli => cli.idVisita,
                             (tc, cli) => new { hm = tc, gh = cli })
+                            .GroupBy(z => z.gh.idCliente)
                       .Select(t => new VisitaRequest
                       {
-                          idVisita = t.gh.idVisita,
-                          Latitud = t.gh.Latitud,
-                          Longitud = t.gh.Longitud
+                          idVisita = t.FirstOrDefault().gh.idVisita,
+                          Latitud = t.FirstOrDefault().gh.Latitud,
+                          Longitud = t.FirstOrDefault().gh.Longitud,
+                          CantidadClienteTipoCompromiso = t.Count(),
+                          valorCalculado = total
                       })
                       .ToList();
 

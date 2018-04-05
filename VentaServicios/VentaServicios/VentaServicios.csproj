@@ -275,6 +275,7 @@
     <Content Include="Content\Cliente\Foto\cover.png" />
     <Content Include="Content\Usuario\Firma\cover.png" />
     <Content Include="Content\Usuario\Foto\logo-o.png" />
+    <Content Include="Content\Usuario\Vendedor\Foto\19.jpg" />
     <Content Include="Content\Visita\Firma\cover.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -344,7 +345,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Usuario\Vendedor\Foto\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
