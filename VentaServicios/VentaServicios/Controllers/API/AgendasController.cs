@@ -24,6 +24,11 @@ namespace VentaServicios.Controllers.API
         private readonly ModelVentas db = new ModelVentas();
         
         // POST: api/Agendas
+        /// <summary>
+        ///Prioridad: 0 = baja (verde), 1 = media (naranja), 2 = alta (rojo) 
+        /// </summary>
+        /// <param name="vendedorRequest"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("ListarEventosPorVendedor")]
         public async Task<List<EventoRequest>> ListarEventosPorVendedor(VendedorRequest vendedorRequest)
@@ -31,7 +36,6 @@ namespace VentaServicios.Controllers.API
 
             //Solo necesita el IdVendedor
 
-            //Prioridad: 0 = baja (verde), 1 = media (naranja), 2 = alta (rojo) 
 
             var lista = new List<EventoRequest>();
 
@@ -89,7 +93,7 @@ namespace VentaServicios.Controllers.API
                 return lista;
             }
         }
-
+       
         // POST: api/Agendas
         [HttpPost]
         [Route("VerEstadisticosVendedor")]
@@ -185,18 +189,28 @@ namespace VentaServicios.Controllers.API
         // POST: api/Agendas
         [HttpPost]
         [Route("Agregar")]
-        [ResponseType(typeof(Agenda))]
-        public async Task<IHttpActionResult> PostEmpresa(Agenda agenda)
+        public async Task<Response> Agregar(Agenda agenda)
         {
-            if (!ModelState.IsValid)
+
+            try
             {
-                return BadRequest(ModelState);
+                db.Agenda.Add(agenda);
+                await db.SaveChangesAsync();
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = "Ok"
+                };
             }
+            catch (Exception)
+            {
 
-            db.Agenda.Add(agenda);
-            await db.SaveChangesAsync();
+                throw;
+            }
+          
 
-            return CreatedAtRoute("DefaultApi", new { id = agenda.idAgenda }, agenda);
+           // return CreatedAtRoute("DefaultApi", new { id = agenda.idAgenda }, agenda);
+          
         }
 
     }
