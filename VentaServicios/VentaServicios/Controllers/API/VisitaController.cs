@@ -63,6 +63,9 @@ namespace VentaServicios.Controllers.API
         {
             try
             {
+                var client = db.Cliente.Where(x => x.idCliente == visita.visita.idCliente).FirstOrDefault();
+                visita.visita.Latitud = client.Latitud;
+                visita.visita.Longitud = client.Longitud;
                 db.Visita.Add(visita.visita);
                 
                 await db.SaveChangesAsync();
