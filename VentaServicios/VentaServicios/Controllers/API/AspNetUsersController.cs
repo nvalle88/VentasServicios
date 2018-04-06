@@ -55,6 +55,39 @@ namespace VentaServicios.Controllers.API
             return new Response { IsSuccess = true };
         }
 
+        [Route("EnviarContrasena")]
+        public async Task<Response> EnviarContrasena(RecuperarContrasenaRequest recuperarContrasenaRequest)
+        {
+            try
+            {
+
+                //Configuring webMail class to send emails  
+                //gmail smtp server  
+                WebMail.SmtpServer = CorreoUtil.SmtpServer;
+                //gmail port to send emails  
+                WebMail.SmtpPort = Convert.ToInt32(CorreoUtil.Port);
+                WebMail.SmtpUseDefaultCredentials = true;
+                //sending emails with secure protocol  
+                WebMail.EnableSsl = true;
+                //EmailId used to send emails from application  
+                WebMail.UserName = CorreoUtil.UserName;
+                WebMail.Password = CorreoUtil.Password;
+
+                //Sender email address.  
+                WebMail.From = CorreoUtil.UserName;
+
+                //Send email  
+                WebMail.Send(to: recuperarContrasenaRequest.Email, subject: "Contraseña: " + recuperarContrasenaRequest.Codigo, body: "Contraseña: " + recuperarContrasenaRequest.Codigo, isBodyHtml: true);
+                return new Response { IsSuccess = true };
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+
         [Route("GenerarCodigo")]
         public async Task<Response> GenerarCodigo(RecuperarContrasenaRequest recuperarContrasenaRequest)
         {

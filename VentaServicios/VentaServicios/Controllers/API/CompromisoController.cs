@@ -123,9 +123,6 @@ namespace VentaServicios.Controllers.API
         {
             EstadisticoSupervisorRequest estadisticoSupervisorRequest = new EstadisticoSupervisorRequest();
 
-
-            
-
             try
             {
                 
@@ -170,13 +167,13 @@ namespace VentaServicios.Controllers.API
                 var cumplidos = await db.Compromiso
                     .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
                     .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
-                    //.Where(y => y.tven.IdVendedor == vendedorRequest.IdVendedor && !String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .Where(y =>  !String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
                     .ToListAsync();
 
                 var incumplidos = await db.Compromiso
                     .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
                     .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
-                    //.Where(y => y.tven.IdVendedor == vendedorRequest.IdVendedor && String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .Where(y =>  String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
                     .ToListAsync();
 
 
