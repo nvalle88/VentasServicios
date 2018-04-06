@@ -171,6 +171,32 @@ namespace VentaServicios.Controllers.API
             }
         }
 
+
+        [HttpPost]
+        [Route("ObtenerVendedor")]
+        public async Task<Response> ObtenerVendedor(VendedorRequest vendedorRequest)
+        {
+
+           
+            var vendedor =await db.Vendedor.Where(x => x.IdVendedor == vendedorRequest.IdVendedor)
+                        .Select(y=>new VendedorRequest
+                        {
+                            Identificacion=y.AspNetUsers.Identificacion,
+                            NombreApellido=y.AspNetUsers.Nombres +" "+ y.AspNetUsers.Apellidos,
+                            Correo=y.AspNetUsers.Email,
+                            Telefono=y.AspNetUsers.Telefono,
+                            Foto=y.AspNetUsers.Foto,
+                            IdVendedor=y.IdVendedor,
+                        })
+                .FirstOrDefaultAsync();
+
+            if (vendedor!=null)
+            {
+                return new Response { IsSuccess = true, Resultado = vendedor };
+            }
+            return new Response { IsSuccess = false};
+        }
+
         // POST: api/Vendedores
         [HttpPost]
         [Route("ListarVendedoresPorSupervisor")]

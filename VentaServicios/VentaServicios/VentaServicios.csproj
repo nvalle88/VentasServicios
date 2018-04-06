@@ -190,6 +190,7 @@
     <Compile Include="Controllers\API\CompromisoController.cs" />
     <Compile Include="Controllers\API\EmpresasController.cs" />
     <Compile Include="Controllers\API\GerentesController.cs" />
+    <Compile Include="Controllers\API\LogRutaVendedorsController.cs" />
     <Compile Include="Controllers\API\MapaCalorController.cs" />
     <Compile Include="Controllers\API\SupervisorsController.cs" />
     <Compile Include="Controllers\API\TipoCompromisoesController.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Controllers\API\AgendasController.cs" />
     <Compile Include="Controllers\API\VendedoresController.cs" />
     <Compile Include="Controllers\API\VisitaController.cs" />
+    <Compile Include="Controllers\API\Visitas2Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MVC\GerentesController.cs" />
     <Compile Include="Controllers\MVC\SupervisorsController.cs" />

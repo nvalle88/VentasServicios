@@ -273,12 +273,12 @@ namespace VentaServicios.Controllers.API
         //PUT: api/Compromiso
         [HttpPost]
         [Route("ActualizarCompromiso")]
-        public async Task<IHttpActionResult> PutCompromiso( Compromiso compromiso)
+        public async Task<IHttpActionResult> PutCompromiso( Compromiso compromisoAux)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            
+            var compromiso = await db.Compromiso.Where(x => x.IdCompromiso == compromisoAux.IdCompromiso).FirstOrDefaultAsync();
+            compromiso.Solucion = compromisoAux.Solucion;
+
             db.Entry(compromiso).State = EntityState.Modified;
             try
             {
