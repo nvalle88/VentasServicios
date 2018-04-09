@@ -491,10 +491,10 @@ namespace VentaServicios.Controllers.API
             try
             {
                 
-                var supervisor = await db.Gerente.Where(x=>x.AspNetUsers.Id == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
+                var supervisor = await db.Supervisor.Where(x=>x.AspNetUsers.Id == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
                 {
                     IdUsuario = x.AspNetUsers.Id,
-                    IdSupervisor = x.Supervisor.FirstOrDefault().IdSupervisor,
+                    IdSupervisor = x.IdSupervisor,
                     Identificacion = x.AspNetUsers.Identificacion,
                     Nombres = x.AspNetUsers.Nombres,
                     Apellidos = x.AspNetUsers.Apellidos,
