@@ -591,6 +591,7 @@ namespace VentaServicios.Controllers.API
 
             // Necesarios: IdEmpresa e IdVendedor
             // solo muestra vendedores con estado 1("Activado")
+            db.Configuration.ProxyCreationEnabled = false;
 
             var lista = new List<RutaRequest>();
             var lista2 = new List<RutaRequest>();
@@ -618,19 +619,36 @@ namespace VentaServicios.Controllers.API
                 
                 lista2 = await db.Visita
                     .Join(db.Vendedor, lrv => lrv.IdVendedor, v => v.IdVendedor, (lrv, v) => new { tlrv = lrv, tv = v })
-                    .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id, (conjunto, asp) => new { varConjunto = conjunto, tAsp = asp })
-                .Where(y => y.tAsp.IdEmpresa == vendedorRequest.idEmpresa && y.tAsp.Estado == 1 && y.varConjunto.tv.IdVendedor == vendedorRequest.IdVendedor)
+                    .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id, (conjunto, asp) => new { visitasUsuarios = conjunto, tAsp = asp })
+
+                    .Join(db.Compromiso, conjunto2 => conjunto2.visitasUsuarios.tlrv.idVisita, compromiso => compromiso.idVisita, (conjunto2, compromiso) => new { CompromisosVisitas = conjunto2, compromisos = compromiso })
+
+                    .Join(db.TipoCompromiso, conjunto3 => conjunto3.compromisos.IdTipoCompromiso, tcompromiso => tcompromiso.IdTipoCompromiso, (conjunto3, tcompromiso) => new { varConjunto = conjunto3, tiposCompromisos = tcompromiso })
+
+
+                .Where(y => y.varConjunto.CompromisosVisitas.tAsp.IdEmpresa == vendedorRequest.idEmpresa 
+                && y.varConjunto.CompromisosVisitas.tAsp.Estado == 1 
+                && y.varConjunto.CompromisosVisitas.visitasUsuarios.tv.IdVendedor == vendedorRequest.IdVendedor)
                 .Select(x => new RutaRequest
                 {
                     IdLogRutaVendedor = 0,
-                    IdVendedor = x.varConjunto.tlrv.IdVendedor,
-                    Fecha = x.varConjunto.tlrv.Fecha,
-                    Latitud = x.varConjunto.tlrv.Latitud,
-                    Longitud = x.varConjunto.tlrv.Longitud
-
+                    IdVendedor = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.IdVendedor,
+                    Fecha = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.Fecha,
+                    Latitud = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.Latitud,
+                    Longitud = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.Longitud,
+                    ClienteRequest=new ClienteRequest
+                    {
+                        IdCliente = x.varConjunto.compromisos.Visita.Cliente.idCliente,
+                        Nombre= x.varConjunto.compromisos.Visita.Cliente.Nombre,
+                        Apellido = x.varConjunto.compromisos.Visita.Cliente.Apellido,
+                        Direccion = x.varConjunto.compromisos.Visita.Cliente.Direccion,
+                        Identificacion = x.varConjunto.compromisos.Visita.Cliente.Identificacion,
+                        Foto = x.varConjunto.compromisos.Visita.Cliente.Foto,
+                    }
                 }
 
                 ).OrderBy(or => or.Fecha).ToListAsync();
+
 
                 for (int i = 0; i<lista2.Count; i++)
                 {
@@ -649,6 +667,22 @@ namespace VentaServicios.Controllers.API
 
                 
                 var lista3 = lista2.OrderBy(t => t.Fecha).ToList();
+
+                // Visitas
+                var listaVisitas =await db.Visita
+                                    .Where(x => x.Fecha.Day == hoy.Day && x.Vendedor.IdVendedor == vendedorRequest.IdVendedor)
+                                    .Select(c => new VisitaRecorrido
+                                    {
+                                        ClienteRequest = new ClienteRequest
+                                        {
+                                            Nombre = c.Cliente.Nombre,
+                                            Apellido = c.Cliente.Apellido,
+                                        },
+                                        ListaCompromisos = c.Compromiso.ToList(),
+                                        Fecha = c.Fecha,
+                                        IdVisita = c.idVisita,
+                                    }
+                                    ).ToListAsync();
                 
                 return lista3;
             }

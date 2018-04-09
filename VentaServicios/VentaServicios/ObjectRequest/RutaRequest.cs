@@ -20,5 +20,6 @@ namespace VentaServicios.ObjectRequest
 
         public int IdVendedor { get; set; }
 
+        public ClienteRequest ClienteRequest { get; set; }
     }
 }

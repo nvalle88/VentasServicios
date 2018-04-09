@@ -235,6 +235,9 @@
     <Compile Include="ModeloDato\TipoSuscripcion.cs" />
     <Compile Include="ModeloDato\TipoVisita.cs" />
     <Compile Include="ObjectRequest\CheckinRequest.cs" />
+    <Compile Include="ObjectRequest\CompromisosRecorrido.cs" />
+    <Compile Include="ObjectRequest\VisitaRecorrido.cs" />
+    <Compile Include="ObjectRequest\compromisosConTipo.cs" />
     <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />
     <Compile Include="ObjectRequest\EstadisticoSupervisorRequest.cs" />
     <Compile Include="ObjectRequest\DatosClienteRequest.cs" />
@@ -248,6 +251,7 @@
     <Compile Include="ObjectRequest\GerenteRequest.cs" />
     <Compile Include="ObjectRequest\MapaCalorRequest.cs" />
     <Compile Include="ObjectRequest\RecuperarContrasenaRequest.cs" />
+    <Compile Include="ObjectRequest\RutasVisitasRequest.cs" />
     <Compile Include="ObjectRequest\SupervisorRequest.cs" />
     <Compile Include="ObjectRequest\TipoClienteRequest.cs" />
     <Compile Include="ObjectRequest\TipoCompromisoRequest.cs" />
