@@ -123,9 +123,6 @@ namespace VentaServicios.Controllers.API
         {
             EstadisticoSupervisorRequest estadisticoSupervisorRequest = new EstadisticoSupervisorRequest();
 
-
-            
-
             try
             {
                 
@@ -170,13 +167,13 @@ namespace VentaServicios.Controllers.API
                 var cumplidos = await db.Compromiso
                     .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
                     .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
-                    //.Where(y => y.tven.IdVendedor == vendedorRequest.IdVendedor && !String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .Where(y =>  !String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
                     .ToListAsync();
 
                 var incumplidos = await db.Compromiso
                     .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
                     .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
-                    //.Where(y => y.tven.IdVendedor == vendedorRequest.IdVendedor && String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .Where(y =>  String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
                     .ToListAsync();
 
 
@@ -193,16 +190,92 @@ namespace VentaServicios.Controllers.API
                 return estadisticoSupervisorRequest;
             }
         }
+        [HttpPost]
+        [Route("VerEstadisticosPorSupervisor")]
+        public async Task<EstadisticoSupervisorRequest> VerEstadisticosPorSupervisor(SupervisorRequest supervisorRequest)
+        {
+            EstadisticoSupervisorRequest estadisticoSupervisorRequest = new EstadisticoSupervisorRequest();
+
+
+
+
+            try
+            {
+
+
+                // Lógica para estadísticos pasteles (tipo de compromiso)
+                var listaCompromiso = await db.Compromiso
+                    .Join(db.TipoCompromiso, com => com.IdTipoCompromiso, tc => tc.IdTipoCompromiso, (com, tc) => new { tcom = com, ttc = tc })
+                    .Join(db.Visita, conjunto1 => conjunto1.tcom.idVisita, visita => visita.idVisita, (conjunto1, visita) => new { Aconjunto1 = conjunto1, Avis = visita })
+                    .Join(db.Vendedor, conjunto2 => conjunto2.Avis.IdVendedor, ven => ven.IdVendedor, (conjunto2, ven) => new { AConjunto2 = conjunto2, Aven = ven })
+
+                .Where(y => y.Aven.IdSupervisor == supervisorRequest.IdSupervisor)
+                .Select(x => new TipoCompromisoRequest
+                {
+                    IdTipoCompromiso = x.AConjunto2.Aconjunto1.ttc.IdTipoCompromiso,
+                    Descripcion = x.AConjunto2.Aconjunto1.ttc.Descripcion
+
+                }
+
+                ).GroupBy(z => z.Descripcion).ToListAsync();
+
+
+                var listaTipoCompromisos = new List<TipoCompromisoRequest>();
+
+                for (int i = 0; i < listaCompromiso.Count; i++)
+                {
+                    var num = listaCompromiso.ElementAt(i).Count();
+
+                    listaTipoCompromisos.Add(
+                        new TipoCompromisoRequest
+                        {
+                            Descripcion = listaCompromiso.ElementAt(i).ElementAt(0).Descripcion,
+                            CantidadCompromiso = num
+                        }
+                    );
+
+
+                }
+
+
+                // Lógica para compromisos cumplidos - incumplidos
+
+                var cumplidos = await db.Compromiso
+                    .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
+                    .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
+                    .Where(y => y.tven.IdSupervisor == supervisorRequest.IdSupervisor && !String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .ToListAsync();
+
+                var incumplidos = await db.Compromiso
+                    .Join(db.Visita, com => com.idVisita, v => v.idVisita, (com, v) => new { tcom = com, tv = v })
+                    .Join(db.Vendedor, conjunto => conjunto.tv.IdVendedor, ven => ven.IdVendedor, (conjunto, ven) => new { varConjunto = conjunto, tven = ven })
+                    .Where(y => y.tven.IdSupervisor == supervisorRequest.IdSupervisor && String.IsNullOrEmpty(y.varConjunto.tcom.Solucion))
+                    .ToListAsync();
+
+
+                estadisticoSupervisorRequest.IdSupervisor = supervisorRequest.IdSupervisor;
+                //estadisticoSupervisorRequest.CalificacionPromedio = promedio;
+                estadisticoSupervisorRequest.ListaTipoCompromiso = listaTipoCompromisos;
+                estadisticoSupervisorRequest.CompromisosCumplidos = cumplidos.Count();
+                estadisticoSupervisorRequest.CompromisosIncumplidos = incumplidos.Count();
+
+                return estadisticoSupervisorRequest;
+            }
+            catch (Exception ex)
+            {
+                return estadisticoSupervisorRequest;
+            }
+        }
 
         //PUT: api/Compromiso
         [HttpPost]
         [Route("ActualizarCompromiso")]
-        public async Task<IHttpActionResult> PutCompromiso( Compromiso compromiso)
+        public async Task<IHttpActionResult> PutCompromiso( Compromiso compromisoAux)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            
+            var compromiso = await db.Compromiso.Where(x => x.IdCompromiso == compromisoAux.IdCompromiso).FirstOrDefaultAsync();
+            compromiso.Solucion = compromisoAux.Solucion;
+
             db.Entry(compromiso).State = EntityState.Modified;
             try
             {

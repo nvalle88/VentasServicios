@@ -22,11 +22,13 @@ namespace VentaServicios.Controllers.API
     public class AgendasController : ApiController
     {
         private readonly ModelVentas db = new ModelVentas();
-
-
-
         
         // POST: api/Agendas
+        /// <summary>
+        ///Prioridad: 0 = baja (verde), 1 = media (naranja), 2 = alta (rojo) 
+        /// </summary>
+        /// <param name="vendedorRequest"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("ListarEventosPorVendedor")]
         public async Task<List<EventoRequest>> ListarEventosPorVendedor(VendedorRequest vendedorRequest)
@@ -34,7 +36,6 @@ namespace VentaServicios.Controllers.API
 
             //Solo necesita el IdVendedor
 
-            //Prioridad: 0 = baja (verde), 1 = media (naranja), 2 = alta (rojo) 
 
             var lista = new List<EventoRequest>();
 
@@ -92,7 +93,7 @@ namespace VentaServicios.Controllers.API
                 return lista;
             }
         }
-
+       
         // POST: api/Agendas
         [HttpPost]
         [Route("VerEstadisticosVendedor")]
@@ -183,6 +184,33 @@ namespace VentaServicios.Controllers.API
             {
                 return estadisticoVendedorRequest;
             }
+        }
+
+        // POST: api/Agendas
+        [HttpPost]
+        [Route("Agregar")]
+        public async Task<Response> Agregar(Agenda agenda)
+        {
+
+            try
+            {
+                db.Agenda.Add(agenda);
+                await db.SaveChangesAsync();
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = "Ok"
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+          
+
+           // return CreatedAtRoute("DefaultApi", new { id = agenda.idAgenda }, agenda);
+          
         }
 
     }

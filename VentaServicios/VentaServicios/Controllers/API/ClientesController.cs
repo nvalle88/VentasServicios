@@ -143,7 +143,7 @@ namespace VentaServicios.Controllers.API
         {
             try
             {
-                var lista = await db.Cliente.Where(x => x.IdVendedor == vendedor.IdVendedor).Select(x => new ClienteRequest
+                var lista = await db.Cliente.Where(x => x.IdVendedor == vendedor.IdVendedor && x.Estado==1).Select(x => new ClienteRequest
                 {
                     Apellido = x.Apellido,
                     ApellidosVendedor = x.Vendedor.AspNetUsers.Apellidos,

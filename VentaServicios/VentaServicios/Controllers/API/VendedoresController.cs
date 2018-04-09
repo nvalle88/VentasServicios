@@ -491,7 +491,7 @@ namespace VentaServicios.Controllers.API
             try
             {
                 
-                var supervisor = await db.Supervisor.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa && x.IdUsuario == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
+                var supervisor = await db.Supervisor.Where(x=>x.AspNetUsers.Id == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
                 {
                     IdUsuario = x.AspNetUsers.Id,
                     IdSupervisor = x.IdSupervisor,
@@ -534,7 +534,56 @@ namespace VentaServicios.Controllers.API
             }
 
         }
+        [HttpPost]
+        [Route("obtenerGerentePorIdUsuario")]
+        public async Task<Response> obtenerGerentePorIdUsuario(SupervisorRequest supervisorRequest)
+        {
+            try
+            {
 
+                var gerente = await db.Gerente.Where(x => x.AspNetUsers.IdEmpresa == supervisorRequest.IdEmpresa && x.IdUsuario == supervisorRequest.IdUsuario).Select(x => new SupervisorRequest
+                {
+                    IdUsuario = x.AspNetUsers.Id,
+                    IdSupervisor = x.IdGerente,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Telefono = x.AspNetUsers.Telefono,
+                    Correo = x.AspNetUsers.Email,
+                    IdEmpresa = x.AspNetUsers.IdEmpresa,
+                    IdGerente = x.IdGerente
+
+                }).SingleOrDefaultAsync();
+
+
+                if (gerente == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = Mensaje.RegistroNoEncontrado
+                    };
+
+                }
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = Mensaje.Satisfactorio,
+                    Resultado = gerente
+
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = Mensaje.Excepcion
+                };
+            }
+
+        }
         // POST: api/Vendedores
         [HttpPost]
         [Route("ListarClientesPorSupervisor")]
