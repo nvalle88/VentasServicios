@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -635,88 +636,65 @@ namespace VentaServicios.Controllers.API
         // POST: api/Vendedores
         [HttpPost]
         [Route("ListarRutaVendedores")]
-        public async Task<List<RutaRequest>> ListarRutaVendedores(VendedorRequest vendedorRequest)
+        public async Task<RutasVisitasRequest> ListarRutaVendedores(VendedorRequest vendedorRequest)
         {
 
             // Necesarios: IdEmpresa e IdVendedor
             // solo muestra vendedores con estado 1("Activado")
             db.Configuration.ProxyCreationEnabled = false;
 
-            var lista = new List<RutaRequest>();
-            var lista2 = new List<RutaRequest>();
+            //var lista = new List<RutaRequest>();
+            //var lista2 = new List<RutaRequest>();
+            RutasVisitasRequest RutaVisitas = new RutasVisitasRequest();
+            var ListaRuta = new List<RutaRequest>();
+            var Lista2 = new List<RutaRequest>();
+
 
             DateTime hoy = vendedorRequest.FechaRuta;
 
             try
             {
-                lista = await db.LogRutaVendedor
-                    .Join(db.Vendedor, lrv => lrv.IdVendedor, v => v.IdVendedor,(lrv, v) => new { tlrv = lrv, tv = v })
-                    .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id,(conjunto, asp) => new { varConjunto = conjunto, tAsp = asp })
-                .Where(y => y.tAsp.IdEmpresa == vendedorRequest.idEmpresa && y.tAsp.Estado == 1 && y.varConjunto.tv.IdVendedor == vendedorRequest.IdVendedor)
-                .Select(x => new RutaRequest
-                {
-                    IdLogRutaVendedor = x.varConjunto.tlrv.IdLogRutaVendedor,
-                    IdVendedor = x.varConjunto.tlrv.IdVendedor,
-                    Fecha = x.varConjunto.tlrv.Fecha,
-                    Latitud = x.varConjunto.tlrv.Latitud,
-                    Longitud = x.varConjunto.tlrv.Longitud
-
-                }
-
-                ).OrderBy(or =>or.Fecha).ToListAsync();
-
-                
-                lista2 = await db.Visita
-                    .Join(db.Vendedor, lrv => lrv.IdVendedor, v => v.IdVendedor, (lrv, v) => new { tlrv = lrv, tv = v })
-                    .Join(db.AspNetUsers, conjunto => conjunto.tv.IdUsuario, asp => asp.Id, (conjunto, asp) => new { visitasUsuarios = conjunto, tAsp = asp })
-
-                    .Join(db.Compromiso, conjunto2 => conjunto2.visitasUsuarios.tlrv.idVisita, compromiso => compromiso.idVisita, (conjunto2, compromiso) => new { CompromisosVisitas = conjunto2, compromisos = compromiso })
-
-                    .Join(db.TipoCompromiso, conjunto3 => conjunto3.compromisos.IdTipoCompromiso, tcompromiso => tcompromiso.IdTipoCompromiso, (conjunto3, tcompromiso) => new { varConjunto = conjunto3, tiposCompromisos = tcompromiso })
-
-
-                .Where(y => y.varConjunto.CompromisosVisitas.tAsp.IdEmpresa == vendedorRequest.idEmpresa 
-                && y.varConjunto.CompromisosVisitas.tAsp.Estado == 1 
-                && y.varConjunto.CompromisosVisitas.visitasUsuarios.tv.IdVendedor == vendedorRequest.IdVendedor)
-                .Select(x => new RutaRequest
+                //Lista para la ruta del vendedor
+                ListaRuta = await db.LogRutaVendedor
+                    .Where(
+                    x => x.Vendedor.AspNetUsers.IdEmpresa == vendedorRequest.idEmpresa &&
+                    x.Vendedor.AspNetUsers.Estado == 1 &&
+                    x.Vendedor.IdVendedor == vendedorRequest.IdVendedor && DbFunctions.TruncateTime(x.Fecha.Value) == hoy)
+                    .Select(
+                    x => new RutaRequest
+                    {
+                        IdLogRutaVendedor = x.IdLogRutaVendedor,
+                        IdVendedor = x.IdVendedor,
+                        Fecha = x.Fecha,
+                        Latitud = x.Latitud,
+                        Longitud = x.Longitud
+                    }
+                    ).OrderBy(or => or.Fecha).ToListAsync();
+                //Lista de Visitas
+                Lista2 = await db.Visita
+                     .Where(y => y.Vendedor.AspNetUsers.IdEmpresa == vendedorRequest.idEmpresa
+                && y.Vendedor.AspNetUsers.Estado == 1
+                && y.Vendedor.IdVendedor == vendedorRequest.IdVendedor && DbFunctions.TruncateTime(y.Fecha) == hoy)
+                .Select(y => new RutaRequest
                 {
                     IdLogRutaVendedor = 0,
-                    IdVendedor = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.IdVendedor,
-                    Fecha = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.Fecha,
-                    Latitud = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.Latitud,
-                    Longitud = x.varConjunto.CompromisosVisitas.visitasUsuarios.tlrv.Longitud,
-                    ClienteRequest=new ClienteRequest
+                    IdVendedor = y.IdVendedor,
+                    Fecha = y.Fecha,
+                    Latitud = y.Latitud,
+                    Longitud = y.Longitud,
+                    ClienteRequest = new ClienteRequest
                     {
-                        IdCliente = x.varConjunto.compromisos.Visita.Cliente.idCliente,
-                        Nombre= x.varConjunto.compromisos.Visita.Cliente.Nombre,
-                        Apellido = x.varConjunto.compromisos.Visita.Cliente.Apellido,
-                        Direccion = x.varConjunto.compromisos.Visita.Cliente.Direccion,
-                        Identificacion = x.varConjunto.compromisos.Visita.Cliente.Identificacion,
-                        Foto = x.varConjunto.compromisos.Visita.Cliente.Foto,
+                        IdCliente = y.idCliente,
+                        Nombre = y.Cliente.Nombre,
+                        RazonSocial = y.Cliente.RazonSocial,
+                        Apellido = y.Cliente.Apellido,
+                        Direccion = y.Cliente.Direccion,
+                        Identificacion = y.Cliente.Identificacion,
+                        Foto = y.Cliente.Foto,
                     }
-                }
-
-                ).OrderBy(or => or.Fecha).ToListAsync();
-
-
-                for (int i = 0; i<lista2.Count; i++)
-                {
-                    lista.Add(lista2.ElementAt(i));
-                }
-
-                lista2.Clear();
-
-                for (int i = 0; i<lista.Count; i++)
-                {
-                    if ( Convert.ToDateTime(lista.ElementAt(i).Fecha).Day == hoy.Day )
-                    {
-                        lista2.Add(lista.ElementAt(i));
-                    }
-                }
-
-                
-                var lista3 = lista2.OrderBy(t => t.Fecha).ToList();
-
+                }).OrderBy(or => or.Fecha).ToListAsync();
+                ListaRuta.AddRange(Lista2);
+                ListaRuta.OrderBy(or => or.Fecha).ToList();
                 // Visitas
                 var listaVisitas =await db.Visita
                                     .Where(x => x.Fecha.Day == hoy.Day && x.Vendedor.IdVendedor == vendedorRequest.IdVendedor)
@@ -724,20 +702,37 @@ namespace VentaServicios.Controllers.API
                                     {
                                         ClienteRequest = new ClienteRequest
                                         {
+                                            IdCliente = c.idCliente,
                                             Nombre = c.Cliente.Nombre,
+                                            RazonSocial = c.Cliente.RazonSocial,
                                             Apellido = c.Cliente.Apellido,
+                                            Direccion = c.Cliente.Direccion,
+                                            Identificacion = c.Cliente.Identificacion,
+                                            Foto = c.Cliente.Foto,
                                         },
-                                        ListaCompromisos = c.Compromiso.ToList(),
+                                        ListaCompromisos = c.Compromiso.Select(y => new CompromisosRecorrido {
+                                            Detalle = y.Descripcion,
+                                            TipoCompromiso =y.TipoCompromiso.Descripcion,
+                                            Solucion =y.Solucion}).ToList(),
                                         Fecha = c.Fecha,
                                         IdVisita = c.idVisita,
                                     }
                                     ).ToListAsync();
-                
-                return lista3;
+
+              
+                listaVisitas.Count();
+
+                RutaVisitas = new RutasVisitasRequest
+                {
+                    ListaRutas = ListaRuta,
+                    ListaVisitas = listaVisitas,
+                };
+
+                return RutaVisitas;
             }
             catch (Exception ex)
             {
-                return lista;
+                    return RutaVisitas;
             }
         }
 
@@ -748,11 +743,8 @@ namespace VentaServicios.Controllers.API
         [Route("BuscarUsuariosVendedoresPorEmpresaEIdentificacion")]
         public async Task<List<VendedorRequest>> BuscarUsuariosVendedoresPorEmpresaEIdentificacion(VendedorRequest vendedorRequest)
         {
-
             //Necesarios el IdEmpresa e Identificacion
-
             var listaVendedores = new List<VendedorRequest>();
-
             try
             {
                 listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
@@ -761,7 +753,6 @@ namespace VentaServicios.Controllers.API
                     TiempoSeguimiento = x.TiempoSeguimiento,
                     IdSupervisor = x.IdSupervisor,
                     IdUsuario = x.AspNetUsers.Id,
-
                     TokenContrasena = x.AspNetUsers.TokenContrasena,
                     Foto = x.AspNetUsers.Foto,
                     Estado = x.AspNetUsers.Estado,
@@ -772,11 +763,8 @@ namespace VentaServicios.Controllers.API
                     Apellidos = x.AspNetUsers.Apellidos,
                     Telefono = x.AspNetUsers.Telefono,
                     idEmpresa = vendedorRequest.idEmpresa
-
                 }
-
                 ).Where(x => x.idEmpresa == vendedorRequest.idEmpresa && x.Identificacion == vendedorRequest.Identificacion).ToListAsync();
-
                 return listaVendedores;
             }
             catch (Exception ex)
@@ -784,6 +772,5 @@ namespace VentaServicios.Controllers.API
                 return listaVendedores;
             }
         }
-
     }
 }
