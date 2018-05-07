@@ -10,5 +10,6 @@ namespace VentaServicios.ModeloDato
     {
         public Position Position { get; set; }
         public int myId { get; set; }
+        public double radio { get; set; }
     }
 }

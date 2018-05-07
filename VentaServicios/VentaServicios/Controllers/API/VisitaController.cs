@@ -64,8 +64,12 @@ namespace VentaServicios.Controllers.API
             try
             {
                 var client = db.Cliente.Where(x => x.idCliente == visita.visita.idCliente).FirstOrDefault();
+                //Para obtener el id de la visita por si solo existe una para evitarnos el enviar quemada el tipo de visita
+                var idtipovisita = db.TipoVisita.Where(x => x.idEmpresa == client.Vendedor.AspNetUsers.IdEmpresa).Select(y=> y.idTipoVisita).FirstOrDefault();
                 visita.visita.Latitud = client.Latitud;
                 visita.visita.Longitud = client.Longitud;
+               
+                if (visita.visita.idTipoVisita == 0 ) visita.visita.idTipoVisita = idtipovisita;
                 db.Visita.Add(visita.visita);
                 
                 await db.SaveChangesAsync();

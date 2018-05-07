@@ -190,6 +190,7 @@
     <Compile Include="Controllers\API\CompromisoController.cs" />
     <Compile Include="Controllers\API\EmpresasController.cs" />
     <Compile Include="Controllers\API\GerentesController.cs" />
+    <Compile Include="Controllers\API\InfoController.cs" />
     <Compile Include="Controllers\API\LogRutaVendedorsController.cs" />
     <Compile Include="Controllers\API\MapaCalorController.cs" />
     <Compile Include="Controllers\API\SupervisorsController.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="ModeloDato\FormularioTipoDato.cs" />
     <Compile Include="ModeloDato\FormularioVisita.cs" />
     <Compile Include="ModeloDato\Gerente.cs" />
+    <Compile Include="ModeloDato\InfoRequest.cs" />
     <Compile Include="ModeloDato\LogRutaVendedor.cs" />
     <Compile Include="ModeloDato\ModelVentas.cs" />
     <Compile Include="ModeloDato\NearClientRequest.cs" />
@@ -238,6 +240,7 @@
     <Compile Include="ModeloDato\TipoVisita.cs" />
     <Compile Include="ObjectRequest\CheckinRequest.cs" />
     <Compile Include="ObjectRequest\CompromisosRecorrido.cs" />
+    <Compile Include="ObjectRequest\LivePositionRequest.cs" />
     <Compile Include="ObjectRequest\VisitaRecorrido.cs" />
     <Compile Include="ObjectRequest\compromisosConTipo.cs" />
     <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />
@@ -272,6 +275,7 @@
     <Compile Include="Utils\GeoUtils\Position.cs" />
     <Compile Include="Utils\Mensaje.cs" />
     <Compile Include="Utils\Response.cs" />
+    <Compile Include="Utils\Template\infoMail.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -311,6 +315,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\ventasDemoWS - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ventasDemoWS - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -319,6 +324,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Utils\Template\InfoMail.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -6,12 +6,16 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VentaServicios.ModeloDato;
+using VentaServicios.ObjectRequest;
 
 namespace VentaServicios.Controllers.API
 {
+    [RoutePrefix("api/LogRutaVendedors")]
+
     public class LogRutaVendedorsController : ApiController
     {
         private ModelVentas db = new ModelVentas();
@@ -20,6 +24,137 @@ namespace VentaServicios.Controllers.API
         public IQueryable<LogRutaVendedor> GetLogRutaVendedor()
         {
             return db.LogRutaVendedor;
+        }
+        /// <summary>
+        /// Metodo para obtener la última posición de los vendedores segun la empresa
+        /// 
+        /// </summary>
+        /// <param name="empresaActual"></param>
+        /// <returns>Lista de vendedores con su última posición</returns>
+        [HttpPost]
+        [Route("VendedoresPorEmpresa")]
+        public async Task<List<LivePositionRequest>> VendedoresPorEmpresa(EmpresaActual empresaActual)
+        {
+            var listaVendedores = new List<VendedorRequest>();
+            try
+            {
+                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+                    NombreApellido = x.AspNetUsers.Nombres + " " + x.AspNetUsers.Apellidos,
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = x.AspNetUsers.IdEmpresa
+                }
+                ).Where(x => x.idEmpresa == empresaActual.IdEmpresa
+                    && x.Estado == 1
+                ).ToListAsync();
+
+
+                List<LivePositionRequest> listPositionRequests = new List<LivePositionRequest>();
+
+                foreach (var Vendedor in listaVendedores)
+                {
+                    var ultimaposicionVendedor =  await db.LogRutaVendedor
+                        .Where(x => x.IdVendedor == Vendedor.IdVendedor)
+                        .OrderByDescending(x => x.Fecha)
+                        .Select(
+                        x => new LivePositionRequest
+                        {
+                            AgenteId = x.IdVendedor,
+                            Nombre=x.Vendedor.AspNetUsers.Nombres,
+                            Lat=(float)x.Latitud,
+                            Lon=(float)x.Longitud,
+                            fecha=(DateTime)x.Fecha,
+                            EmpresaId=x.Vendedor.AspNetUsers.IdEmpresa
+                        })
+                        .FirstOrDefaultAsync();
+                    if (ultimaposicionVendedor!=null)
+                    {
+                        listPositionRequests.Add(ultimaposicionVendedor);
+
+                    }
+                }
+
+
+                return listPositionRequests;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        [HttpPost]
+        [Route("VendedoresPorSupervisor")]
+        public async Task<List<LivePositionRequest>> VendedoresPorSupervisor(SupervisorRequest supervisorRequest)
+        {
+            var listaVendedores = new List<VendedorRequest>();
+            try
+            {
+                listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
+                {
+                    IdVendedor = x.IdVendedor,
+                    TiempoSeguimiento = x.TiempoSeguimiento,
+                    IdSupervisor = x.IdSupervisor,
+                    IdUsuario = x.AspNetUsers.Id,
+                    NombreApellido = x.AspNetUsers.Nombres + " " + x.AspNetUsers.Apellidos,
+                    TokenContrasena = x.AspNetUsers.TokenContrasena,
+                    Foto = x.AspNetUsers.Foto,
+                    Estado = x.AspNetUsers.Estado,
+                    Correo = x.AspNetUsers.Email,
+                    Direccion = x.AspNetUsers.Direccion,
+                    Identificacion = x.AspNetUsers.Identificacion,
+                    Nombres = x.AspNetUsers.Nombres,
+                    Apellidos = x.AspNetUsers.Apellidos,
+                    Telefono = x.AspNetUsers.Telefono,
+                    idEmpresa = x.AspNetUsers.IdEmpresa
+                }
+                ).Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor
+                    && x.Estado == 1
+                ).ToListAsync();
+
+
+                List<LivePositionRequest> listPositionRequests = new List<LivePositionRequest>();
+
+                foreach (var Vendedor in listaVendedores)
+                {
+                    var ultimaposicionVendedor = await db.LogRutaVendedor
+                        .Where(x => x.IdVendedor == Vendedor.IdVendedor)
+                        .OrderByDescending(x => x.Fecha)
+                        .Select(
+                        x => new LivePositionRequest
+                        {
+                            AgenteId = x.IdVendedor,
+                            Nombre = x.Vendedor.AspNetUsers.Nombres,
+                            Lat = (float)x.Latitud,
+                            Lon = (float)x.Longitud,
+                            fecha = (DateTime)x.Fecha,
+                            EmpresaId = x.Vendedor.AspNetUsers.IdEmpresa
+                        })
+                        .FirstOrDefaultAsync();
+                    if (ultimaposicionVendedor != null)
+                    {
+                        listPositionRequests.Add(ultimaposicionVendedor);
+                    }
+                }
+                return listPositionRequests;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         // GET: api/LogRutaVendedors/5

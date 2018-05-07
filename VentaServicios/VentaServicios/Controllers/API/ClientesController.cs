@@ -131,7 +131,7 @@ namespace VentaServicios.Controllers.API
                     latitude = cliente.Latitud,
                     longitude = cliente.Longitud
                 };
-                if (GeoUtils.EstaCercaDeMi(posicion.Position, cposition, 0.1))
+                if (GeoUtils.EstaCercaDeMi(posicion.Position, cposition, posicion.radio))
                 {
                     Clientes.Add(cliente);
                 }

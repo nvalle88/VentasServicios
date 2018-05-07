@@ -251,10 +251,8 @@ namespace VentaServicios.Controllers.API
         [HttpPost]
         [Route("ListarVendedoresGerente")]
         public async Task<SupervisorRequest> ListarVendedoresGerente(SupervisorRequest supervisorRequest)
-        {
-           
+        {           
             var listaVendedores = new List<VendedorRequest>();
-
             try
             {
                 listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
@@ -273,8 +271,7 @@ namespace VentaServicios.Controllers.API
                     Nombres = x.AspNetUsers.Nombres,
                     Apellidos = x.AspNetUsers.Apellidos,
                     Telefono = x.AspNetUsers.Telefono,
-                    idEmpresa = supervisorRequest.IdEmpresa
-
+                   idEmpresa=x.AspNetUsers.IdEmpresa
                 }
 
                 ).Where(x =>  x.idEmpresa == supervisorRequest.IdEmpresa
@@ -282,7 +279,6 @@ namespace VentaServicios.Controllers.API
                 ).ToListAsync();
 
                 supervisorRequest.ListaVendedores = listaVendedores;
-
                 return supervisorRequest;
             }
             catch (Exception ex)
@@ -331,8 +327,7 @@ namespace VentaServicios.Controllers.API
             {
                 return supervisorRequest;
             }
-        }
-
+        }      
 
         // POST: api/Vendedores
         [HttpPost]
@@ -482,7 +477,6 @@ namespace VentaServicios.Controllers.API
 
             }
         }
-
 
         // POST: api/Vendedores
         [HttpPost]
@@ -735,8 +729,6 @@ namespace VentaServicios.Controllers.API
                     return RutaVisitas;
             }
         }
-
-
 
 
         [HttpPost]

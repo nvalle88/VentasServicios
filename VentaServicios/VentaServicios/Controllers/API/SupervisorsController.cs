@@ -152,9 +152,7 @@ namespace VentaServicios.Controllers.API
 
             VendedoresController ctl = new VendedoresController();
             try
-            {
-                
-
+            {               
                 supervisor = await db.Supervisor.Where(m => m.IdSupervisor == id.IdSupervisor).Select(x => new SupervisorRequest
                 {
                     IdUsuario = x.AspNetUsers.Id,
@@ -267,21 +265,16 @@ namespace VentaServicios.Controllers.API
             }
         }
 
-
         [HttpPost]
         [Route("BuscarSupervisorPorEmpresaEIdentificacion")]
-        public async Task<List<SupervisorRequest>> BuscarSupervisorPorEmpresaEIdentificacion(SupervisorRequest supervisorRequest)
+        public async Task<SupervisorRequest> BuscarSupervisorPorEmpresaEIdentificacion(SupervisorRequest supervisorRequest)
         {
-
             //Necesarios el IdEmpresa e Identificacion
-
-            var listaSupervisores = new List<SupervisorRequest>();
-
+            var listaSupervisores = new SupervisorRequest();
             try
             {
-                listaSupervisores = await db.Supervisor.Select(x => new SupervisorRequest
-                {
-                    
+                listaSupervisores = db.Supervisor.Select(x => new SupervisorRequest
+                {                    
                     IdSupervisor = x.IdSupervisor,
                     IdUsuario = x.AspNetUsers.Id,
                     Correo = x.AspNetUsers.Email,
@@ -291,11 +284,8 @@ namespace VentaServicios.Controllers.API
                     Apellidos = x.AspNetUsers.Apellidos,
                     Telefono = x.AspNetUsers.Telefono,
                     IdEmpresa = supervisorRequest.IdEmpresa
-
                 }
-
-                ).Where(x => x.IdEmpresa == supervisorRequest.IdEmpresa && x.Identificacion == supervisorRequest.Identificacion).ToListAsync();
-
+                ).Where(x => x.IdEmpresa == supervisorRequest.IdEmpresa && x.Identificacion == supervisorRequest.Identificacion).FirstOrDefault();
                 return listaSupervisores;
             }
             catch (Exception ex)
