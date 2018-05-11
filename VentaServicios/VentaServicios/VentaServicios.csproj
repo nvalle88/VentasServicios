@@ -241,6 +241,7 @@
     <Compile Include="ObjectRequest\CheckinRequest.cs" />
     <Compile Include="ObjectRequest\CompromisosRecorrido.cs" />
     <Compile Include="ObjectRequest\LivePositionRequest.cs" />
+    <Compile Include="ObjectRequest\VendedorPositionRequest.cs" />
     <Compile Include="ObjectRequest\VisitaRecorrido.cs" />
     <Compile Include="ObjectRequest\compromisosConTipo.cs" />
     <Compile Include="ObjectRequest\EstadisticosClienteRequest.cs" />

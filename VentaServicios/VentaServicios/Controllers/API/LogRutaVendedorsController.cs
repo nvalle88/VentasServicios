@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VentaServicios.ModeloDato;
 using VentaServicios.ObjectRequest;
+using VentaServicios.Utils;
 
 namespace VentaServicios.Controllers.API
 {
@@ -33,7 +34,7 @@ namespace VentaServicios.Controllers.API
         /// <returns>Lista de vendedores con su última posición</returns>
         [HttpPost]
         [Route("VendedoresPorEmpresa")]
-        public async Task<List<LivePositionRequest>> VendedoresPorEmpresa(EmpresaActual empresaActual)
+        public async Task<Response> VendedoresPorEmpresa(EmpresaActual empresaActual)
         {
             var listaVendedores = new List<VendedorRequest>();
             try
@@ -61,7 +62,7 @@ namespace VentaServicios.Controllers.API
                 ).ToListAsync();
 
 
-                List<LivePositionRequest> listPositionRequests = new List<LivePositionRequest>();
+                List<VendedorPositionRequest> listPositionRequests = new List<VendedorPositionRequest>();
 
                 foreach (var Vendedor in listaVendedores)
                 {
@@ -69,14 +70,16 @@ namespace VentaServicios.Controllers.API
                         .Where(x => x.IdVendedor == Vendedor.IdVendedor)
                         .OrderByDescending(x => x.Fecha)
                         .Select(
-                        x => new LivePositionRequest
+                        x => new VendedorPositionRequest
                         {
-                            AgenteId = x.IdVendedor,
-                            Nombre=x.Vendedor.AspNetUsers.Nombres,
-                            Lat=(float)x.Latitud,
-                            Lon=(float)x.Longitud,
-                            fecha=(DateTime)x.Fecha,
-                            EmpresaId=x.Vendedor.AspNetUsers.IdEmpresa
+                            VendedorId = x.IdVendedor,
+                            Nombre = x.Vendedor.AspNetUsers.Nombres,
+                            Lat = (float)x.Latitud,
+                            Lon = (float)x.Longitud,
+                            Fecha = (DateTime)x.Fecha,
+                            EmpresaId = x.Vendedor.AspNetUsers.IdEmpresa,
+                            urlFoto = x.Vendedor.AspNetUsers.Foto,
+
                         })
                         .FirstOrDefaultAsync();
                     if (ultimaposicionVendedor!=null)
@@ -87,7 +90,11 @@ namespace VentaServicios.Controllers.API
                 }
 
 
-                return listPositionRequests;
+                return new Response
+                {
+                    IsSuccess = true,
+                    Resultado = listPositionRequests,
+                };
             }
             catch (Exception ex)
             {
@@ -98,7 +105,7 @@ namespace VentaServicios.Controllers.API
 
         [HttpPost]
         [Route("VendedoresPorSupervisor")]
-        public async Task<List<LivePositionRequest>> VendedoresPorSupervisor(SupervisorRequest supervisorRequest)
+        public async Task<Response> VendedoresPorSupervisor(SupervisorRequest supervisorRequest)
         {
             var listaVendedores = new List<VendedorRequest>();
             try
@@ -121,12 +128,12 @@ namespace VentaServicios.Controllers.API
                     Telefono = x.AspNetUsers.Telefono,
                     idEmpresa = x.AspNetUsers.IdEmpresa
                 }
-                ).Where(x => x.IdSupervisor == supervisorRequest.IdSupervisor
+                ).Where(x => x.IdUsuario == supervisorRequest.IdUsuario
                     && x.Estado == 1
                 ).ToListAsync();
 
 
-                List<LivePositionRequest> listPositionRequests = new List<LivePositionRequest>();
+                List<VendedorPositionRequest> listPositionRequests = new List<VendedorPositionRequest>();
 
                 foreach (var Vendedor in listaVendedores)
                 {
@@ -134,14 +141,16 @@ namespace VentaServicios.Controllers.API
                         .Where(x => x.IdVendedor == Vendedor.IdVendedor)
                         .OrderByDescending(x => x.Fecha)
                         .Select(
-                        x => new LivePositionRequest
+                        x => new VendedorPositionRequest
                         {
-                            AgenteId = x.IdVendedor,
+                            VendedorId = x.IdVendedor,
                             Nombre = x.Vendedor.AspNetUsers.Nombres,
                             Lat = (float)x.Latitud,
                             Lon = (float)x.Longitud,
-                            fecha = (DateTime)x.Fecha,
-                            EmpresaId = x.Vendedor.AspNetUsers.IdEmpresa
+                            Fecha = (DateTime)x.Fecha,
+                            EmpresaId = x.Vendedor.AspNetUsers.IdEmpresa,
+                            urlFoto= x.Vendedor.AspNetUsers.Foto,
+                            
                         })
                         .FirstOrDefaultAsync();
                     if (ultimaposicionVendedor != null)
@@ -149,7 +158,11 @@ namespace VentaServicios.Controllers.API
                         listPositionRequests.Add(ultimaposicionVendedor);
                     }
                 }
-                return listPositionRequests;
+                return new Response
+                {
+                    IsSuccess=true,
+                    Resultado= listPositionRequests,
+                };
             }
             catch (Exception ex)
             {
