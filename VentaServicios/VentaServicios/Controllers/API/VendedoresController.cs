@@ -23,9 +23,6 @@ namespace VentaServicios.Controllers.API
     public class VendedoresController : ApiController
     {
         private readonly ModelVentas db = new ModelVentas();
-
-
-
         
         // POST: api/Vendedores
         [HttpPost]
@@ -188,6 +185,7 @@ namespace VentaServicios.Controllers.API
                             Telefono=y.AspNetUsers.Telefono,
                             Foto=y.AspNetUsers.Foto,
                             IdVendedor=y.IdVendedor,
+                            DistanciaSeguimiento=y.DistanciaSeguimiento
                         })
                 .FirstOrDefaultAsync();
 
@@ -197,6 +195,52 @@ namespace VentaServicios.Controllers.API
             }
             return new Response { IsSuccess = false};
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="distanciaRequest"></param>
+        /// 
+        /// <returns></returns>
+        [HttpPost]
+        [Route("DistanciaVendedor")]
+        public async Task<Response> DistanciaVendedor(DistanciaRequest distanciaRequest)
+        {
+            if (distanciaRequest.isSet)
+            {
+                var modelo = await db.Vendedor.Where(x => x.IdVendedor == distanciaRequest.IdVendedor).FirstOrDefaultAsync();
+
+                if (modelo != null)
+                {
+                    modelo.DistanciaSeguimiento = (float) distanciaRequest.DistanciaSeguimiento;
+                    db.Entry(modelo).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                }
+                var response = new Response
+                {
+                    IsSuccess = true,
+                    Message = Mensaje.GuardadoSatisfactorio
+                };
+                return response;
+            }
+            else
+            {
+                var vendedor = await db.Vendedor.Where(x => x.IdVendedor == distanciaRequest.IdVendedor)
+                       .Select(y => new DistanciaRequest
+                       {
+                           IdVendedor=y.IdVendedor,
+                           DistanciaSeguimiento=y.DistanciaSeguimiento,                                                   
+                           isSet=false
+                       }).FirstOrDefaultAsync();
+                if (vendedor != null)
+                {
+                    return new Response { IsSuccess = true, Resultado = vendedor };
+                }
+            }           
+            return new Response { IsSuccess = false };
+        }
+
+
 
         // POST: api/Vendedores
         [HttpPost]
@@ -227,6 +271,7 @@ namespace VentaServicios.Controllers.API
                     Identificacion = x.AspNetUsers.Identificacion,
                     Nombres = x.AspNetUsers.Nombres,
                     Apellidos = x.AspNetUsers.Apellidos,
+                    NombreApellido = x.AspNetUsers.Nombres+" "+ x.AspNetUsers.Apellidos,
                     Telefono = x.AspNetUsers.Telefono,
                     idEmpresa = vendedorRequest.idEmpresa
 
@@ -364,15 +409,13 @@ namespace VentaServicios.Controllers.API
                         Nombres = x.AspNetUsers.Nombres,
                         Apellidos = x.AspNetUsers.Apellidos,
                         Telefono = x.AspNetUsers.Telefono,
-                        idEmpresa = vendedorRequest.idEmpresa
+                        idEmpresa = vendedorRequest.idEmpresa,
+                        DistanciaSeguimiento=x.DistanciaSeguimiento
                     }
-
                 ).Where(x => x.idEmpresa == vendedorRequest.idEmpresa 
                     && x.IdVendedor == vendedorRequest.IdVendedor
                     && x.Estado == 1
-                ).FirstOrDefaultAsync();
-
-               
+                ).FirstOrDefaultAsync();               
                 vendedor.ListaClientes = listaClientes;
                
 
@@ -383,8 +426,6 @@ namespace VentaServicios.Controllers.API
                 return vendedor;
             }
         }
-
-
 
         // POST: api/Vendedores
         [HttpPost]
@@ -446,12 +487,14 @@ namespace VentaServicios.Controllers.API
             {
                 var modelo = await db.Vendedor.Where(x => x.IdVendedor == vendedorRequest.IdVendedor).FirstOrDefaultAsync();
 
-                if (modelo.TiempoSeguimiento != vendedorRequest.TiempoSeguimiento || modelo.IdSupervisor != vendedorRequest.IdSupervisor) {
-                    
+
+                if (modelo.TiempoSeguimiento != vendedorRequest.TiempoSeguimiento || modelo.IdSupervisor != vendedorRequest.IdSupervisor || modelo.DistanciaSeguimiento != vendedorRequest.DistanciaSeguimiento)
+                {
+
                     modelo.TiempoSeguimiento = vendedorRequest.TiempoSeguimiento;
                     modelo.IdSupervisor = vendedorRequest.IdSupervisor;
-
-                    db.Entry(modelo).State = EntityState.Modified;
+                    modelo.DistanciaSeguimiento = vendedorRequest.DistanciaSeguimiento;
+                   // db.Entry(modelo).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                 }
 
@@ -464,7 +507,8 @@ namespace VentaServicios.Controllers.API
                 return response;
 
             }
-            catch(Exception ex)
+
+            catch (Exception ex)
             {
                 response = new Response
                 {
@@ -729,7 +773,6 @@ namespace VentaServicios.Controllers.API
                     return RutaVisitas;
             }
         }
-
 
         [HttpPost]
         [Route("BuscarUsuariosVendedoresPorEmpresaEIdentificacion")]

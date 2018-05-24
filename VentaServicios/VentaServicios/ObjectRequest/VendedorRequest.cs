@@ -21,6 +21,9 @@ namespace VentaServicios.ObjectRequest
 
         public string NombreApellido { get; set; }
 
+        public Nullable<double> DistanciaSeguimiento { get; set; }
+
+
         //Campos de tabla usuario
 
         public string IdUsuario { get; set; }

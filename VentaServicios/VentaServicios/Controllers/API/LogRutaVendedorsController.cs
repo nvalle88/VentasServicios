@@ -110,6 +110,8 @@ namespace VentaServicios.Controllers.API
             var listaVendedores = new List<VendedorRequest>();
             try
             {
+                var supervisor = await db.Supervisor.Where(x => x.IdUsuario == supervisorRequest.IdUsuario).FirstOrDefaultAsync();
+
                 listaVendedores = await db.Vendedor.Select(x => new VendedorRequest
                 {
                     IdVendedor = x.IdVendedor,
@@ -128,10 +130,9 @@ namespace VentaServicios.Controllers.API
                     Telefono = x.AspNetUsers.Telefono,
                     idEmpresa = x.AspNetUsers.IdEmpresa
                 }
-                ).Where(x => x.IdUsuario == supervisorRequest.IdUsuario
+                ).Where(x => x.IdSupervisor == supervisor.IdSupervisor
                     && x.Estado == 1
                 ).ToListAsync();
-
 
                 List<VendedorPositionRequest> listPositionRequests = new List<VendedorPositionRequest>();
 
@@ -169,6 +170,46 @@ namespace VentaServicios.Controllers.API
                 return null;
             }
         }
+
+
+        [HttpPost]
+        [Route("PosicionPorUsuario")]
+        public async Task<Response> PosicionPorUsuario(VendedorRequest vendedorRequest)
+        {
+            try
+            {                
+                VendedorPositionRequest VendedorPositionRequests = new VendedorPositionRequest();                
+                    var ultimaposicionVendedor = await db.LogRutaVendedor
+                        .Where(x => x.IdVendedor == vendedorRequest.IdVendedor)
+                        .OrderByDescending(x => x.Fecha)
+                        .Select(
+                        x => new VendedorPositionRequest
+                        {
+                            VendedorId = x.IdVendedor,
+                            Nombre = x.Vendedor.AspNetUsers.Nombres,
+                            Lat = (float)x.Latitud,
+                            Lon = (float)x.Longitud,
+                            Fecha = (DateTime)x.Fecha,
+                            EmpresaId = x.Vendedor.AspNetUsers.IdEmpresa,
+                            urlFoto = x.Vendedor.AspNetUsers.Foto,
+                            Correo= x.Vendedor.AspNetUsers.Email,
+                            Identificacion=x.Vendedor.AspNetUsers.Identificacion,
+                            Telefono=x.Vendedor.AspNetUsers.Telefono
+                        })
+                        .FirstOrDefaultAsync();                  
+                return new Response
+                {
+                    IsSuccess = true,
+                    Resultado = ultimaposicionVendedor,
+                };
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
 
         // GET: api/LogRutaVendedors/5
         [ResponseType(typeof(LogRutaVendedor))]

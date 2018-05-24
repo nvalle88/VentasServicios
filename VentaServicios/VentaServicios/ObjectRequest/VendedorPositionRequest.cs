@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -14,5 +15,13 @@ namespace VentaServicios.ObjectRequest
         public float Lon { get; set; }
         public DateTime Fecha { get; set; }
         public string urlFoto { get; set; }
+
+        [StringLength(13)]
+        public string Identificacion { get; set; }
+        [StringLength(10)]
+        public string Telefono { get; set; }
+        [StringLength(80)]
+        public string Correo { get; set; }
+
     }
 }

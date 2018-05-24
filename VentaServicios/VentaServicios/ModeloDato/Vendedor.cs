@@ -25,6 +25,9 @@ namespace VentaServicios.ModeloDato
 
         public int? IdSupervisor { get; set; }
 
+        public Nullable<double> DistanciaSeguimiento { get; set; }
+
+
         [StringLength(128)]
         public string IdUsuario { get; set; }
 

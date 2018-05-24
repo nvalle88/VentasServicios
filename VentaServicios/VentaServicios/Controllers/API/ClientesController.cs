@@ -138,6 +138,7 @@ namespace VentaServicios.Controllers.API
             }
             return Clientes;
         }
+
         [Route("ListarClientesPorVendedor")]
         public async Task<List<ClienteRequest>> ListarClientesPorVendedor(VendedorRequest vendedor)
         {
@@ -172,7 +173,6 @@ namespace VentaServicios.Controllers.API
                 return new List<ClienteRequest>();
             }
         }
-
 
         [HttpPost]
         [Route("VerEstadisticosCliente")]
